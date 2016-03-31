@@ -16,7 +16,6 @@
 #import "AWSTask+CheckExceptions.h"
 #import "AWSConfiguration.h"
 #import "AWSFacebookSignInProvider.h"
-#import "AWSGoogleSignInProvider.h"
 
 NSString *const AWSIdentityManagerDidSignInNotification = @"com.amazonaws.AWSIdentityManager.AWSIdentityManagerDidSignInNotification";
 NSString *const AWSIdentityManagerDidSignOutNotification = @"com.amazonaws.AWSIdentityManager.AWSIdentityManagerDidSignOutNotification";
@@ -122,9 +121,6 @@ typedef void (^AWSIdentityManagerCompletionBlock)(id result, NSError *error);
     if (signInProviderType == AWSSignInProviderTypeFacebook) {
         self.currentSignInProvider = [AWSFacebookSignInProvider sharedInstance];
     }
-    if (signInProviderType == AWSSignInProviderTypeGoogle) {
-        self.currentSignInProvider = [AWSGoogleSignInProvider sharedInstance];
-    }
 
     self.completionHandler = completionHandler;
     [self.currentSignInProvider login];
@@ -135,9 +131,6 @@ typedef void (^AWSIdentityManagerCompletionBlock)(id result, NSError *error);
 
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"Facebook"]) {
         self.currentSignInProvider = [AWSFacebookSignInProvider sharedInstance];
-    }
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"Google"]) {
-        self.currentSignInProvider = [AWSGoogleSignInProvider sharedInstance];
     }
 
     [self.currentSignInProvider reloadSession];

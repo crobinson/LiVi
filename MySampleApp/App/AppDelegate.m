@@ -61,5 +61,26 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    
+    // Clear the badge icon when you open the app.
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [[AWSMobileClient sharedInstance] application:application
+ didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    [[AWSMobileClient sharedInstance] application:application
+ didFailToRegisterForRemoteNotificationsWithError:error];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [[AWSMobileClient sharedInstance] application:application
+                     didReceiveRemoteNotification:userInfo];
+}
 
 @end

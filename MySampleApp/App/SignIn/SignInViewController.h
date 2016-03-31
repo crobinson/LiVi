@@ -17,15 +17,9 @@
 
 @property (weak, nonatomic) IBOutlet UIView *anchorView;
 
-@property (weak, nonatomic) IBOutlet UIButton *loginButton;
-@property (weak, nonatomic) IBOutlet UIButton *signupButton;
 @property (weak, nonatomic) IBOutlet UIButton *facebookButton;
-// Support code for Twitter provider UI.
-//@property (weak, nonatomic) IBOutlet UIButton *twitterButton;
+// Support code for Google provider UI.
 @property (weak, nonatomic) IBOutlet UIButton *googleButton;
-// Support code for Amazon provider UI.
-//@property (weak, nonatomic) IBOutlet UIButton *amazonButton;
-// Support code for custom sign-in provider UI.
 @property (weak, nonatomic) IBOutlet UIButton *customProviderButton;
 @property (weak, nonatomic) IBOutlet UIButton *customCreateAccountButton;
 @property (weak, nonatomic) IBOutlet UIButton *customForgotPasswordButton;

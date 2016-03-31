@@ -74,7 +74,7 @@ NSUInteger const AWSContentManagerMaxKeys = 100;
 
 @property (nonatomic, assign, getter=isDirectory) BOOL directory;
 @property (nonatomic, assign) AWSContentStatusType status;
-@property (nonatomic, assign) NSProgress *progress;
+@property (nonatomic, strong) NSProgress *progress;
 @property (nonatomic, strong) NSString *key;
 @property (nonatomic, strong) NSDate *knownRemoteLastModifiedDate;
 @property (nonatomic, assign) NSUInteger knownRemoteByteCount;

@@ -59,4 +59,27 @@
  */
 - (void)applicationDidBecomeActive:(UIApplication *)application;
 
+/**
+ * Handles callback from iOS platform indicating push notification registration was a success.
+ * @param application application
+ * @param deviceToken device token
+ */
+- (void)application:(UIApplication *)application
+didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
+
+/**
+ * Handles callback from iOS platform indicating push notification registration failed.
+ * @param application application
+ * @param error error
+ */
+- (void)application:(UIApplication *)application 
+didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+
+/**
+ * Handles a received push notification.
+ * @param userInfo push notification contents
+ */
+- (void)application:(UIApplication *)application 
+didReceiveRemoteNotification:(NSDictionary *)userInfo;
+
 @end

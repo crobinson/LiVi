@@ -58,6 +58,15 @@ static NSString * LOG_TAG = @"MainViewController";
     [self.demoFeatures addObject:demoFeature];
 
     demoFeature =
+        [[DemoFeature alloc] initWithName:NSLocalizedString(@"Push Notifications",
+                                                            @"Label for demo menu option.")
+                                   detail:NSLocalizedString(@"Send individual or group push notifications to your apps.",
+                                                            @"Description for demo menu option.")
+                                     icon:@"PushIcon"
+                               storyboard:@"PushNotification"];
+    [self.demoFeatures addObject:demoFeature];
+
+    demoFeature =
         [[DemoFeature alloc]
             initWithName:NSLocalizedString(@"App Content Delivery",
                                            @"Label for demo menu option.")

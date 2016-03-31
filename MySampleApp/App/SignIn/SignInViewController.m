@@ -37,10 +37,10 @@ static NSString *LOG_TAG;
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"%@: Sign-In Loading.", LOG_TAG);
-    
     self.facebookButton.layer.cornerRadius = 10;
-    self.loginButton.layer.cornerRadius = 10;
-    self.signupButton.layer.cornerRadius = 10;
+    self.customProviderButton.layer.cornerRadius = 10;
+    self.customCreateAccountButton.layer.cornerRadius = 10;
+
     __weak SignInViewController *weakSelf = self;
     self.didSignInObserver =
         [[NSNotificationCenter defaultCenter]
@@ -63,9 +63,9 @@ static NSString *LOG_TAG;
     } else {
         NSLog(@"%@: Facebook button image unavailable. We're hiding this button.", LOG_TAG);
         self.facebookButton.hidden = YES;
-    }
+    }*/
 
-    [self.view addConstraint:[NSLayoutConstraint
+    /*[self.view addConstraint:[NSLayoutConstraint
                                  constraintWithItem:self.facebookButton
                                           attribute:NSLayoutAttributeTop
                                           relatedBy:NSLayoutRelationEqual
@@ -73,38 +73,18 @@ static NSString *LOG_TAG;
                                           attribute:NSLayoutAttributeBottom
                                          multiplier:1
                                           constant:8.0]];*/
-    // GOOGLE UI SETUP
-    [self.googleButton addTarget:self
-                          action:@selector(handleGoogleLogin)
-                forControlEvents:UIControlEventTouchUpInside];
-    /*UIImage *googleButtonImage = [UIImage imageNamed:@"GoogleButton"];
-    if (googleButtonImage) {
-        [self.googleButton setImage:googleButtonImage
-                           forState:UIControlStateNormal];
-    } else {
-        NSLog(@"%@: Google button image unavailable.  We're hiding this button.", LOG_TAG);
-        self.googleButton.hidden = YES;
-    }
+    [self.googleButton removeFromSuperview];
+    // CUSTOM UI SETUP
+    [self.customProviderButton addTarget:self
+                                  action:@selector(handleCustomLogin)
+                        forControlEvents:UIControlEventTouchUpInside];
+    [self.customCreateAccountButton addTarget:self
+                                       action:@selector(handleCustomLogin)
+                             forControlEvents:UIControlEventTouchUpInside];
+    [self.customForgotPasswordButton addTarget:self
+                                        action:@selector(handleCustomLogin)
+                              forControlEvents:UIControlEventTouchUpInside];
 
-    [self.view addConstraint:[NSLayoutConstraint
-                                 constraintWithItem:self.googleButton
-                                          attribute:NSLayoutAttributeTop
-                                          relatedBy:NSLayoutRelationEqual
-                                             toItem:[self anchorViewForGoogle]
-                                          attribute:NSLayoutAttributeBottom
-                                         multiplier:1
-                                           constant:8.0]];*/
-   /* [self.customProviderButton removeFromSuperview];
-    [self.customCreateAccountButton removeFromSuperview];
-    [self.customForgotPasswordButton removeFromSuperview];
-    [self.customUserIdField removeFromSuperview];
-    [self.customPasswordField removeFromSuperview];
-    [self.leftHorizontalBar removeFromSuperview];
-    [self.rightHorizontalBar removeFromSuperview];
-    [self.orSignInWithLabel removeFromSuperview];*/
-
-    [self.customProviderButton setImage:[UIImage imageNamed:@"LoginButton"]
-                               forState:UIControlStateNormal];
 }
 
 - (void)dealloc {
@@ -153,18 +133,28 @@ static NSString *LOG_TAG;
 - (void)handleFacebookLogin {
     [self handleLoginWithSignInProvider:AWSSignInProviderTypeFacebook];
 }
-
-- (void)handleGoogleLogin {
-    [self handleLoginWithSignInProvider:AWSSignInProviderTypeGoogle];
+- (void)handleCustomLogin {
+    UIAlertController *alertController =
+        [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Custom Sign-In Demo",
+                                                                      @"Label for custom sign-in dialog.")
+                                            message:NSLocalizedString(@"This is just a demo of custom sign-in.",
+                                                                      @"Sign-in message structure for custom sign-in stub.")
+                                     preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *doneAction =
+        [UIAlertAction actionWithTitle:NSLocalizedString(@"Done",
+                                                         @"Label to complete stubbed custom sign-in.")
+                                 style:UIAlertActionStyleCancel
+                               handler:nil];
+    [alertController addAction:doneAction];
+    
+    [self presentViewController:alertController
+                       animated:YES
+                     completion:nil];
 }
 
 - (UIView *)anchorViewForFacebook {
-    return self.anchorView;
+    return self.orSignInWithLabel;
 }
 
-- (UIView *)anchorViewForGoogle {
-    return self.facebookButton;
-
-}
 
 @end

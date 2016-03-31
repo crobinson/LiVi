@@ -23,7 +23,6 @@ FOUNDATION_EXPORT NSString *const AWSIdentityManagerDidSignOutNotification;
 typedef NS_ENUM(NSInteger, AWSSignInProviderType) {
     AWSSignInProviderTypeGuest,
     AWSSignInProviderTypeFacebook,
-    AWSSignInProviderTypeGoogle,
 };
 
 @interface AWSIdentityManager : NSObject

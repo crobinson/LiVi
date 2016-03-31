@@ -13,6 +13,7 @@
 #import "AWSConfiguration.h"
 #import "AWSIdentityManager.h"
 #import <AWSMobileAnalytics/AWSMobileAnalytics.h>
+#import "AWSPushManager.h"
 
 @interface AWSMobileClient ()
 
@@ -63,6 +64,8 @@
     BOOL didFinishLaunching = [[AWSIdentityManager sharedInstance] application:application
                                                  didFinishLaunchingWithOptions:launchOptions];
 
+    didFinishLaunching &= [[AWSPushManager defaultPushManager] interceptApplication:application
+                                                      didFinishLaunchingWithOptions:launchOptions];
     return didFinishLaunching;
 }
 
@@ -89,6 +92,20 @@
     [self initializeMobileAnalytics];
 }
 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [[AWSPushManager defaultPushManager] interceptApplication:application
+             didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    [[AWSPushManager defaultPushManager] interceptApplication:application
+             didFailToRegisterForRemoteNotificationsWithError:error];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [[AWSPushManager defaultPushManager] interceptApplication:application
+                                 didReceiveRemoteNotification:userInfo];
+}
 
 #pragma mark - AWS Methods
 
