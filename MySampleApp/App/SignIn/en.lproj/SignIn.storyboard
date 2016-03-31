@@ -10,7 +10,7 @@
         <!--Sign-In View Controller-->
         <scene sceneID="Pcg-oB-wor">
             <objects>
-                <viewController storyboardIdentifier="SignIn" title="Sign-In View Controller" id="zFR-uy-L27" customClass="SignInViewController" sceneMemberID="viewController">
+                <viewController title="Sign-In View Controller" id="zFR-uy-L27" customClass="SignInViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Izq-ir-PWZ"/>
                         <viewControllerLayoutGuide type="bottom" id="9Ts-qe-o9Z"/>
@@ -140,6 +140,12 @@
                                     <action selector="handleCustomLogin" destination="zFR-uy-L27" eventType="touchUpInside" id="Evm-W6-BZr"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoLogin.png" translatesAutoresizingMaskIntoConstraints="NO" id="gIb-ll-gJh">
+                                <rect key="frame" x="16" y="17" width="65" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="gIb-ll-gJh" secondAttribute="height" multiplier="65:56" id="SQz-Sg-Qe8"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -157,6 +163,7 @@
                             <constraint firstItem="So3-eD-i8k" firstAttribute="centerX" secondItem="Ygm-EJ-04R" secondAttribute="centerX" id="MQu-Nq-pl3"/>
                             <constraint firstItem="ut2-wf-oqq" firstAttribute="centerX" secondItem="Ygm-EJ-04R" secondAttribute="centerX" id="O09-1E-wxR"/>
                             <constraint firstItem="i6t-Ik-XAc" firstAttribute="leading" secondItem="T6t-nK-GpM" secondAttribute="trailing" constant="8" symbolic="YES" id="OEx-R7-NL7"/>
+                            <constraint firstItem="gIb-ll-gJh" firstAttribute="top" secondItem="Izq-ir-PWZ" secondAttribute="bottom" constant="-3" id="OIt-Rc-vfQ"/>
                             <constraint firstItem="i6t-Ik-XAc" firstAttribute="centerX" secondItem="Ygm-EJ-04R" secondAttribute="centerX" id="Qv9-mu-gRe"/>
                             <constraint firstItem="i6t-Ik-XAc" firstAttribute="baseline" secondItem="mou-mq-q0x" secondAttribute="baseline" id="ReE-vL-bg7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="CTo-gR-rA6" secondAttribute="trailing" id="TLC-NZ-3CY"/>
@@ -166,6 +173,7 @@
                             <constraint firstItem="i6t-Ik-XAc" firstAttribute="top" secondItem="fgZ-Wa-Fth" secondAttribute="bottom" constant="11" id="YoI-2x-NDe"/>
                             <constraint firstItem="mou-mq-q0x" firstAttribute="leading" secondItem="i6t-Ik-XAc" secondAttribute="trailing" constant="8" symbolic="YES" id="aQn-Ei-jvq"/>
                             <constraint firstItem="2ER-3W-z3p" firstAttribute="top" secondItem="i6t-Ik-XAc" secondAttribute="bottom" constant="8" symbolic="YES" id="bUG-Zw-fRH"/>
+                            <constraint firstItem="gIb-ll-gJh" firstAttribute="leading" secondItem="Ygm-EJ-04R" secondAttribute="leadingMargin" constant="-4" id="bcG-ma-iCB"/>
                             <constraint firstAttribute="trailingMargin" secondItem="jAO-db-UaA" secondAttribute="trailing" id="bk7-fx-oKp"/>
                             <constraint firstItem="T6t-nK-GpM" firstAttribute="leading" secondItem="Ygm-EJ-04R" secondAttribute="leadingMargin" id="cSj-Kg-WF0"/>
                             <constraint firstItem="Zuh-aP-yxj" firstAttribute="leading" secondItem="fgZ-Wa-Fth" secondAttribute="trailing" constant="8" symbolic="YES" id="dj5-aF-hv3"/>
@@ -210,12 +218,32 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K3V-Vr-oX2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="911.25" y="455.28169014084506"/>
+            <point key="canvasLocation" x="1723" y="455"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="dlS-Ji-seg">
+            <objects>
+                <navigationController storyboardIdentifier="SignIn" automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="f8g-9L-oe9" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yfP-aC-kuK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="zFR-uy-L27" kind="relationship" relationship="rootViewController" id="hHP-qs-g2B"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FmU-uE-qKf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="911" y="455"/>
         </scene>
     </scenes>
     <resources>
         <image name="\" width="20" height="20"/>
         <image name="facebook.png" width="243" height="46"/>
         <image name="fotoLogin.png" width="375" height="667"/>
+        <image name="logoLogin.png" width="65" height="56"/>
     </resources>
 </document>
