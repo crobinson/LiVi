@@ -7,6 +7,7 @@
 //
 
 #import "MapViewController.h"
+#import "AWSIdentityManager.h"
 
 @interface MapViewController ()
 
@@ -17,10 +18,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated{
     [self presentProfileViewController];
 }
 
@@ -30,11 +36,21 @@
 }
 
 - (void)presentProfileViewController {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
-    UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Profile"];
-    [self presentViewController:viewController
-                       animated:YES
-                     completion:nil];
+    if ([AWSIdentityManager sharedInstance].isLoggedIn) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
+        UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Profile"];
+        [self presentViewController:viewController
+                           animated:YES
+                         completion:nil];
+    }else{
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"SignIn" bundle:nil];
+        UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"SignIn"];
+        [self presentViewController:viewController
+                           animated:YES
+                         completion:nil];
+
+    }
+    
 }
 
 /*

@@ -21,6 +21,10 @@
 // Support code for Google provider UI.
 @property (weak, nonatomic) IBOutlet UIButton *googleButton;
 @property (weak, nonatomic) IBOutlet UIButton *customProviderButton;
+@property (weak, nonatomic) IBOutlet UIButton *siginBtn;
+@property (weak, nonatomic) IBOutlet UIButton *ressetPwdBtnBtn;
+@property (weak, nonatomic) IBOutlet UIButton *userPwdBtnBtn;
+@property (weak, nonatomic) IBOutlet UIButton *vendorPwdBtnBtn;
 @property (weak, nonatomic) IBOutlet UIButton *customCreateAccountButton;
 @property (weak, nonatomic) IBOutlet UIButton *customForgotPasswordButton;
 @property (weak, nonatomic) IBOutlet UITextField *customUserIdField;
@@ -28,5 +32,6 @@
 @property (weak, nonatomic) IBOutlet UIView *leftHorizontalBar;
 @property (weak, nonatomic) IBOutlet UIView *rightHorizontalBar;
 @property (weak, nonatomic) IBOutlet UILabel *orSignInWithLabel;
+
 
 @end

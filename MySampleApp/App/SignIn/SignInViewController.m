@@ -40,6 +40,10 @@ static NSString *LOG_TAG;
     self.facebookButton.layer.cornerRadius = 10;
     self.customProviderButton.layer.cornerRadius = 10;
     self.customCreateAccountButton.layer.cornerRadius = 10;
+    self.siginBtn.layer.cornerRadius = 10;
+    self.ressetPwdBtnBtn.layer.cornerRadius = 10;
+    self.userPwdBtnBtn.layer.cornerRadius = 10;
+    self.vendorPwdBtnBtn.layer.cornerRadius = 10;
 
     __weak SignInViewController *weakSelf = self;
     self.didSignInObserver =
@@ -85,6 +89,10 @@ static NSString *LOG_TAG;
                                         action:@selector(handleCustomLogin)
                               forControlEvents:UIControlEventTouchUpInside];
 
+}
+
+-(IBAction)back:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)dealloc {
@@ -134,7 +142,7 @@ static NSString *LOG_TAG;
     [self handleLoginWithSignInProvider:AWSSignInProviderTypeFacebook];
 }
 - (void)handleCustomLogin {
-    UIAlertController *alertController =
+    /*UIAlertController *alertController =
         [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Custom Sign-In Demo",
                                                                       @"Label for custom sign-in dialog.")
                                             message:NSLocalizedString(@"This is just a demo of custom sign-in.",
@@ -149,7 +157,7 @@ static NSString *LOG_TAG;
     
     [self presentViewController:alertController
                        animated:YES
-                     completion:nil];
+                     completion:nil];*/
 }
 
 - (UIView *)anchorViewForFacebook {

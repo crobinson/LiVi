@@ -29,6 +29,10 @@
 		076C9E871CAD52EC007FF5F8 /* inviteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 076C9E851CAD52EC007FF5F8 /* inviteButton.png */; };
 		076C9E8A1CAD6BB1007FF5F8 /* descriptionText@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 076C9E881CAD6BB1007FF5F8 /* descriptionText@2x.png */; };
 		076C9E8B1CAD6BB1007FF5F8 /* descriptionText.png in Resources */ = {isa = PBXBuildFile; fileRef = 076C9E891CAD6BB1007FF5F8 /* descriptionText.png */; };
+		076C9E8E1CAD8C0B007FF5F8 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 076C9E8C1CAD8C0B007FF5F8 /* back@2x.png */; };
+		076C9E8F1CAD8C0B007FF5F8 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 076C9E8D1CAD8C0B007FF5F8 /* back.png */; };
+		076C9E921CAD93F2007FF5F8 /* fondo2login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 076C9E901CAD93F2007FF5F8 /* fondo2login@2x.png */; };
+		076C9E931CAD93F2007FF5F8 /* fondo2login.png in Resources */ = {isa = PBXBuildFile; fileRef = 076C9E911CAD93F2007FF5F8 /* fondo2login.png */; };
 		07CFD3C81CAABA4000CB2735 /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 07CFD3C01CAABA4000CB2735 /* facebook.png */; };
 		07CFD3C91CAABA4000CB2735 /* facebook@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07CFD3C11CAABA4000CB2735 /* facebook@2x.png */; };
 		07CFD3CA1CAABA4000CB2735 /* fotoLogin.png in Resources */ = {isa = PBXBuildFile; fileRef = 07CFD3C21CAABA4000CB2735 /* fotoLogin.png */; };
@@ -123,6 +127,10 @@
 		076C9E851CAD52EC007FF5F8 /* inviteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteButton.png; sourceTree = "<group>"; };
 		076C9E881CAD6BB1007FF5F8 /* descriptionText@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "descriptionText@2x.png"; sourceTree = "<group>"; };
 		076C9E891CAD6BB1007FF5F8 /* descriptionText.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = descriptionText.png; sourceTree = "<group>"; };
+		076C9E8C1CAD8C0B007FF5F8 /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
+		076C9E8D1CAD8C0B007FF5F8 /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
+		076C9E901CAD93F2007FF5F8 /* fondo2login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fondo2login@2x.png"; sourceTree = "<group>"; };
+		076C9E911CAD93F2007FF5F8 /* fondo2login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fondo2login.png; sourceTree = "<group>"; };
 		07CFD3C01CAABA4000CB2735 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
 		07CFD3C11CAABA4000CB2735 /* facebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2x.png"; sourceTree = "<group>"; };
 		07CFD3C21CAABA4000CB2735 /* fotoLogin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fotoLogin.png; sourceTree = "<group>"; };
@@ -274,6 +282,10 @@
 		07CFD3BF1CAABA4000CB2735 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				076C9E901CAD93F2007FF5F8 /* fondo2login@2x.png */,
+				076C9E911CAD93F2007FF5F8 /* fondo2login.png */,
+				076C9E8C1CAD8C0B007FF5F8 /* back@2x.png */,
+				076C9E8D1CAD8C0B007FF5F8 /* back.png */,
 				076C9E881CAD6BB1007FF5F8 /* descriptionText@2x.png */,
 				076C9E891CAD6BB1007FF5F8 /* descriptionText.png */,
 				076C9E841CAD52EC007FF5F8 /* inviteButton@2x.png */,
@@ -659,6 +671,7 @@
 				07CFD3CE1CAABA4000CB2735 /* SplashInfo.png in Resources */,
 				CED33FE51BB49B3D00B357CE /* Launch Screen.storyboard in Resources */,
 				076C9E861CAD52EC007FF5F8 /* inviteButton@2x.png in Resources */,
+				076C9E931CAD93F2007FF5F8 /* fondo2login.png in Resources */,
 				076C9E741CAD4C69007FF5F8 /* searchmap@2x.png in Resources */,
 				076C9E621CAD465D007FF5F8 /* fblogo.png in Resources */,
 				07CFD3C81CAABA4000CB2735 /* facebook.png in Resources */,
@@ -680,6 +693,7 @@
 				661104511B8751B600C8F1F4 /* UserIdentity.storyboard in Resources */,
 				076C9E671CAD465D007FF5F8 /* logoback@2x.png in Resources */,
 				076C9E701CAD4BA0007FF5F8 /* mapgroup@2x.png in Resources */,
+				076C9E8E1CAD8C0B007FF5F8 /* back@2x.png in Resources */,
 				076C9E631CAD465D007FF5F8 /* fblogo@2x.png in Resources */,
 				07CFD3CF1CAABA4000CB2735 /* SplashInfo@2x.png in Resources */,
 				CE790C461C2894CC000CA0DE /* Images.xcassets in Resources */,
@@ -687,6 +701,8 @@
 				07CFD3CD1CAABA4000CB2735 /* logoLogin@2x.png in Resources */,
 				07CFD3D31CAB2F3700CB2735 /* Splash@2x.png in Resources */,
 				076C9E711CAD4BA0007FF5F8 /* mapgroup.png in Resources */,
+				076C9E8F1CAD8C0B007FF5F8 /* back.png in Resources */,
+				076C9E921CAD93F2007FF5F8 /* fondo2login@2x.png in Resources */,
 				07CFD3D21CAB2F3700CB2735 /* Splash.png in Resources */,
 				6B9E5DE61BAFDBF6005E71C9 /* UserDataStorage.storyboard in Resources */,
 				076C9E751CAD4C69007FF5F8 /* searchmap.png in Resources */,
