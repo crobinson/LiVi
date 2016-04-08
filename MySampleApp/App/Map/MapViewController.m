@@ -8,6 +8,10 @@
 
 #import "MapViewController.h"
 #import "AWSIdentityManager.h"
+#import <AWSCognito/AWSCognitoSyncService.h>
+#import "AWSConfiguration.h"
+#import "AWSTask+CheckExceptions.h"
+#import <AWSCore/AWSCore.h>
 
 @interface MapViewController ()
 
@@ -37,11 +41,18 @@
 
 - (void)presentProfileViewController {
     if ([AWSIdentityManager sharedInstance].isLoggedIn) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
-        UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Profile"];
-        [self presentViewController:viewController
-                           animated:YES
-                         completion:nil];
+        AWSCognito *syncClient = [AWSCognito defaultCognito];
+        AWSCognitoDataset *userSettings = [syncClient openOrCreateDataset:@"user_settings"];
+        
+        if(![userSettings stringForKey:@"Description"] || [[userSettings stringForKey:@"Description"] isEqualToString:@""]){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
+            UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Profile"];
+            [self presentViewController:viewController
+                               animated:YES
+                             completion:nil];
+        }
+
+        
     }else{
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"SignIn" bundle:nil];
         UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"SignIn"];
@@ -50,6 +61,58 @@
                          completion:nil];
 
     }
+    
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    //return dataSource.count;
+    return 9;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    if(indexPath.row==0){
+        return 138;
+    }
+    return 69;
+    
+    
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //tableView = _mytableview;
+    static NSString *CellIdentifier = @"menu";
+    NSLog(@"%ld",(long)indexPath.row);
+    if(indexPath.row==0){
+         CellIdentifier = @"header";
+    }else{
+        CellIdentifier = @"menu";
+    }
+        
+    
+    UITableViewCell *cell = [_menuTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+  
+    
+    if ( cell == nil ) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    // Configure the cell...
+    
+    
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     
 }
 

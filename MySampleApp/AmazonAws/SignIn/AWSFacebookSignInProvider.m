@@ -122,11 +122,17 @@ static NSTimeInterval const AWSFacebookSignInProviderTokenRefreshBuffer = 10 * 6
         self.imageURL = [NSURL URLWithString:result[@"picture"][@"data"][@"url"]];
     }];
 
+    NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:@"id,name,email" forKey:@"fields"];
+    
     FBSDKGraphRequest *requestForName = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
-                                                                          parameters:nil];
+                                                                          parameters:@{@"fields" : @"email,name"}];
     [requestForName startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
                                                  NSDictionary *result,
                                                  NSError *queryError) {
+        NSLog(@"%@", result);
+        [[NSUserDefaults standardUserDefaults] setObject:result[@"email"]
+                                                  forKey:@"email"];
         self.userName = result[@"name"];
     }];
 }
@@ -140,7 +146,7 @@ static NSTimeInterval const AWSFacebookSignInProviderTokenRefreshBuffer = 10 * 6
     if (!self.facebookLogin)
         self.facebookLogin = [FBSDKLoginManager new];
 
-    [self.facebookLogin logInWithReadPermissions:nil
+    [self.facebookLogin logInWithReadPermissions:@[@"public_profile",@"email"]
                                          handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                              if (error) {
                                                  //[[AWSIdentityManager errorAlert:[NSString stringWithFormat:@"Error logging in with FB: %@", error.localizedDescription]] show];

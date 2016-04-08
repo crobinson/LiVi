@@ -12,12 +12,17 @@
 //
 //
 #import <UIKit/UIKit.h>
+#import "NIDropDown.h"
 
-@interface SignInViewController : UIViewController
+@interface SignInViewController : UIViewController<UITextViewDelegate, NIDropDownDelegate>{
+    UITextField *mytextField;
+    NIDropDown *dropDown;
+}
 
 @property (weak, nonatomic) IBOutlet UIView *anchorView;
-
+@property (weak, nonatomic) IBOutlet UIButton *selectButton;
 @property (weak, nonatomic) IBOutlet UIButton *facebookButton;
+@property (weak, nonatomic) IBOutlet UIScrollView *myscroll;
 // Support code for Google provider UI.
 @property (weak, nonatomic) IBOutlet UIButton *googleButton;
 @property (weak, nonatomic) IBOutlet UIButton *customProviderButton;

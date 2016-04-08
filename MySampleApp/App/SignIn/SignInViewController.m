@@ -37,6 +37,8 @@ static NSString *LOG_TAG;
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"%@: Sign-In Loading.", LOG_TAG);
+    [self.myscroll setScrollEnabled:YES];
+    [self.myscroll setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height)];
     self.facebookButton.layer.cornerRadius = 10;
     self.customProviderButton.layer.cornerRadius = 10;
     self.customCreateAccountButton.layer.cornerRadius = 10;
@@ -44,6 +46,7 @@ static NSString *LOG_TAG;
     self.ressetPwdBtnBtn.layer.cornerRadius = 10;
     self.userPwdBtnBtn.layer.cornerRadius = 10;
     self.vendorPwdBtnBtn.layer.cornerRadius = 10;
+    self.selectButton.layer.cornerRadius = 10;
 
     __weak SignInViewController *weakSelf = self;
     self.didSignInObserver =
@@ -164,5 +167,94 @@ static NSString *LOG_TAG;
     return self.orSignInWithLabel;
 }
 
+#pragma mark UITextField
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    mytextField = textField;
+    [self.myscroll setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+153)];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.50];
+    [UIView setAnimationDelegate:self];
+    
+    [self.myscroll setContentOffset:CGPointMake(0, textField.frame.origin.y - 150) animated:YES];
+    
+    [UIView commitAnimations];
+    
+}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    /* if (textField == _Username_TextField) {
+     [_Username_TextField resignFirstResponder];
+     [_password_TextField becomeFirstResponder];
+     } else if (textField == _password_TextField) {*/
+    // here you can define what happens
+    // when user presses return on the email field
+    [textField resignFirstResponder];
+    [self.myscroll setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height-153)];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.50];
+    [UIView setAnimationDelegate:self];
+    
+    [self.myscroll setContentOffset:CGPointMake(0, 0) animated:YES];
+    
+    [UIView commitAnimations];
+    
+    
+    // }
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    
+    
+}
+
+#pragma mark NIDropDown
+
+- (IBAction)selectClicked:(id)sender {
+    NSArray * arr = [[NSArray alloc] init];
+    arr = [NSArray arrayWithObjects:@"Hello 0", @"Hello 1", @"Hello 2", @"Hello 3", @"Hello 4", @"Hello 5", @"Hello 6", @"Hello 7", @"Hello 8", @"Hello 9",nil];
+    NSArray * arrImage = [[NSArray alloc] init];
+    arrImage = [NSArray arrayWithObjects:[UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], [UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], [UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], [UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], [UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], nil];
+    if(dropDown == nil) {
+        CGFloat f = 200;
+        dropDown = [[NIDropDown alloc]showDropDown:sender :&f :arr :arrImage :@"down"];
+        dropDown.delegate = self;
+    }
+    else {
+        [dropDown hideDropDown:sender];
+        [self rel];
+    }
+}
+
+- (void) niDropDownDelegateMethod: (NIDropDown *) sender
+{
+    [self rel];
+}
+
+- (void) whoissender: (UIButton *) sender andtext:(NSString *)titulo
+{
+    /*[self.view addGestureRecognizer:tap];
+    
+    if(sender == _pais_Button){
+        [[NSUserDefaults standardUserDefaults] setObject:titulo forKey:@"pais_Button"];
+        _pais.placeholder = @"";
+        paisSelected = titulo;
+        
+    }else{
+        _tipoddocumento.placeholder = @"";
+        tipoSelected = titulo;
+    }*/
+    
+    //[self rel];
+}
+
+-(void)rel{
+    //    [dropDown release];
+    dropDown = nil;
+}
 
 @end

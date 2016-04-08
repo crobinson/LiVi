@@ -10,4 +10,7 @@
 
 @interface ProfileViewController : UIViewController<UITextViewDelegate>
 
+@property (weak, nonatomic) IBOutlet UILabel *tooltip;
+
+
 @end
