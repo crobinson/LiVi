@@ -44,16 +44,15 @@
         
         self.layer.masksToBounds = NO;
         self.layer.cornerRadius = 8;
-        self.layer.shadowRadius = 5;
+        self.layer.shadowRadius = 10;
         self.layer.shadowOpacity = 0.5;
-        
         table = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, btn.size.width, 0)];
         table.delegate = self;
         table.dataSource = self;
-        table.layer.cornerRadius = 5;
+        table.layer.cornerRadius = 10;
         table.backgroundColor = [UIColor colorWithRed:0.239 green:0.239 blue:0.239 alpha:1];
         table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        table.separatorColor = [UIColor grayColor];
+        table.separatorColor = [UIColor whiteColor];
         
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];
@@ -67,6 +66,7 @@
         [b.superview addSubview:self];
         [self addSubview:table];
         table.delegate = self;
+        
     }
     return self;
 }
@@ -104,7 +104,10 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        cell.backgroundColor = [UIColor colorWithRed:54.0/255 green:121.0/255 blue:189.0/255 alpha:1];
+        cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:20.0f];
+        cell.textLabel.font = [UIFont systemFontOfSize:20];
+        cell.textLabel.textColor = [UIColor whiteColor];
         cell.textLabel.textAlignment = UITextAlignmentCenter;
     }
     if ([self.imageList count] == [self.list count]) {

@@ -13,11 +13,19 @@
 //
 #import <UIKit/UIKit.h>
 #import "NIDropDown.h"
+#import "MBProgressHUD.h"
+#import <MapKit/MapKit.h>
 
-@interface SignInViewController : UIViewController<UITextViewDelegate, NIDropDownDelegate>{
+@interface SignInViewController : UIViewController<UITextViewDelegate, NIDropDownDelegate, CLLocationManagerDelegate,MKMapViewDelegate>{
     UITextField *mytextField;
     NIDropDown *dropDown;
+    NSString *tipoSelected;
+    CLLocationManager *locationManager;
+    MKPointAnnotation *origen, *driver, *destino;
+    CLLocation *location;
+    BOOL bandera;
 }
+@property (weak, nonatomic) IBOutlet UIButton *selectLocationBtn;
 
 @property (weak, nonatomic) IBOutlet UIView *anchorView;
 @property (weak, nonatomic) IBOutlet UIButton *selectButton;
@@ -37,6 +45,18 @@
 @property (weak, nonatomic) IBOutlet UIView *leftHorizontalBar;
 @property (weak, nonatomic) IBOutlet UIView *rightHorizontalBar;
 @property (weak, nonatomic) IBOutlet UILabel *orSignInWithLabel;
+@property (weak, nonatomic) IBOutlet UITextField *firstName;
+@property (weak, nonatomic) IBOutlet UITextField *lastName;
+@property (weak, nonatomic) IBOutlet UITextField *email;
+@property (weak, nonatomic) IBOutlet UITextField *location;
+@property (weak, nonatomic) IBOutlet UITextField *password;
+@property (strong, nonatomic) MBProgressHUD *progressHUD;
+@property (weak, nonatomic) IBOutlet UITextField *emailLogin;
+@property (weak, nonatomic) IBOutlet UITextField *passwordLogin;
+@property (weak, nonatomic) IBOutlet UITextField *businessName;
+@property (weak, nonatomic) IBOutlet UITextField *Username;
+@property (weak, nonatomic) IBOutlet MKMapView *mvMap;
+@property (weak, nonatomic) IBOutlet UIImageView *pin;
 
 
 @end

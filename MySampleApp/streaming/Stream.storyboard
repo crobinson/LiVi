@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Stream View Controller-->
+        <scene sceneID="mP6-R5-ep0">
+            <objects>
+                <viewController storyboardIdentifier="streamView" id="ROu-Fo-jGe" customClass="StreamViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kmZ-JT-4Az"/>
+                        <viewControllerLayoutGuide type="bottom" id="4KK-Dw-Brd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lf1-ao-gav">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MAP-m1-vGB">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <button opaque="NO" tag="100" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dXX-5q-PAX">
+                                <rect key="frame" x="510" y="40" width="46" height="30"/>
+                                <state key="normal" backgroundImage="close.png"/>
+                                <connections>
+                                    <action selector="btnConnectTouch:" destination="ROu-Fo-jGe" eventType="touchUpInside" id="cSL-Ff-4UY"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXK-u7-ZP3">
+                                <rect key="frame" x="277" y="276" width="46" height="48"/>
+                                <state key="normal" backgroundImage="playStream.png"/>
+                                <connections>
+                                    <action selector="btnConnectTouch:" destination="ROu-Fo-jGe" eventType="touchUpInside" id="wMX-ZU-lBw"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="MAP-m1-vGB" firstAttribute="width" secondItem="lf1-ao-gav" secondAttribute="width" id="BYJ-Ik-2VA"/>
+                            <constraint firstItem="MAP-m1-vGB" firstAttribute="centerY" secondItem="lf1-ao-gav" secondAttribute="centerY" id="EKO-ab-CZK"/>
+                            <constraint firstItem="vXK-u7-ZP3" firstAttribute="centerY" secondItem="lf1-ao-gav" secondAttribute="centerY" id="FOK-2z-Qf4"/>
+                            <constraint firstItem="MAP-m1-vGB" firstAttribute="centerX" secondItem="lf1-ao-gav" secondAttribute="centerX" id="OWG-Wm-wOP"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="dXX-5q-PAX" secondAttribute="trailing" constant="24" id="cRn-Oy-zOw"/>
+                            <constraint firstItem="MAP-m1-vGB" firstAttribute="height" secondItem="lf1-ao-gav" secondAttribute="height" id="dr2-wu-hWH"/>
+                            <constraint firstItem="dXX-5q-PAX" firstAttribute="top" secondItem="kmZ-JT-4Az" secondAttribute="bottom" constant="20" id="m95-D9-cBe"/>
+                            <constraint firstItem="vXK-u7-ZP3" firstAttribute="centerX" secondItem="lf1-ao-gav" secondAttribute="centerX" id="wNs-eG-VJ0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnConnect" destination="vXK-u7-ZP3" id="LwJ-xu-qZE"/>
+                        <outlet property="previewView" destination="MAP-m1-vGB" id="wQz-ty-pHx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1g1-fD-c26" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="259" y="237"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="close.png" width="43" height="43"/>
+        <image name="playStream.png" width="45" height="53"/>
+    </resources>
+</document>

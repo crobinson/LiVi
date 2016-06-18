@@ -131,12 +131,12 @@ NSString *const AWSPushManagerUserDefaultsPlatformARNKey = @"com.amazonaws.PushM
 #pragma mark - User action methods
 
 - (void)registerForPushNotifications {
-    UIApplication *application = [UIApplication sharedApplication];
+    /*UIApplication *application = [UIApplication sharedApplication];
     UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
     UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:types
                                                                                          categories:nil];
     [application registerUserNotificationSettings:notificationSettings];
-    [application registerForRemoteNotifications];
+    [application registerForRemoteNotifications];*/
 }
 
 - (void)disablePushNotifications {
@@ -197,7 +197,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     }
 
     self.deviceToken = deviceTokenString;
-
+    
     AWSSNS *sns = [AWSSNS defaultSNS];
     AWSTask *task = [AWSTask taskWithResult:nil];
 
@@ -210,7 +210,18 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             createPlatformEndpointInput.platformApplicationArn = AWS_SNS_PLATFORM_APPLICATION_ARN;
             weakSelf.platformARN = AWS_SNS_PLATFORM_APPLICATION_ARN;
             // call CreatePlatformEndpoint
+            
+            
             return [[sns createPlatformEndpoint:createPlatformEndpointInput] continueWithSuccessBlock:^id(AWSTask *task) {
+                
+                if(task.error != nil)
+                {
+                    NSLog(@"%@", task.error);
+                }
+                else
+                {
+                    NSLog(@"success!");
+                }
                 AWSSNSCreateEndpointResponse *createEndPointResponse = task.result;
                 NSString *endpointARN = createEndPointResponse.endpointArn;
                 AWSLogInfo(@"endpointARN: %@", endpointARN);

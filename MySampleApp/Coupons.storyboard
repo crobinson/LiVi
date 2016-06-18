@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Coupons View Controller-->
+        <scene sceneID="zxl-dQ-vfo">
+            <objects>
+                <viewController storyboardIdentifier="myCoupons" id="cgD-QQ-ejs" customClass="CouponsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FWW-tp-Qy3"/>
+                        <viewControllerLayoutGuide type="bottom" id="XvE-yg-Btk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QJF-lR-pv0">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ljb-CV-Ojb">
+                                <rect key="frame" x="0.0" y="-20" width="600" height="89"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aeI-Me-ADe">
+                                        <rect key="frame" x="18" y="31" width="29" height="27"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Coupons" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ckv-e5-Qqe">
+                                        <rect key="frame" x="92" y="34" width="416" height="24"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="addcoupon.png" translatesAutoresizingMaskIntoConstraints="NO" id="wTz-tX-Z3b">
+                                        <rect key="frame" x="55" y="31" width="29" height="28"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fpe-gD-AzU">
+                                        <rect key="frame" x="24" y="29" width="17" height="31"/>
+                                        <state key="normal" backgroundImage="back.png"/>
+                                        <connections>
+                                            <action selector="back:" destination="cgD-QQ-ejs" eventType="touchUpInside" id="cEJ-yE-9zk"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dn8-B2-xga">
+                                        <rect key="frame" x="55" y="34" width="29" height="26"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="dn8-B2-xga" secondAttribute="height" multiplier="29:26" id="XlQ-zm-Dzf"/>
+                                            <constraint firstAttribute="width" constant="29" id="hno-JP-kj1"/>
+                                            <constraint firstAttribute="height" constant="26" id="iDK-sK-ruB"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="onBtnTakePhoto:" destination="cgD-QQ-ejs" eventType="touchUpInside" id="ISu-9w-QBT"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.21176470589999999" green="0.47450980390000003" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="Ckv-e5-Qqe" firstAttribute="centerY" secondItem="Ljb-CV-Ojb" secondAttribute="centerY" id="1md-cW-AYZ"/>
+                                    <constraint firstItem="aeI-Me-ADe" firstAttribute="leading" secondItem="Ljb-CV-Ojb" secondAttribute="leading" constant="15" id="8Vb-es-tvU"/>
+                                    <constraint firstItem="fpe-gD-AzU" firstAttribute="centerY" secondItem="aeI-Me-ADe" secondAttribute="centerY" id="9qD-Sx-FTn"/>
+                                    <constraint firstItem="dn8-B2-xga" firstAttribute="width" secondItem="wTz-tX-Z3b" secondAttribute="width" id="Cts-05-zbe"/>
+                                    <constraint firstItem="wTz-tX-Z3b" firstAttribute="centerY" secondItem="Ljb-CV-Ojb" secondAttribute="centerY" id="Cyo-2w-JJI"/>
+                                    <constraint firstItem="aeI-Me-ADe" firstAttribute="centerY" secondItem="Ljb-CV-Ojb" secondAttribute="centerY" id="J6J-Nt-ydN"/>
+                                    <constraint firstItem="fpe-gD-AzU" firstAttribute="centerX" secondItem="aeI-Me-ADe" secondAttribute="centerX" id="L8k-Jz-IaX"/>
+                                    <constraint firstAttribute="height" constant="89" id="exS-4h-LPV"/>
+                                    <constraint firstItem="dn8-B2-xga" firstAttribute="centerX" secondItem="wTz-tX-Z3b" secondAttribute="centerX" id="ftG-pr-yZ7"/>
+                                    <constraint firstItem="Ckv-e5-Qqe" firstAttribute="centerX" secondItem="Ljb-CV-Ojb" secondAttribute="centerX" id="msw-0L-Nka"/>
+                                    <constraint firstItem="wTz-tX-Z3b" firstAttribute="leading" secondItem="aeI-Me-ADe" secondAttribute="trailing" constant="11" id="q1e-yN-4rn"/>
+                                    <constraint firstItem="aeI-Me-ADe" firstAttribute="centerX" secondItem="Ljb-CV-Ojb" secondAttribute="centerX" id="qga-Ub-k0K"/>
+                                    <constraint firstItem="dn8-B2-xga" firstAttribute="height" secondItem="wTz-tX-Z3b" secondAttribute="height" id="rSn-o7-XfY"/>
+                                    <constraint firstItem="dn8-B2-xga" firstAttribute="centerY" secondItem="wTz-tX-Z3b" secondAttribute="centerY" id="wpU-nn-JYa"/>
+                                    <constraint firstItem="aeI-Me-ADe" firstAttribute="centerX" secondItem="Ljb-CV-Ojb" secondAttribute="centerX" id="y3T-SA-U9J"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="qga-Ub-k0K"/>
+                                        <exclude reference="y3T-SA-U9J"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y1w-Yc-syy">
+                                <rect key="frame" x="44" y="86" width="512" height="406"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.91764705879999997" green="0.34901960780000002" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="y1w-Yc-syy" secondAttribute="trailing" constant="24" id="0u4-BK-QmC"/>
+                            <constraint firstItem="Ljb-CV-Ojb" firstAttribute="leading" secondItem="QJF-lR-pv0" secondAttribute="leadingMargin" id="Aav-GJ-INA"/>
+                            <constraint firstItem="XvE-yg-Btk" firstAttribute="top" secondItem="y1w-Yc-syy" secondAttribute="bottom" constant="108" id="ShC-bd-r8L"/>
+                            <constraint firstItem="y1w-Yc-syy" firstAttribute="leading" secondItem="QJF-lR-pv0" secondAttribute="leadingMargin" constant="24" id="aeD-8N-lhP"/>
+                            <constraint firstItem="Ljb-CV-Ojb" firstAttribute="centerX" secondItem="QJF-lR-pv0" secondAttribute="centerX" id="exu-nf-mKU"/>
+                            <constraint firstItem="Ljb-CV-Ojb" firstAttribute="top" secondItem="FWW-tp-Qy3" secondAttribute="bottom" constant="-20" id="okN-yw-j3m"/>
+                            <constraint firstItem="y1w-Yc-syy" firstAttribute="top" secondItem="Ljb-CV-Ojb" secondAttribute="bottom" constant="17" id="wYs-PP-sfc"/>
+                            <constraint firstItem="Ljb-CV-Ojb" firstAttribute="width" secondItem="QJF-lR-pv0" secondAttribute="width" id="xCn-Il-COA"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Aav-GJ-INA"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="myscroll" destination="y1w-Yc-syy" id="g4U-uP-b32"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vNJ-kM-hsy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="556" y="312"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="addcoupon.png" width="31" height="31"/>
+        <image name="back.png" width="16" height="26"/>
+    </resources>
+</document>

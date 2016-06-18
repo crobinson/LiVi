@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileViewController : UIViewController<UITextViewDelegate>
+@interface ProfileViewController : UIViewController<UITextViewDelegate, UIActionSheetDelegate, UIPickerViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UILabel *tooltip;
 

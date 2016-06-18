@@ -12,14 +12,18 @@
 //
 //
 #import <Foundation/Foundation.h>
-#import "MainViewController.h"
 #import "SignInViewController.h"
 #import <AWSCore/AWSCore.h>
 #import "AWSIdentityManager.h"
+#import <Parse/Parse.h>
+
 
 static NSString *LOG_TAG;
 
-@interface SignInViewController ()
+@interface SignInViewController (){
+    double latitude;
+    double longitude;
+}
 
 @property (nonatomic, strong) id didSignInObserver;
 
@@ -36,7 +40,11 @@ static NSString *LOG_TAG;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    latitude=0;
+    longitude=0;
     NSLog(@"%@: Sign-In Loading.", LOG_TAG);
+    tipoSelected = @"";
     [self.myscroll setScrollEnabled:YES];
     [self.myscroll setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height)];
     self.facebookButton.layer.cornerRadius = 10;
@@ -82,17 +90,43 @@ static NSString *LOG_TAG;
                                           constant:8.0]];*/
     [self.googleButton removeFromSuperview];
     // CUSTOM UI SETUP
-    [self.customProviderButton addTarget:self
+    /*[self.customProviderButton addTarget:self
                                   action:@selector(handleCustomLogin)
-                        forControlEvents:UIControlEventTouchUpInside];
+                        forControlEvents:UIControlEventTouchUpInside];*/
     [self.customCreateAccountButton addTarget:self
                                        action:@selector(handleCustomLogin)
                              forControlEvents:UIControlEventTouchUpInside];
     [self.customForgotPasswordButton addTarget:self
                                         action:@selector(handleCustomLogin)
                               forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    _mvMap.delegate = self;
+    //_mvMap.showsUserLocation = YES;
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0 &&
+        [CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedWhenInUse)
+        [locationManager requestWhenInUseAuthorization];
+    else
+        [locationManager startUpdatingLocation];
+    
 
 }
+
+- (void) hideProgressHUD
+{
+    if (_progressHUD)
+    {
+        [_progressHUD hide:YES];
+        [_progressHUD removeFromSuperview];
+        _progressHUD = nil;
+    }
+}
+
 
 -(IBAction)back:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
@@ -140,27 +174,263 @@ static NSString *LOG_TAG;
 }
 
 #pragma mark - IBActions
+- (IBAction)customUserSignUp:(id)sender {
+    [PFUser logOut];
+    if (_progressHUD == nil)
+    {
+        _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
+    /*PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
+    testObject[@"foo"] = @"bar";
+    [testObject saveInBackground];*/
+    
+    /*PFObject *gameScore = [PFObject objectWithClassName:@"GameScore"];
+    gameScore[@"score"] = @1337;
+    gameScore[@"playerName"] = @"Sean Plott";
+    gameScore[@"cheatMode"] = @NO;
+    [gameScore saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            // The object has been saved.
+        } else {
+            // There was a problem, check error.description
+        }
+    }];*/
+    
+    /*if(latitude==0 && longitude==0){
+        NSString *esc_addr =  [_location.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *req = [NSString stringWithFormat:@"https://maps.google.com/maps/api/geocode/json?sensor=false&address=%@", esc_addr];
+        NSLog(@"%@", req);
+        
+        NSString *result = [NSString stringWithContentsOfURL:[NSURL URLWithString:req] encoding:NSUTF8StringEncoding error:NULL];
+        NSLog(@"%@", result);
+        if (result) {
+            NSLog(@"%@", result);
+            NSScanner *scanner = [NSScanner scannerWithString:result];
+            if ([scanner scanUpToString:@"\"lat\" :" intoString:nil] && [scanner scanString:@"\"lat\" :" intoString:nil]) {
+                [scanner scanDouble:&latitude];
+                if ([scanner scanUpToString:@"\"lng\" :" intoString:nil] && [scanner scanString:@"\"lng\" :" intoString:nil]) {
+                    [scanner scanDouble:&longitude];
+                }
+            }
+            NSString *formated_address;
+            
+            if ([scanner scanUpToString:@"\"formatted_address\" :" intoString:&formated_address] && [scanner scanString:@"\"formatted_address\" :" intoString:&formated_address]) {
+                //[scanner scanString:&formated_address];
+                NSLog(@"formated address: %@", formated_address);
+            }
+            
+            //[scanner scanString:@"\"formatted_address\" :" intoString:&formated_address];
+        }
+    }*/
+    
+    PFUser *user = [PFUser user];
+    user.username = _email.text;
+    user.password = _password.text;
+    user.email = _email.text;
+    user[@"firstname"] = _firstName.text;
+    user[@"lastname"] = _lastName.text;
+    user[@"vendor"] = @"NO";
+    PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:latitude longitude:longitude];
+    user[@"location"] = point;
+    user[@"nickname"] = _Username.text;
+    
+    // other fields can be set just like with PFObject
+    //user[@"phone"] = @"415-392-0202";
+    
+    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [self hideProgressHUD];
+
+        if (!error) {
+            // Hooray! Let them use the app now.
+            [self.parentViewController dismissViewControllerAnimated:YES
+                                                          completion:nil];
+        } else {
+            NSString *errorString = [error userInfo][@"error"];   // Show the errorString somewhere and let the user try again.
+            NSLog(@"%@", errorString);
+            UIAlertController *alertController =
+            [UIAlertController alertControllerWithTitle:@"Sign In Error"
+                                                message:errorString
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *doneAction =
+            [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",
+                                                             @"Label to cancel sign-in failure.")
+                                     style:UIAlertActionStyleCancel
+                                   handler:nil];
+            [alertController addAction:doneAction];
+            
+            [self presentViewController:alertController
+                               animated:YES
+                             completion:nil];
+        }
+    }];
+
+}
+
+- (IBAction)logIn:(id)sender{
+    [PFUser logInWithUsernameInBackground:@"myname" password:@"mypass"
+                                    block:^(PFUser *user, NSError *error) {
+                                        if (user) {
+                                            // Do stuff after successful login.
+                                            PFInstallation *installation = [PFInstallation currentInstallation];
+                                            installation[@"user"] = [PFUser currentUser];
+                                            [installation saveInBackground];
+                                        } else {
+                                            // The login failed. Check error to see why.
+                                        }
+                                    }];
+}
+
+
+- (IBAction)customVendorSignUp:(id)sender {
+    [PFUser logOut];
+    if (_progressHUD == nil)
+    {
+        _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
+    
+    /*if(latitude==0 && longitude==0){
+        NSString *esc_addr =  [_location.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *req = [NSString stringWithFormat:@"https://maps.google.com/maps/api/geocode/json?sensor=false&address=%@", esc_addr];
+        NSLog(@"%@", req);
+        
+        NSString *result = [NSString stringWithContentsOfURL:[NSURL URLWithString:req] encoding:NSUTF8StringEncoding error:NULL];
+        NSLog(@"%@", result);
+        if (result) {
+            NSLog(@"%@", result);
+            NSScanner *scanner = [NSScanner scannerWithString:result];
+            if ([scanner scanUpToString:@"\"lat\" :" intoString:nil] && [scanner scanString:@"\"lat\" :" intoString:nil]) {
+                [scanner scanDouble:&latitude];
+                if ([scanner scanUpToString:@"\"lng\" :" intoString:nil] && [scanner scanString:@"\"lng\" :" intoString:nil]) {
+                    [scanner scanDouble:&longitude];
+                }
+            }
+            NSString *formated_address;
+            
+            if ([scanner scanUpToString:@"\"formatted_address\" :" intoString:&formated_address] && [scanner scanString:@"\"formatted_address\" :" intoString:&formated_address]) {
+                //[scanner scanString:&formated_address];
+                NSLog(@"formated address: %@", formated_address);
+            }
+            
+            //[scanner scanString:@"\"formatted_address\" :" intoString:&formated_address];
+        }
+    }*/
+    
+    if([tipoSelected isEqualToString:@""]){
+        [self hideProgressHUD];
+        UIAlertController *alertController =
+        [UIAlertController alertControllerWithTitle:@"Sign In Error"
+                                            message:@"You must select Industry"
+                                     preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *doneAction =
+        [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok",
+                                                         @"Label to cancel sign-in failure.")
+                                 style:UIAlertActionStyleCancel
+                               handler:nil];
+        [alertController addAction:doneAction];
+        
+        [self presentViewController:alertController
+                           animated:YES
+                         completion:nil];
+    }else{
+        NSLog(@"%@", tipoSelected); 
+        
+        PFUser *user = [PFUser user];
+        user.username = _email.text;
+        user.password = _password.text;
+        user.email = _email.text;
+        user[@"firstname"] = _firstName.text;
+        user[@"lastname"] = _lastName.text;
+        user[@"vendor"] = tipoSelected;
+        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:latitude longitude:longitude];
+        user[@"location"] = point;
+        user[@"businessname"] = _businessName.text;
+        user[@"nickname"] = _businessName.text;
+        
+        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            [self hideProgressHUD];
+            
+            if (!error) {
+                // Hooray! Let them use the app now.
+                [self.parentViewController dismissViewControllerAnimated:YES
+                                                              completion:nil];
+            } else {
+                NSString *errorString = [error userInfo][@"error"];   // Show the errorString somewhere and let the user try again.
+                NSLog(@"%@", errorString);
+                UIAlertController *alertController =
+                [UIAlertController alertControllerWithTitle:@"Sign In Error"
+                                                    message:errorString
+                                             preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *doneAction =
+                [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok",
+                                                                 @"Label to cancel sign-in failure.")
+                                         style:UIAlertActionStyleCancel
+                                       handler:nil];
+                [alertController addAction:doneAction];
+                
+                [self presentViewController:alertController
+                                   animated:YES
+                                 completion:nil];
+            }
+        }];
+
+    }
+}
 
 - (void)handleFacebookLogin {
     [self handleLoginWithSignInProvider:AWSSignInProviderTypeFacebook];
 }
+
+- (IBAction) manageLocation:(id)sender {
+    _mvMap.hidden = !_mvMap.hidden;
+    _pin.hidden = !_pin.hidden;
+    _selectLocationBtn.hidden = !_selectLocationBtn.hidden;
+}
+
+
 - (void)handleCustomLogin {
-    /*UIAlertController *alertController =
-        [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Custom Sign-In Demo",
-                                                                      @"Label for custom sign-in dialog.")
-                                            message:NSLocalizedString(@"This is just a demo of custom sign-in.",
-                                                                      @"Sign-in message structure for custom sign-in stub.")
-                                     preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *doneAction =
-        [UIAlertAction actionWithTitle:NSLocalizedString(@"Done",
-                                                         @"Label to complete stubbed custom sign-in.")
-                                 style:UIAlertActionStyleCancel
-                               handler:nil];
-    [alertController addAction:doneAction];
+}
+
+- (IBAction)handleCustomLogin:(id)sender {
+    if (_progressHUD == nil)
+    {
+        _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
     
-    [self presentViewController:alertController
-                       animated:YES
-                     completion:nil];*/
+    
+    [PFUser logInWithUsernameInBackground:_emailLogin.text password:_passwordLogin.text
+                                    block:^(PFUser *user, NSError *error) {
+                                        if (user) {
+                                            // Do stuff after successful login.
+                                            PFInstallation *installation = [PFInstallation currentInstallation];
+                                            installation[@"user"] = [PFUser currentUser];
+                                            [installation setDeviceTokenFromData:[[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"]];
+                                            
+                                            [installation saveInBackground];
+                                            
+                                            [self hideProgressHUD];
+                                            [self.parentViewController dismissViewControllerAnimated:YES
+                                                                                          completion:nil];
+                                        } else {
+                                            // The login failed. Check error to see why.
+                                            [self hideProgressHUD];
+                                            NSString *errorString = [error userInfo][@"error"];   // Show the errorString somewhere and let the user try again.
+                                            NSLog(@"%@", errorString);
+                                            UIAlertController *alertController =
+                                            [UIAlertController alertControllerWithTitle:@"Sign In Error"
+                                                                                message:errorString
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                                            UIAlertAction *doneAction =
+                                            [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok",
+                                                                                             @"Label to cancel sign-in failure.")
+                                                                     style:UIAlertActionStyleCancel
+                                                                   handler:nil];
+                                            [alertController addAction:doneAction];
+                                            
+                                            [self presentViewController:alertController
+                                                               animated:YES
+                                                             completion:nil];
+                                        }
+                                    }];
 }
 
 - (UIView *)anchorViewForFacebook {
@@ -179,6 +449,11 @@ static NSString *LOG_TAG;
     
     [self.myscroll setContentOffset:CGPointMake(0, textField.frame.origin.y - 150) animated:YES];
     
+    if(textField==_emailLogin || textField==_passwordLogin){
+        self.view.frame = CGRectMake(0, 0 - textField.frame.origin.y + 100 , self.view.frame.size.width, self.view.frame.size.height);
+    }
+        
+        
     [UIView commitAnimations];
     
 }
@@ -198,6 +473,9 @@ static NSString *LOG_TAG;
     [UIView setAnimationDelegate:self];
     
     [self.myscroll setContentOffset:CGPointMake(0, 0) animated:YES];
+    if(textField==_emailLogin || textField==_passwordLogin){
+        self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    }
     
     [UIView commitAnimations];
     
@@ -209,6 +487,36 @@ static NSString *LOG_TAG;
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     
+    if (textField==_location) {
+        NSString *esc_addr =  [_location.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *req = [NSString stringWithFormat:@"https://maps.google.com/maps/api/geocode/json?sensor=false&address=%@", esc_addr];
+        NSLog(@"%@", req);
+        
+        NSString *result = [NSString stringWithContentsOfURL:[NSURL URLWithString:req] encoding:NSUTF8StringEncoding error:NULL];
+        NSLog(@"%@", result);
+        if (result) {
+            NSLog(@"%@", result);
+            NSScanner *scanner = [NSScanner scannerWithString:result];
+            if ([scanner scanUpToString:@"\"lat\" :" intoString:nil] && [scanner scanString:@"\"lat\" :" intoString:nil]) {
+                [scanner scanDouble:&latitude];
+                if ([scanner scanUpToString:@"\"lng\" :" intoString:nil] && [scanner scanString:@"\"lng\" :" intoString:nil]) {
+                    [scanner scanDouble:&longitude];
+                }
+            }
+            NSString *formated_address;
+            
+            if ([scanner scanUpToString:@"\"formatted_address\" :" intoString:&formated_address] && [scanner scanString:@"\"formatted_address\" :" intoString:&formated_address]) {
+                //[scanner scanString:&formated_address];
+                NSLog(@"formated address: %@", formated_address);
+            }
+            
+            //[scanner scanString:@"\"formatted_address\" :" intoString:&formated_address];
+            NSLog(@"formated address: %@", formated_address);
+        }
+    }
+    
+        NSLog(@"latitude: %f", latitude);
+        NSLog(@"longitude: %f", longitude);
     
 }
 
@@ -216,11 +524,11 @@ static NSString *LOG_TAG;
 
 - (IBAction)selectClicked:(id)sender {
     NSArray * arr = [[NSArray alloc] init];
-    arr = [NSArray arrayWithObjects:@"Hello 0", @"Hello 1", @"Hello 2", @"Hello 3", @"Hello 4", @"Hello 5", @"Hello 6", @"Hello 7", @"Hello 8", @"Hello 9",nil];
+    arr = [NSArray arrayWithObjects:@"Dining", @"Real State", @"Night Life", @"Online Enterprices", @"Travel", @"Veterans",nil];
     NSArray * arrImage = [[NSArray alloc] init];
     arrImage = [NSArray arrayWithObjects:[UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], [UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], [UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], [UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], [UIImage imageNamed:@"apple.png"], [UIImage imageNamed:@"apple2.png"], nil];
     if(dropDown == nil) {
-        CGFloat f = 200;
+        CGFloat f = 240;
         dropDown = [[NIDropDown alloc]showDropDown:sender :&f :arr :arrImage :@"down"];
         dropDown.delegate = self;
     }
@@ -237,24 +545,118 @@ static NSString *LOG_TAG;
 
 - (void) whoissender: (UIButton *) sender andtext:(NSString *)titulo
 {
-    /*[self.view addGestureRecognizer:tap];
-    
-    if(sender == _pais_Button){
-        [[NSUserDefaults standardUserDefaults] setObject:titulo forKey:@"pais_Button"];
-        _pais.placeholder = @"";
-        paisSelected = titulo;
-        
-    }else{
-        _tipoddocumento.placeholder = @"";
-        tipoSelected = titulo;
-    }*/
-    
-    //[self rel];
+    tipoSelected = titulo;
 }
 
 -(void)rel{
     //    [dropDown release];
     dropDown = nil;
 }
+
+// location
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    
+    location = [locations lastObject];
+    
+    driver.coordinate = location.coordinate;
+    
+    MKCoordinateSpan span; span.latitudeDelta = .005;
+    span.longitudeDelta = .005;
+    //the .001 here represents the actual height and width delta
+    MKCoordinateRegion region;
+    region.center = location.coordinate;
+    region.span = span;
+    if(!bandera)
+        [_mvMap setRegion:region animated:TRUE];
+    
+    bandera = TRUE;
+    
+    //[self zoomToFitMapAnnotations];
+}
+
+-(MKAnnotationView*)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    
+    // If it's the user location, just return nil.
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+    
+    // Handle any custom annotations.
+    if ([annotation isKindOfClass:[MKPointAnnotation class]]) {
+
+    }
+    return nil;
+}
+
+
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake( _mvMap.centerCoordinate.latitude, _mvMap.centerCoordinate.longitude);
+    NSString *urlString = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&amp;sensor=false",_mvMap.centerCoordinate.latitude,_mvMap.centerCoordinate.longitude];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL: [NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+    
+    NSURLResponse *response = nil;
+    NSError * error = nil;
+    NSError *requestError = nil;
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:request
+                                                 returningResponse:&response
+                                                             error:&error];
+    
+    NSString *responseString = [[NSString alloc] initWithData: responseData encoding:NSUTF8StringEncoding];
+    NSDictionary *responseJson = [NSJSONSerialization JSONObjectWithData: responseData options: 0 error: &error];
+    
+    
+    if ([responseJson[@"status"] isEqualToString:@"OK"] ) {
+        //NSLog(@"responseString %@  %@",[[responseJson valueForKey:@"results"] objectAtIndex:0]);
+        NSArray *resultsArray = [responseJson valueForKey:@"results"];
+        NSString *address = nil;
+        
+        if ([resultsArray count] > 0) {
+            address = [[resultsArray objectAtIndex:0] valueForKey:@"formatted_address"];
+            NSLog(@"adress: %@", address);
+            _location.text = address;
+            latitude = _mvMap.centerCoordinate.latitude;
+            longitude = _mvMap.centerCoordinate.longitude;
+        }
+        
+        // use the address variable to access the ADDRESS :)
+    } else {
+        
+    }
+
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    
+    switch (status) {
+        case kCLAuthorizationStatusNotDetermined:
+            [locationManager requestWhenInUseAuthorization];
+            break;
+        case kCLAuthorizationStatusDenied:
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+        case kCLAuthorizationStatusAuthorizedAlways:
+            
+            [locationManager startUpdatingLocation];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)mapView:(MKMapView *)aMapView didUpdateUserLocation:(MKUserLocation *)aUserLocation {
+    MKCoordinateRegion region;
+    MKCoordinateSpan span;
+    span.latitudeDelta = 0.005;
+    span.longitudeDelta = 0.005;
+    CLLocationCoordinate2D location;
+    location.latitude = aUserLocation.coordinate.latitude;
+    location.longitude = aUserLocation.coordinate.longitude;
+    region.span = span;
+    region.center = location;
+    [aMapView setRegion:region animated:YES];
+}
+
+
 
 @end

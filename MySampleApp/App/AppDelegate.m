@@ -10,8 +10,12 @@
 //
 // Source code generated from template: aws-my-sample-app-ios-objc v0.6
 //
+#import <AVFoundation/AVFoundation.h>
 #import "AppDelegate.h"
 #import "AWSMobileClient.h"
+#import <Parse/Parse.h>
+#import "RequestNotificationViewController.h"
+//#import "AWSPushManager.h"
 
 @interface AppDelegate ()
 
@@ -23,10 +27,69 @@
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"application didFinishLaunchingWithOptions");
     
+    if (launchOptions != nil)
+    {
+        NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        NSDictionary *dictionary2 = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        NSLog(@"%@, %@", dictionary, dictionary2);
+        if (dictionary != nil)
+        {
+            
+            /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Your Custom Title"
+                                                            message: [NSString stringWithFormat:@"Launched from push notification: %@", dictionary]
+                                                           delegate: self
+                                                  cancelButtonTitle: @"OK"
+                                                  otherButtonTitles: nil];
+            [alert show];*/
+            NSDictionary *message = [dictionary objectForKey:@"aps"];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Your Custom Title"
+                                                            message: message[@"alert"]
+                                                           delegate: self
+                                                  cancelButtonTitle: @"OK"
+                                                  otherButtonTitles: nil];
+            [alert show];
+            
+            NSLog(@"Launched from push notification: %@", dictionary);
+            //[self addMessageFromRemoteNotification:dictionary updateUI:NO];
+        }
+    }
+    
+    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    
+    UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                    UIUserNotificationTypeBadge |
+                                                    UIUserNotificationTypeSound);
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+                                                                             categories:nil];
+    [application registerUserNotificationSettings:settings];
+    [application registerForRemoteNotifications];
+    
+    
+    
     // Override point for customization after application launch.
     return [[AWSMobileClient sharedInstance] didFinishLaunching:application
                                              withOptions:launchOptions];
+    
+    // Initialize Parse.
+    /*[Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.applicationId = @"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta";
+        //configuration.server = @"http://YOUR_PARSE_SERVER:1337/parse";
+        configuration.server = @"https://api.parse.com";
+    }]];*/
+    
+    
+    
+    //NSString *platformARN = @"arn:aws:sns:us-east-1:752818564425:app/APNS_SANDBOX/livi_MOBILEHUB_2026985135";
+    
+   // [AWSPushManager defaultPushManager].defaultPlatformARN = platformARN;
+    
+   // return [[AWSPushManager defaultPushManager] interceptApplication:application
+     //                                  didFinishLaunchingWithOptions:launchOptions];
+
+
 }
+
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
@@ -69,18 +132,90 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [[AWSMobileClient sharedInstance] application:application
- didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+    NSLog(@"deviceToken: %@", deviceToken);
+   // [[AWSMobileClient sharedInstance] application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+    [[NSUserDefaults standardUserDefaults] setObject:deviceToken forKey:@"deviceToken"];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    if([PFUser currentUser])
+        currentInstallation[@"user"] = [PFUser currentUser];
+    
+    [currentInstallation saveInBackground];
+    
+    /*[[AWSPushManager defaultPushManager] interceptApplication:application
+             didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];*/
+    
+    
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    [[AWSMobileClient sharedInstance] application:application
- didFailToRegisterForRemoteNotificationsWithError:error];
+    //[[AWSMobileClient sharedInstance] application:application didFailToRegisterForRemoteNotificationsWithError:error];
+    
+    /*[[AWSPushManager defaultPushManager] interceptApplication:application
+             didFailToRegisterForRemoteNotificationsWithError:error];*/
+
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"Received notification: %@", userInfo);
+    
+    if(application.applicationState == UIApplicationStateInactive) {
+        
+        NSLog(@"Inactive");
+    } else if (application.applicationState == UIApplicationStateBackground) {
+        
+        NSLog(@"Background");
+    } else {
+        
+        NSLog(@"Active");
+        NSLog(@"%@", userInfo);
+        
+        [PFPush handlePush:userInfo];
+        
+    }
+    
+    completionHandler(UIBackgroundFetchResultNewData);
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [[AWSMobileClient sharedInstance] application:application
-                     didReceiveRemoteNotification:userInfo];
+    NSString *message = [userInfo objectForKey:@"alert"];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Livi"
+                                                    message: message
+                                                   delegate: self
+                                          cancelButtonTitle: @"OK"
+                                          otherButtonTitles: nil];
+    [alert show];
+    
+    //[[AWSMobileClient sharedInstance] application:application didReceiveRemoteNotification:userInfo];
+    
+    /*[[AWSPushManager defaultPushManager] interceptApplication:application
+                                 didReceiveRemoteNotification:userInfo];*/
+   /* NSLog(@"%@", userInfo);
+    [PFPush handlePush:userInfo];
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
+    UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"RequestNotification"];
+    [self.window.rootViewController presentViewController:viewController
+                       animated:YES
+                     completion:nil];
+    
+    if ([userInfo objectForKey:@"alert"]) {
+        NSString *message = [userInfo objectForKey:@"alert"];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Your Custom Title"
+                                                        message: message
+                                                       delegate: self
+                                              cancelButtonTitle: @"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+    
+    if ([userInfo objectForKey:@"badge"]) {
+        [application setApplicationIconBadgeNumber:0];
+    }
+    
+    */
 }
 
 @end
