@@ -218,7 +218,7 @@
         _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }*/
     
-    AWSIdentityManager *identityManager = [AWSIdentityManager sharedInstance];
+    //AWSIdentityManager *identityManager = [AWSIdentityManager sharedInstance];
     if ([AWSIdentityManager sharedInstance].isLoggedIn) {
     
         AWSCognito *syncClient = [AWSCognito defaultCognito];
@@ -361,7 +361,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)img editingInfo:(NSDictionary *)editInfo
 {
     isPhotoSelected = YES;
-    [picker dismissModalViewControllerAnimated:YES];
+    [picker dismissViewControllerAnimated:YES completion:nil];
     //Place the image in the imageview
     
     UIImage *scaledImage = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:self.profilePic.bounds.size interpolationQuality:kCGInterpolationHigh];
@@ -378,7 +378,7 @@
 -(void)getUserImage
 {
     //Prepare the query to get all the images in descending order
-    AWSIdentityManager *identityManager = [AWSIdentityManager sharedInstance];
+    //AWSIdentityManager *identityManager = [AWSIdentityManager sharedInstance];
     if ([AWSIdentityManager sharedInstance].isLoggedIn) {
         //custom
     }else{
@@ -392,7 +392,7 @@
                 //Everything was correct, put the new objects and load the wall
                 for (PFObject *imgObject in objects){
                     PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
-                    UIImageView *userImage = [[UIImageView alloc] initWithImage:[UIImage imageWithData:image.getData]];
+                    //UIImageView *userImage = [[UIImageView alloc] initWithImage:[UIImage imageWithData:image.getData]];
                     UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:self.profilePic.bounds.size interpolationQuality:kCGInterpolationHigh];
                     // Crop the image to a square (yikes, fancy!)
                     UIImage *croppedImage = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -self.profilePic.frame.size.width)/2, (scaledImage.size.height -self.profilePic.frame.size.height)/2, self.profilePic.frame.size.width, self.profilePic.frame.size.height)];

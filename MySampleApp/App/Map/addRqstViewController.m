@@ -49,7 +49,8 @@
     _dateTxt.inputAccessoryView = keyboardToolbar;
     
     datePicker = [[UIDatePicker alloc] init];
-    datePicker.datePickerMode = UIDatePickerModeDate;
+    //datePicker.datePickerMode = UIDatePickerModeDate;
+    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
     [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
     _dateTxt.inputView = datePicker;
     
@@ -254,32 +255,37 @@
         [self hideProgressHUD];
         if (succeeded){
             NSData *picData = UIImageJPEGRepresentation(_addPic.currentBackgroundImage, 0.5);
-            PFFile *file = [PFFile fileWithName:@"img" data:picData];
-            [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded){
-                    PFObject *imageObject = [PFObject objectWithClassName:@"TaskImages"];
-                    [imageObject setObject:file forKey:@"image"];
-                    [imageObject setObject:requestObject.objectId forKey:@"taskId"];
-                    
-                    //3
-                    [imageObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                        //4
-                        if (succeeded){
-                            //Go back to the wall
-                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Task created succesfully" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                            
-                            [alertView show];
-                            
-                        }
-                        else{
-                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Task created succesfully" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                            
-                            [alertView show];
-                        }
-                    }];
-                }
-            }];
-            
+            if(picData){
+                PFFile *file = [PFFile fileWithName:@"img" data:picData];
+                [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded){
+                        PFObject *imageObject = [PFObject objectWithClassName:@"TaskImages"];
+                        [imageObject setObject:file forKey:@"image"];
+                        [imageObject setObject:requestObject.objectId forKey:@"taskId"];
+                        
+                        //3
+                        [imageObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            //4
+                            if (succeeded){
+                                //Go back to the wall
+                                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Task created succesfully" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                
+                                [alertView show];
+                                
+                            }
+                            else{
+                                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Task created succesfully" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                
+                                [alertView show];
+                            }
+                        }];
+                    }
+                }];
+            }else{
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Task created succesfully" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                
+                [alertView show];
+            }
             
         }else{
             NSString *errorString = [[error userInfo] objectForKey:@"error"];
@@ -292,12 +298,14 @@
 
 - (void)datePickerValueChanged:(id)sender{
     
+    NSLog(@"%@", datePicker.date);
+    
     date = datePicker.date;
     
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"YYYY/MM/dd"];
+    [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [_date setTitle:[df stringFromDate:datePicker.date] forState:UIControlStateNormal];
     
-    [_date setTitle:[df stringFromDate:date] forState:UIControlStateNormal];
    // [_dateTxt setText:[df stringFromDate:date]];
 }
 

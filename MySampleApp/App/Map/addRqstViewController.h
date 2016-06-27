@@ -9,13 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 
-@interface addRqstViewController : UIViewController<UITextViewDelegate, UIActionSheetDelegate, UIPickerViewDelegate, UITableViewDataSource>
+@interface addRqstViewController : UIViewController<UITextViewDelegate, UIActionSheetDelegate, UIPickerViewDelegate>
 
 
 @property (weak, nonatomic) IBOutlet UIImageView *taskImageView;
 //@property (weak, nonatomic) IBOutlet UITextField *date;
 @property (weak, nonatomic) IBOutlet UITextField *time;
-@property (weak, nonatomic) IBOutlet UITextField *title;
 @property (weak, nonatomic) IBOutlet UITextField *money;
 @property (weak, nonatomic) IBOutlet UITextField *tasktitle;
 @property (weak, nonatomic) IBOutlet UITextField *dateTxt;

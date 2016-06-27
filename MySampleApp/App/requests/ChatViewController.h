@@ -17,6 +17,7 @@
 @property (strong, nonatomic) NSString *taskId;
 @property (strong, nonatomic) UITextField *activeTextField;
 @property (strong, nonatomic) PFObject *chatMessage;
+@property (strong, nonatomic) PFObject *notification;
 
 - (IBAction)sendMessage:(id)sender;
 @end

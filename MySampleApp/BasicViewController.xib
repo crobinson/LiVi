@@ -10,7 +10,7 @@
                 <outlet property="calendarContentView" destination="V2D-jB-xad" id="wge-4T-tsc"/>
                 <outlet property="calendarContentViewHeight" destination="B5M-EU-dSr" id="L4b-pt-DqQ"/>
                 <outlet property="calendarMenuView" destination="bUG-Um-eDs" id="VZf-Gd-DYg"/>
-                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="5Uu-Y6-GtQ"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -19,60 +19,73 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bUG-Um-eDs" customClass="JTCalendarMenuView">
-                    <rect key="frame" x="0.0" y="20" width="600" height="50"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <rect key="frame" x="0.0" y="60" width="600" height="50"/>
+                    <color key="backgroundColor" red="0.21176470589999999" green="0.47450980390000003" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="sLX-05-ZtW"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2D-jB-xad" customClass="JTHorizontalCalendarView">
-                    <rect key="frame" x="0.0" y="70" width="600" height="300"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2D-jB-xad" customClass="JTVerticalCalendarView">
+                    <rect key="frame" x="0.0" y="110" width="600" height="300"/>
+                    <color key="backgroundColor" red="0.21176470589999999" green="0.47450980390000003" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="300" id="B5M-EU-dSr"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uhw-ef-kaS">
-                    <rect key="frame" x="30" y="400" width="46" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="30" id="JkR-47-MHH"/>
-                        <constraint firstAttribute="width" constant="46" id="o1b-8q-ELL"/>
-                    </constraints>
-                    <state key="normal" title="Today">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jgp-9Z-Wwp">
+                    <rect key="frame" x="13" y="27" width="17" height="29"/>
+                    <state key="normal" backgroundImage="back.png"/>
                     <connections>
-                        <action selector="didGoTodayTouch" destination="-1" eventType="touchUpInside" id="DQ2-cI-PEs"/>
+                        <action selector="back:" destination="-1" eventType="touchUpInside" id="ffe-7T-bLY"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ES5-rW-dqY">
-                    <rect key="frame" x="448" y="400" width="122" height="30"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="My Schedule" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="saC-Yu-eql">
+                    <rect key="frame" x="81" y="30" width="416" height="24"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="calenarwhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="R1H-WF-Sn4">
+                    <rect key="frame" x="44" y="27" width="29" height="28"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bdp-Eg-DIZ">
+                    <rect key="frame" x="543" y="26" width="46" height="30"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="122" id="LQp-cc-Tyw"/>
-                        <constraint firstAttribute="height" constant="30" id="LbI-h5-DQE"/>
+                        <constraint firstAttribute="width" constant="46" id="RU6-c9-F3O"/>
+                        <constraint firstAttribute="height" constant="30" id="aL7-dT-HJ1"/>
                     </constraints>
-                    <state key="normal" title="Change mode">
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                    <state key="normal" title="Today">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="didChangeModeTouch" destination="-1" eventType="touchUpInside" id="lNn-VU-bLm"/>
+                        <action selector="didGoTodayTouch" destination="-1" eventType="touchUpInside" id="gVD-Rq-AjQ"/>
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.21176470589999999" green="0.47450980390000003" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
+                <constraint firstItem="bdp-Eg-DIZ" firstAttribute="centerY" secondItem="saC-Yu-eql" secondAttribute="centerY" id="3HE-iR-rOR"/>
                 <constraint firstItem="bUG-Um-eDs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="5N5-nK-Csa"/>
-                <constraint firstItem="Uhw-ef-kaS" firstAttribute="top" secondItem="V2D-jB-xad" secondAttribute="bottom" constant="30" id="P97-NA-Il9"/>
+                <constraint firstItem="jgp-9Z-Wwp" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="27" id="FST-u8-Ynu"/>
+                <constraint firstAttribute="trailing" secondItem="bdp-Eg-DIZ" secondAttribute="trailing" constant="15" id="P8w-TB-qk6"/>
                 <constraint firstAttribute="trailing" secondItem="bUG-Um-eDs" secondAttribute="trailing" id="PQn-ch-N59"/>
+                <constraint firstItem="saC-Yu-eql" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="RQQ-bI-ndo"/>
+                <constraint firstItem="R1H-WF-Sn4" firstAttribute="centerY" secondItem="jgp-9Z-Wwp" secondAttribute="centerY" id="Yyz-qn-pkZ"/>
                 <constraint firstAttribute="trailing" secondItem="V2D-jB-xad" secondAttribute="trailing" id="ZUT-ce-Fo1"/>
                 <constraint firstItem="V2D-jB-xad" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="a1x-G4-3ng"/>
-                <constraint firstItem="ES5-rW-dqY" firstAttribute="top" secondItem="V2D-jB-xad" secondAttribute="bottom" constant="30" id="bzX-Jo-vxR"/>
-                <constraint firstItem="bUG-Um-eDs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="jp6-Hu-86S"/>
-                <constraint firstAttribute="trailing" secondItem="ES5-rW-dqY" secondAttribute="trailing" constant="30" id="kDr-EG-qoe"/>
-                <constraint firstItem="Uhw-ef-kaS" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="l8j-MK-g6j"/>
+                <constraint firstItem="jgp-9Z-Wwp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="gNY-SG-yJm"/>
+                <constraint firstItem="bUG-Um-eDs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="60" id="jp6-Hu-86S"/>
                 <constraint firstItem="V2D-jB-xad" firstAttribute="top" secondItem="bUG-Um-eDs" secondAttribute="bottom" id="vea-aa-tOL"/>
+                <constraint firstItem="saC-Yu-eql" firstAttribute="centerY" secondItem="R1H-WF-Sn4" secondAttribute="centerY" id="w4U-gz-ZtC"/>
+                <constraint firstItem="saC-Yu-eql" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="ynQ-S5-NGR"/>
             </constraints>
             <point key="canvasLocation" x="730" y="290"/>
         </view>
     </objects>
+    <resources>
+        <image name="back.png" width="16" height="26"/>
+        <image name="calenarwhite.png" width="29" height="29"/>
+    </resources>
 </document>

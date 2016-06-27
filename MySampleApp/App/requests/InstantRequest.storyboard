@@ -460,6 +460,7 @@
                                 <rect key="frame" x="26" y="11" width="17" height="29"/>
                                 <state key="normal" backgroundImage="back.png"/>
                                 <connections>
+                                    <action selector="back:" destination="APA-Uv-aJK" eventType="touchUpInside" id="EFg-Y3-Dk2"/>
                                     <action selector="back:" destination="x2y-UU-Ocn" eventType="touchUpInside" id="zDp-Ru-wmJ"/>
                                 </connections>
                             </button>

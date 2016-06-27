@@ -15,6 +15,7 @@
 #import "AWSMobileClient.h"
 #import <Parse/Parse.h>
 #import "RequestNotificationViewController.h"
+#import "ChatViewController.h"
 //#import "AWSPushManager.h"
 
 @interface AppDelegate ()
@@ -159,17 +160,70 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"Received notification: %@", userInfo);
     
+    //I would like to find out which view controller is on the screen here.
+    
+    
     if(application.applicationState == UIApplicationStateInactive) {
         
         NSLog(@"Inactive");
+        
+        if([userInfo valueForKey:@"name"]!=nil){
+            if([userInfo[@"name"] isEqualToString:@"TaskMessage"]){
+                if([self.window.rootViewController isKindOfClass:[UINavigationController class]]){
+                    UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
+                    //Push to notifications
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
+                    UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
+                    [mynavigation pushViewController:viewController
+                                            animated:YES];
+                }
+            }
+        }
     } else if (application.applicationState == UIApplicationStateBackground) {
         
         NSLog(@"Background");
+        
+        if([userInfo valueForKey:@"name"]!=nil){
+            if([userInfo[@"name"] isEqualToString:@"TaskMessage"]){
+                if([self.window.rootViewController isKindOfClass:[UINavigationController class]]){
+                    UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
+                    //Push to notifications
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
+                    UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
+                    [mynavigation pushViewController:viewController
+                                            animated:YES];
+                }
+            }
+        }
+        
+        
     } else {
         
         NSLog(@"Active");
         NSLog(@"%@", userInfo);
         
+        
+        if([userInfo valueForKey:@"name"]!=nil){
+            if([userInfo[@"name"] isEqualToString:@"TaskMessage"]){
+                UIViewController *vc = [(UINavigationController *)self.window.rootViewController topViewController];
+                NSLog(@"%@", [vc class]);
+                //[vc performSelector:@selector(handleThePushNotification:) withObject:userInfo];
+                if ([vc isKindOfClass: [ChatViewController class]]) {
+                    [vc performSelector:@selector(handleThePushNotification:) withObject:userInfo];
+                }else{
+                    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+                    NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+                    localNotification.applicationIconBadgeNumber =0;
+                    localNotification.alertBody =message;
+                    localNotification.soundName = UILocalNotificationDefaultSoundName;
+                    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
+                    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+                    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+                }
+            }
+        }
+        
+
         [PFPush handlePush:userInfo];
         
     }
@@ -178,14 +232,22 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSString *message = [userInfo objectForKey:@"alert"];
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+    localNotification.applicationIconBadgeNumber =0;
+    localNotification.alertBody =message;
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
+    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    /*NSString *message = [userInfo objectForKey:@"alert"];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Livi"
                                                     message: message
                                                    delegate: self
                                           cancelButtonTitle: @"OK"
                                           otherButtonTitles: nil];
-    [alert show];
+    [alert show];*/
     
     //[[AWSMobileClient sharedInstance] application:application didReceiveRemoteNotification:userInfo];
     

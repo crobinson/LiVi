@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <Parse/Parse.h>
 #import <JTCalendar/JTCalendar.h>
 
 @interface BasicViewController : UIViewController<JTCalendarDelegate>

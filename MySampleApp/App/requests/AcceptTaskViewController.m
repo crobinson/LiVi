@@ -112,7 +112,6 @@
         ct.chatMateId = _obj[@"userId"];
         ct.taskId = _obj.objectId;
     }
-    
 }
 
 

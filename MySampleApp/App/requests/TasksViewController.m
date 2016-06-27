@@ -132,7 +132,7 @@
     NSDictionary *obj = [dataSource objectAtIndex:indexPath.row];
     NSLog(@"%@", obj);
     
-    UIImageView *_miimageView = (UIImageView *)[cell viewWithTag:100];
+    //UIImageView *_miimageView = (UIImageView *)[cell viewWithTag:100];
     UIImageView *_fromimageView = (UIImageView *)[cell viewWithTag:101];
     UILabel *nombre = (UILabel *)[cell viewWithTag:102];
     UILabel *descripcion = (UILabel *)[cell viewWithTag:103];

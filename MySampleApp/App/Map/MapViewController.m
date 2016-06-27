@@ -24,6 +24,7 @@
 #import "MBProgressHUD.h"
 #import "QuartzCore/QuartzCore.h"
 #import "addRqstViewController.h"
+#import "BasicViewController.h"
 
 @interface MapViewController ()
 {
@@ -34,12 +35,14 @@
     MKPointAnnotation *origen;
     NSMutableArray *dataSource;
     NSMutableArray *aroundDataSource;
+    NSArray *pvObjects;
     MyAnnotation *anotationSelected;
     callOutView *calloutview;
     bool bandera;
     BOOL banderamap;
     bool opened;
     MKPointAnnotation *newannot;
+    NSMutableArray *filteredCandyArray;
 }
 
 @property(nonatomic, strong) UITableView *table;
@@ -258,6 +261,8 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            
+            NSMutableArray *datasourcetemporal = [NSMutableArray arrayWithObjects:nil];
             //Everything was correct, put the new objects and load the wall
             for (PFObject *userObj in objects){
                 NSLog(@"%@", userObj);
@@ -297,12 +302,20 @@
                                          andUrlIos:userObj.objectId
                                          andUrlOther:userObj[@"nickname"]
                                          andCoordinate:coordinate];
+            
+                NSDictionary *datoTemporal=@{
+                                             @"nickname" : userObj[@"nickname"],
+                                             @"latitude" : [NSString stringWithFormat:@"%f", coordinate.latitude],
+                                             @"longitude" : [NSString stringWithFormat:@"%f", coordinate.longitude],
+                                             };
+                [datasourcetemporal addObject:datoTemporal];
                 //destino.title = userObj[@"firstname"];
                 //destino.accessibilityHint = userObj[@"vendor"];
                 //destino.accessibilityHint = userObj[@"username"];
                 
                 [_mvMap addAnnotation:destino];
             }
+            pvObjects = datasourcetemporal;
             [self hideProgressHUD];
         }else {
             [self hideProgressHUD];
@@ -464,6 +477,8 @@
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    
+    
     
     calloutview = (callOutView *)[view viewWithTag:999];
     CGRect viewframe = _mvMap.frame;
@@ -763,6 +778,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     _menuTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _menuTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     
@@ -817,7 +833,11 @@
             UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
             [self.navigationController pushViewController:viewController
                                                  animated:YES];
+        }else if (indexPath.row==2){
+            [self.navigationController pushViewController:[[BasicViewController alloc] initWithNibName:@"BasicViewController" bundle:nil]
+                                                 animated:YES];
         }
+        
     }
     
     
@@ -1077,11 +1097,21 @@
      [_Username_TextField resignFirstResponder];
      [_password_TextField becomeFirstResponder];
      } else if (textField == _password_TextField) {*/
-    // here you can define what happens
-    // when user presses return on the email field
+    
+    //Buscamos un pv con ese nickname
+    NSLog(@"%@", pvObjects);
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"nickname CONTAINS %@", textField.text ];
+    
+    filteredCandyArray = [NSMutableArray arrayWithArray:[pvObjects filteredArrayUsingPredicate:predicate]];
+    NSLog(@"filteredCandyArray %@", filteredCandyArray);
+    
+    if(filteredCandyArray.count){
+        MKCoordinateRegion region = [_mvMap regionThatFits:MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake([[filteredCandyArray objectAtIndex:0][@"latitude"] floatValue], [[filteredCandyArray objectAtIndex:0][@"longitude"] floatValue]), 200, 200)];
+        [_mvMap setRegion:region animated:YES];
+    }
+    
+    
     [textField resignFirstResponder];
-    
-    
     // }
     return YES;
 }

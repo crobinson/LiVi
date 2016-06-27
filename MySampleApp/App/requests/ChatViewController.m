@@ -23,10 +23,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-     self.messageArray = [[NSMutableArray alloc] init];
-     self.historicalMessagesTableView.rowHeight = UITableViewAutomaticDimension;
-    
+    self.messageArray = [[NSMutableArray alloc] init];
+    self.historicalMessagesTableView.rowHeight = UITableViewAutomaticDimension;
+    [self retrieveMessagesFromParseWithChatMateID:self.chatMateId];
+    UITapGestureRecognizer *tapTableGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnTableView)];
+    [self.historicalMessagesTableView addGestureRecognizer:tapTableGR];
     [self registerForKeyboardNotifications];
+}
+
+- (void)didTapOnTableView {
+    [self.activeTextField resignFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -82,6 +88,12 @@
     self.activeTextField = nil;
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    [self sendMessageVoid];
+    return YES;
+}
+
 
 
 - (void)messageDelivered:(NSNotification *)notification
@@ -92,42 +104,124 @@
     //[self scrollTableToBottom];
 }
 
+-(void)sendMessageVoid {
+    /*
+     [self.messageArray addObject:chatMessage];
+     [self.historicalMessagesTableView reloadData];
+     [self scrollTableToBottom];
+     
+     Manejamos el envío de mensajes desde el controller
+     1. Agregamos nuestro objeto mensaje al array y recargamos la tabla
+     2. Creamos el mensaje en Parse
+     3. Enviamos la notificación al usuario
+     
+     Nota: Este proceso se debe repetir al recibir un mensaje
+     */
+    if(![self.messageEditField.text isEqualToString:@""]){
+        _chatMessage = [PFObject objectWithClassName:@"TaskMessage"];
+        _chatMessage[@"senderId"] = _myUserId;
+        _chatMessage[@"recipientId"] = _chatMateId;
+        _chatMessage[@"taskId"] = _taskId;
+        _chatMessage[@"text"] = self.messageEditField.text;
+        
+        if(!_notification){
+            PFQuery *query = [PFQuery queryWithClassName:@"Notifications"];
+            [query whereKey:@"from" equalTo:_myUserId];
+            [query whereKey:@"to" equalTo:_chatMateId];
+            [query orderByAscending:@"timestamp"];
+            
+            [query findObjectsInBackgroundWithBlock:^(NSArray *notificationArray, NSError *error) {
+                if (!error) {
+                    if(notificationArray.count<1){
+                        _notification = [PFObject objectWithClassName:@"Notifications"];
+                        _notification[@"from"]  = _myUserId;
+                        _notification[@"to"]    = _chatMateId;
+                        _notification[@"type"]    = @"message";
+                        _notification[@"title"] = [NSString stringWithFormat:@"%@ %@", [PFUser currentUser][@"firstname"], [PFUser currentUser][@"lastname"]];
+                        _notification[@"alert"] = @"Message Received";
+                        _notification[@"taskId"] = _taskId;
+                        [_notification save];
+                    }
+                    
+                } else {
+                    NSLog(@"Error: %@", error.description);
+                }
+            }];
+        }
+        
+        [_chatMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+         {
+             if (succeeded)
+             {
+                 PFQuery *userQuery = [PFUser query];
+                 [userQuery whereKey:@"objectId" equalTo:_chatMateId];
+                 
+                 PFQuery *pushQuery = [PFInstallation query];
+                 [pushQuery whereKey:@"user" matchesQuery: userQuery];
+                 
+                 // Send push notification to query
+                 NSDictionary *data = @{
+                                        @"alert" : @"You have received a Message",
+                                        @"name" : @"TaskMessage",
+                                        @"senderId" : _myUserId,
+                                        @"recipientId" : _chatMateId,
+                                        @"text" : _chatMessage[@"text"],
+                                        @"taskId" : _chatMessage.objectId
+                                        };
+                 PFPush *push = [[PFPush alloc] init];
+                 [push setQuery:pushQuery]; // Set our Installation query
+                 //[push setMessage:@"Live Stream Finished"];
+                 [push setData:data];
+                 [push sendPushInBackground];
+                 
+             }
+             
+         }];
+        
+        self.messageEditField.text = @"";
+        [self.messageArray addObject:_chatMessage];
+        [self.historicalMessagesTableView reloadData];
+        [self scrollTableToBottom];
+    }
+    
+    
+}
+
+-(IBAction)back:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 -(void)sendMessage:(id)sender
 {
     //AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     //[appDelegate sendTextMessage:self.messageEditField.text toRecipient:self.chatMateId];
-    /*
-        [self.messageArray addObject:chatMessage];
-        [self.historicalMessagesTableView reloadData];
-        [self scrollTableToBottom];
-
-        Manejamos el envío de mensajes desde el controller
-        1. Agregamos nuestro objeto mensaje al array y recargamos la tabla
-        2. Creamos el mensaje en Parse
-        3. Enviamos la notificación al usuario
-        
-        Nota: Este proceso se debe repetir al recibir un mensaje
-     */
-    _chatMessage = [PFObject objectWithClassName:@"TaskMessage"];
-    _chatMessage[@"senderId"] = _myUserId;
-    _chatMessage[@"recipientId"] = _chatMateId;
-    _chatMessage[@"taskId"] = _taskId;
-    _chatMessage[@"text"] = self.messageEditField.text;
-    
-    [_chatMessage saveInBackground];
-    
-    self.messageEditField.text = @"";
-    [self.messageArray addObject:_chatMessage];
-    [self.historicalMessagesTableView reloadData];
-    [self scrollTableToBottom];
-    
-    
-
+    if(self.activeTextField){
+        [self.activeTextField resignFirstResponder];
+    }
+    [self sendMessageVoid];
 }
+
 - (void)scrollTableToBottom {
     int rowNumber = [self.historicalMessagesTableView numberOfRowsInSection:0];
     if (rowNumber > 0) [self.historicalMessagesTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowNumber-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+}
+
+- (void)handleThePushNotification:(NSDictionary *)userInfo{
+    
+    //set some badge view here
+    NSLog(@"entro");
+    NSLog(@"%@", userInfo);
+    
+    _chatMessage = [PFObject objectWithClassName:@"TaskMessage"];
+    _chatMessage[@"senderId"] = userInfo[@"senderId"];
+    _chatMessage[@"recipientId"] = userInfo[@"recipientId"];
+    _chatMessage[@"taskId"] = userInfo[@"taskId"];
+    _chatMessage[@"text"] = userInfo[@"text"];
+    
+    [self.messageArray addObject:_chatMessage];
+    [self.historicalMessagesTableView reloadData];
+    [self scrollTableToBottom];
+
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -142,7 +236,6 @@
     return [self.messageArray count];
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MNCChatMessageCell *messageCell = [tableView dequeueReusableCellWithIdentifier:@"MessageListPrototypeCell" forIndexPath:indexPath];
@@ -152,22 +245,21 @@
 }
 
 
-
 #pragma mark Method to configure the appearance of a message list prototype cell
 
 - (void)configureCell:(MNCChatMessageCell *)messageCell forIndexPath:(NSIndexPath *)indexPath {
     
-    /*MNCChatMessage *chatMessage = self.messageArray[indexPath.row];
+    PFObject *chatMessage = self.messageArray[indexPath.row];
     
-    if ([[chatMessage senderId] isEqualToString:self.myUserId]) {
+    if ([chatMessage[@"senderId"] isEqualToString:self.myUserId]) {
         // If the message was sent by myself
         messageCell.chatMateMessageLabel.text = @"";
-        messageCell.myMessageLabel.text = chatMessage.text;
+        messageCell.myMessageLabel.text = chatMessage[@"text"];
     } else {
         // If the message was sent by the chat mate
         messageCell.myMessageLabel.text = @"";
-        messageCell.chatMateMessageLabel.text = chatMessage.text;
-    }*/
+        messageCell.chatMateMessageLabel.text = chatMessage[@"text"];
+    }
 }
 
 - (void)retrieveMessagesFromParseWithChatMateID:(NSString *)chatMateId {

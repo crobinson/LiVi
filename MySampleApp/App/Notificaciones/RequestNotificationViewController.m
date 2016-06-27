@@ -38,7 +38,7 @@
 -(IBAction)imhere:(id)sender {
     PFQuery *query = [PFUser query];
     [query getObjectWithId:_userId];
-    NSArray *userArray = [query findObjects];
+    //NSArray *userArray = [query findObjects];
     
     PFQuery *pushQuery = [PFInstallation query];
     //[pushQuery whereKey:@"user" equalTo:userAgain];
@@ -47,9 +47,9 @@
     PFObject *notificationObject = [PFObject objectWithClassName:@"Notifications"];
     notificationObject[@"alert"] = @"Live Stream / Task Acepted";
     
-    for (PFObject *userObj in userArray){
+    //for (PFObject *userObj in userArray){
         notificationObject[@"title"] = [PFUser currentUser][@"nickname"];
-    }
+    //}
     notificationObject[@"from"] = [PFUser currentUser].objectId;
     notificationObject[@"to"] = _userId;
     [notificationObject save];

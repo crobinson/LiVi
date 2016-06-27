@@ -6,10 +6,13 @@
 //
 
 #import "BasicViewController.h"
+#import "ListEventsViewController.h"
 
 
 @interface BasicViewController (){
     NSMutableDictionary *_eventsByDate;
+    NSArray *_eventsSelected;
+    NSString *_daySelected;
     
     NSDate *_todayDate;
     NSDate *_minDate;
@@ -43,6 +46,7 @@
     
     // Generate random events sort by date using a dateformatter for the demonstration
     [self createRandomEvents];
+     _calendarManager.settings.weekDayFormat = JTCalendarWeekDayFormatSingle;
     
     // Create a min and max date for limit the calendar, optional
     [self createMinAndMaxDate];
@@ -82,28 +86,28 @@
     // Today
     if([_calendarManager.dateHelper date:[NSDate date] isTheSameDayThan:dayView.date]){
         dayView.circleView.hidden = NO;
-        dayView.circleView.backgroundColor = [UIColor blueColor];
+        //dayView.circleView.backgroundColor = [UIColor blueColor];
         dayView.dotView.backgroundColor = [UIColor whiteColor];
         dayView.textLabel.textColor = [UIColor whiteColor];
     }
     // Selected date
     else if(_dateSelected && [_calendarManager.dateHelper date:_dateSelected isTheSameDayThan:dayView.date]){
         dayView.circleView.hidden = NO;
-        dayView.circleView.backgroundColor = [UIColor redColor];
+        dayView.circleView.backgroundColor = [UIColor colorWithRed:234.0/255 green:89.0/255 blue:45.0/255 alpha:1];
         dayView.dotView.backgroundColor = [UIColor whiteColor];
         dayView.textLabel.textColor = [UIColor whiteColor];
     }
     // Other month
     else if(![_calendarManager.dateHelper date:_calendarContentView.date isTheSameMonthThan:dayView.date]){
         dayView.circleView.hidden = YES;
-        dayView.dotView.backgroundColor = [UIColor redColor];
+        dayView.dotView.backgroundColor = [UIColor colorWithRed:234.0/255 green:89.0/255 blue:45.0/255 alpha:1];
         dayView.textLabel.textColor = [UIColor lightGrayColor];
     }
     // Another day of the current month
     else{
         dayView.circleView.hidden = YES;
-        dayView.dotView.backgroundColor = [UIColor redColor];
-        dayView.textLabel.textColor = [UIColor blackColor];
+        dayView.dotView.backgroundColor = [UIColor colorWithRed:234.0/255 green:89.0/255 blue:45.0/255 alpha:1];
+        dayView.textLabel.textColor = [UIColor whiteColor];
     }
     
     if([self haveEventForDay:dayView.date]){
@@ -117,6 +121,7 @@
 - (void)calendar:(JTCalendarManager *)calendar didTouchDayView:(JTCalendarDayView *)dayView
 {
     _dateSelected = dayView.date;
+    
     
     // Animation for the circleView
     dayView.circleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1);
@@ -135,9 +140,31 @@
         if([_calendarContentView.date compare:dayView.date] == NSOrderedAscending){
             [_calendarContentView loadNextPageWithAnimation];
         }
-        else{
+        else if([_calendarContentView.date compare:dayView.date]==NSOrderedDescending){
             [_calendarContentView loadPreviousPageWithAnimation];
         }
+    }else{
+        //ListEventsViewController *vc = [[ListEventsViewController alloc] initWithNibName:@"ListEventsViewController" bundle:nil];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ListEvents" bundle:nil];
+        ListEventsViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListEvents"];
+        if([self haveEventForDay:_dateSelected]){
+            NSString *key = [[self dateFormatter] stringFromDate:_dateSelected];
+            
+            if(_eventsByDate[key] && [_eventsByDate[key] count] > 0){
+                NSLog(@"%@", _eventsByDate[key]);
+                _eventsSelected = _eventsByDate[key];
+                NSDateFormatter *df = [[NSDateFormatter alloc] init];
+                [df setDateFormat:@"EEEE MMM d/yy"];
+                _daySelected = [df stringFromDate:_dateSelected];
+                
+                vc.daySelected = _daySelected;
+                vc.eventsSelected = _eventsSelected;
+                vc.dateSelected = _dateSelected;
+            }
+        }
+        
+        [self presentViewController:vc animated:YES completion:nil];
+         
     }
 }
 
@@ -166,10 +193,10 @@
     _todayDate = [NSDate date];
     
     // Min date will be 2 month before today
-    _minDate = [_calendarManager.dateHelper addToDate:_todayDate months:-2];
+    _minDate = [_calendarManager.dateHelper addToDate:_todayDate months:-92];
     
     // Max date will be 2 month after today
-    _maxDate = [_calendarManager.dateHelper addToDate:_todayDate months:2];
+    _maxDate = [_calendarManager.dateHelper addToDate:_todayDate months:92];
 }
 
 // Used only to have a key for _eventsByDate
@@ -198,21 +225,35 @@
 
 - (void)createRandomEvents
 {
+    
     _eventsByDate = [NSMutableDictionary new];
     
-    for(int i = 0; i < 30; ++i){
-        // Generate 30 random dates between now and 60 days later
-        NSDate *randomDate = [NSDate dateWithTimeInterval:(rand() % (3600 * 24 * 60)) sinceDate:[NSDate date]];
-        
-        // Use the date as key for eventsByDate
-        NSString *key = [[self dateFormatter] stringFromDate:randomDate];
-        
-        if(!_eventsByDate[key]){
-            _eventsByDate[key] = [NSMutableArray new];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"userId = '%@' OR responsable = '%@'", [PFUser currentUser].objectId, [PFUser currentUser].objectId]];
+    NSLog(@"%@", [PFUser currentUser].objectId);
+    PFQuery *query = [PFQuery queryWithClassName:@"Requests" predicate:predicate];
+    NSArray *objects = [query findObjects];
+    
+    for (PFObject *requestObj in objects){
+        if(requestObj[@"date"]){
+            NSLog(@"%@", requestObj);
+           // NSDate *date = [[self dateFormatter] dateFromString:requestObj[@"date"]];
+            NSString *key = [[self dateFormatter] stringFromDate:requestObj[@"date"]];
+            
+            if(!_eventsByDate[key]){
+                _eventsByDate[key] = [NSMutableArray new];
+            }
+            
+            [_eventsByDate[key] addObject:requestObj];
         }
         
-        [_eventsByDate[key] addObject:randomDate];
     }
+    
+    
+
+}
+
+-(IBAction)back:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

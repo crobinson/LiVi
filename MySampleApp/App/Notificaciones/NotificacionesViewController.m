@@ -10,11 +10,15 @@
 #import <Parse/Parse.h>
 #import "UIImage+Resize.h"
 #import "RequestNotificationViewController.h"
+#import "ChatViewController.h"
+#import "MBProgressHUD.h"
 
 @interface NotificacionesViewController (){
     NSMutableArray *dataSource;
     UIImage *croppedImg;
 }
+
+@property (strong, nonatomic) MBProgressHUD *progressHUD;
 
 @end
 
@@ -24,6 +28,24 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     dataSource = [[NSMutableArray alloc] init];
+    if (_progressHUD == nil)
+    {
+        _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
+
+}
+
+- (void) hideProgressHUD
+{
+    if (_progressHUD)
+    {
+        [_progressHUD hide:YES];
+        [_progressHUD removeFromSuperview];
+        _progressHUD = nil;
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
     [self getDataSource];
 }
 
@@ -38,11 +60,11 @@
     
     PFQuery *query = [PFQuery queryWithClassName:@"Notifications"];
     [query whereKey:@"to" equalTo:[PFUser currentUser].objectId];
+    [query orderByDescending:@"createdAt"];
     NSArray *notifications = [query findObjects];
     for (PFObject *userObj in notifications) {
         
         //Traigo el user q envía
-        NSLog(@"%@", userObj[@"from"]);
         PFQuery *userquery = [PFUser query];
         [userquery whereKey:@"objectId" equalTo:userObj[@"from"]];
         NSArray *userobjects = [userquery findObjects];
@@ -66,14 +88,27 @@
                                                      @"objectId": userObj[@"from"],
                                                      @"title"   : userObj[@"title"],
                                                      @"alert"   : userObj[@"alert"],
+                                                     @"type"   : userObj[@"type"],
+                                                     @"from"   : userObj[@"from"],
                                                      @"image"   : croppedImg,
                                                      };
                     
+                    if(userObj[@"taskId"]){
+                        dataDictionary = @{
+                                           @"objectId": userObj[@"from"],
+                                           @"title"   : userObj[@"title"],
+                                           @"alert"   : userObj[@"alert"],
+                                           @"type"   : userObj[@"type"],
+                                           @"from"   : userObj[@"from"],
+                                           @"taskId"   : userObj[@"taskId"],
+                                           @"image"   : croppedImg,
+                                           };
+                    }
+                    
                     [dataSource addObject:dataDictionary];
                 }
-            
-        
     }
+    [self hideProgressHUD];
     [_myTableView reloadData];
 }
 
@@ -119,8 +154,15 @@
     NSDictionary *obj = [dataSource objectAtIndex:indexPath.row];
     NSLog(@"%@", obj);
     
-    UIImageView *_miimageView = (UIImageView *)[cell viewWithTag:100];
+    UIImageView *_miiconView = (UIImageView *)[cell viewWithTag:100];
+    if([obj[@"type"] isEqualToString:@"message"]){
+        _miiconView.image = [UIImage imageNamed:@"messageblue.png"];
+    }else if([obj[@"type"] isEqualToString:@"streaming"]){
+        _miiconView.image = [UIImage imageNamed:@"play.png"];
+    }
     UIImageView *_fromimageView = (UIImageView *)[cell viewWithTag:101];
+    _fromimageView.layer.masksToBounds = YES;
+    [_fromimageView.layer setCornerRadius:33];
     UILabel *nombre = (UILabel *)[cell viewWithTag:102];
     UILabel *descripcion = (UILabel *)[cell viewWithTag:103];
     
@@ -167,15 +209,15 @@
         viewController.userId = obj[@"objectId"];
         [self.navigationController pushViewController:viewController
                                              animated:YES];
-        /*UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
-         RequestNotificationViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"SorryNotification"];
-         viewController.userId = userInfo[@"title"];
-         UINavigationController *navigationController = (UINavigationController*)self.window.rootViewController;
-         [navigationController pushViewController:viewController animated:YES];
-         
-         if ([userInfo objectForKey:@"badge"]) {
-         [application setApplicationIconBadgeNumber:0];
-         }*/
+    } else if([obj[@"alert"] isEqualToString:@"Message Received"]){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"InstantRequest" bundle:nil];
+        ChatViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"chat"];
+        viewController.myUserId = [PFUser currentUser].objectId;
+        NSLog(@"%@", obj);
+        viewController.chatMateId = obj[@"from"];
+        viewController.taskId = obj[@"taskId"];
+        [self.navigationController pushViewController:viewController
+                                             animated:YES];
     }
 }
 -(IBAction)back:(id)sender {
