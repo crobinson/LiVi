@@ -16,6 +16,7 @@
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
 #import "UIImage+Resize.h"
+#import "EditProfileViewController.h"
 
 
 @interface ProfileViewController ()
@@ -421,15 +422,22 @@
 }
 
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"gotoEdit"] || [segue.identifier isEqualToString:@"gotoEditt"]) {
+        EditProfileViewController *ct = segue.destinationViewController;
+        ct.croppedImage = self.profilePic2.image;
+        ct.nameString   = self.nameLbl.text;
+        ct.emailString  = self.mailLbl.text;
+    }
+    
 }
-*/
+
 
 #pragma mark - Table view data source
 

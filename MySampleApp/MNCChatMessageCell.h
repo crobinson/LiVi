@@ -6,6 +6,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *chatMateMessageLabel;
 
-@property (strong, nonatomic) IBOutlet UILabel *myMessageLabel;
+@property (strong, nonatomic) IBOutlet UIView *viewLabel;
+@property (strong, nonatomic) IBOutlet UIImageView *foto;
 
 @end

@@ -14,6 +14,8 @@
 @property (strong, nonatomic) NSString *chatMateId;     /* add this line */
 @property (strong, nonatomic) NSMutableArray* messageArray;
 @property (strong, nonatomic) NSString *myUserId;
+@property (strong, nonatomic) UIImage *myUserFoto;
+@property (strong, nonatomic) UIImage *chatMateFoto;
 @property (strong, nonatomic) NSString *taskId;
 @property (strong, nonatomic) UITextField *activeTextField;
 @property (strong, nonatomic) PFObject *chatMessage;

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--My Money View Controller-->
+        <scene sceneID="L3o-5D-R2C">
+            <objects>
+                <viewController storyboardIdentifier="MyMoney" id="D7h-du-3Wh" customClass="MyMoneyViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="0AD-97-6tu"/>
+                        <viewControllerLayoutGuide type="bottom" id="FS2-MM-lug"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="YGE-91-NJ4">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="92" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1aK-Cf-oXr">
+                                <rect key="frame" x="0.0" y="67" width="600" height="533"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="notificacion" rowHeight="66" id="V79-9K-ahS">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="66"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="V79-9K-ahS" id="Efv-ZG-Xts">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="65"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="coins.png" translatesAutoresizingMaskIntoConstraints="NO" id="I0U-qD-dQX">
+                                                    <rect key="frame" x="11" y="14" width="33" height="36"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WQn-bF-R28">
+                                                    <rect key="frame" x="52" y="21" width="433" height="21"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="18"/>
+                                                    <color key="textColor" red="0.21176470589999999" green="0.47450980390000003" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="WQn-bF-R28" secondAttribute="trailing" id="BJz-co-7Gz"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="D7h-du-3Wh" id="SEo-bF-wHm"/>
+                                    <outlet property="delegate" destination="D7h-du-3Wh" id="For-Vh-Hxi"/>
+                                </connections>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4GD-zj-dGX">
+                                <rect key="frame" x="0.0" y="-20" width="600" height="89"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BH6-Op-pYM">
+                                        <rect key="frame" x="18" y="31" width="29" height="27"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="My Money" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HZ1-S7-JeQ">
+                                        <rect key="frame" x="92" y="34" width="416" height="24"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="moneyblanco.png" translatesAutoresizingMaskIntoConstraints="NO" id="DBM-lH-gxv">
+                                        <rect key="frame" x="55" y="31" width="29" height="28"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Km7-Ju-6bx">
+                                        <rect key="frame" x="24" y="29" width="17" height="31"/>
+                                        <state key="normal" backgroundImage="back.png"/>
+                                        <connections>
+                                            <action selector="back:" destination="D7h-du-3Wh" eventType="touchUpInside" id="H6p-FB-PEG"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.21176470589999999" green="0.47450980390000003" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="BH6-Op-pYM" firstAttribute="centerY" secondItem="4GD-zj-dGX" secondAttribute="centerY" id="5Kj-6R-WUa"/>
+                                    <constraint firstItem="Km7-Ju-6bx" firstAttribute="centerY" secondItem="BH6-Op-pYM" secondAttribute="centerY" id="7n1-cz-D2z"/>
+                                    <constraint firstItem="DBM-lH-gxv" firstAttribute="centerY" secondItem="4GD-zj-dGX" secondAttribute="centerY" id="FUx-Ks-eHx"/>
+                                    <constraint firstItem="BH6-Op-pYM" firstAttribute="centerX" secondItem="4GD-zj-dGX" secondAttribute="centerX" id="Fhy-10-KG2"/>
+                                    <constraint firstItem="BH6-Op-pYM" firstAttribute="leading" secondItem="4GD-zj-dGX" secondAttribute="leading" constant="15" id="GmE-WX-5dJ"/>
+                                    <constraint firstAttribute="height" constant="89" id="HQw-dg-UqL"/>
+                                    <constraint firstItem="DBM-lH-gxv" firstAttribute="leading" secondItem="BH6-Op-pYM" secondAttribute="trailing" constant="11" id="JAV-2F-St7"/>
+                                    <constraint firstItem="Km7-Ju-6bx" firstAttribute="centerX" secondItem="BH6-Op-pYM" secondAttribute="centerX" id="Y4Z-k4-h4i"/>
+                                    <constraint firstItem="HZ1-S7-JeQ" firstAttribute="centerX" secondItem="4GD-zj-dGX" secondAttribute="centerX" id="i8k-9p-vh7"/>
+                                    <constraint firstItem="BH6-Op-pYM" firstAttribute="centerX" secondItem="4GD-zj-dGX" secondAttribute="centerX" id="nno-Y8-8LI"/>
+                                    <constraint firstItem="HZ1-S7-JeQ" firstAttribute="centerY" secondItem="4GD-zj-dGX" secondAttribute="centerY" id="xwl-Yt-aLO"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="nno-Y8-8LI"/>
+                                        <exclude reference="Fhy-10-KG2"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="1aK-Cf-oXr" firstAttribute="top" secondItem="4GD-zj-dGX" secondAttribute="bottom" constant="-2" id="6A2-Cj-czn"/>
+                            <constraint firstItem="FS2-MM-lug" firstAttribute="top" secondItem="1aK-Cf-oXr" secondAttribute="bottom" id="F6X-8E-GIv"/>
+                            <constraint firstItem="4GD-zj-dGX" firstAttribute="leading" secondItem="YGE-91-NJ4" secondAttribute="leadingMargin" id="FPm-TI-gcc"/>
+                            <constraint firstItem="4GD-zj-dGX" firstAttribute="centerX" secondItem="YGE-91-NJ4" secondAttribute="centerX" id="PFv-DP-gVs"/>
+                            <constraint firstItem="4GD-zj-dGX" firstAttribute="width" secondItem="YGE-91-NJ4" secondAttribute="width" id="TMk-GS-HB2"/>
+                            <constraint firstItem="1aK-Cf-oXr" firstAttribute="width" secondItem="YGE-91-NJ4" secondAttribute="width" id="qFz-8Y-6hk"/>
+                            <constraint firstItem="1aK-Cf-oXr" firstAttribute="centerX" secondItem="YGE-91-NJ4" secondAttribute="centerX" id="rC9-TO-7JV"/>
+                            <constraint firstItem="4GD-zj-dGX" firstAttribute="top" secondItem="0AD-97-6tu" secondAttribute="bottom" constant="-20" id="rG0-3d-ZrH"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="FPm-TI-gcc"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="myTableView" destination="1aK-Cf-oXr" id="zif-EN-epN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Fkl-0t-ueC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="556" y="312"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="back.png" width="16" height="26"/>
+        <image name="coins.png" width="35" height="37"/>
+        <image name="moneyblanco.png" width="32" height="32"/>
+    </resources>
+</document>

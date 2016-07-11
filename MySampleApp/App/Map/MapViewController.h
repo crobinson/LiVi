@@ -10,9 +10,10 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import "NIDropDown.h"
+#import "SlideNavigationController.h"
 //@import MapKit;
 
-@interface MapViewController : UIViewController<UITableViewDelegate, UITableViewDataSource,CLLocationManagerDelegate,MKMapViewDelegate, NIDropDownDelegate> {
+@interface MapViewController : UIViewController<UITableViewDelegate, UITableViewDataSource,CLLocationManagerDelegate,MKMapViewDelegate, SlideNavigationControllerDelegate, NIDropDownDelegate> {
     NIDropDown *dropDown;
     NSString *tipoSelected;
 }

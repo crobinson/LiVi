@@ -25,6 +25,10 @@
 #import "QuartzCore/QuartzCore.h"
 #import "addRqstViewController.h"
 #import "BasicViewController.h"
+#import "VendorProfileViewController.h"
+#import "SlideNavigationController.h"
+#import "LeftMenuViewController.h"
+#import "RightMenuViewController.h"
 
 @interface MapViewController ()
 {
@@ -67,6 +71,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LeftMenuViewController *leftMenu = [storyboard instantiateViewControllerWithIdentifier:@"LeftMenuViewController"];
+    
+    RightMenuViewController *rightMenu = [storyboard instantiateViewControllerWithIdentifier:@"RightMenuViewController"];
+    [SlideNavigationController sharedInstance].rightMenu = rightMenu;
+    [SlideNavigationController sharedInstance].leftMenu = leftMenu;
     _searchview.layer.masksToBounds = YES;
     [_searchview.layer setCornerRadius:3.0f];
     [_searchview.layer setBorderColor:[UIColor colorWithRed:54.0/255 green:121.0/255 blue:189.0/255 alpha:1].CGColor];
@@ -82,13 +92,9 @@
     [self.mvMap addGestureRecognizer:lpgr];
     
     
-    UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closemenus)];
-    leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
-    
     //Inicio los datasources
     
     dataSource          = [[NSMutableArray alloc] init];
-    aroundDataSource    = [[NSMutableArray alloc] init];
     
     
     //Inicio el select de vendors
@@ -118,7 +124,6 @@
     
     [_selectbox addSubview:table];
 
-        [_menuTableView addGestureRecognizer:leftSwipe];
     
     _mvMap.delegate = self;
     //_mvMap.showsUserLocation = YES;
@@ -148,8 +153,6 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     banderamap = FALSE;
-    _menuTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _menuTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     [self presentProfileViewController];
 }
 
@@ -209,49 +212,7 @@
     
 }
 
--(void)getAroundPV:(NSString *)vendor {
-    if (_progressHUD == nil)
-    {
-        _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    }
 
-    [aroundDataSource removeAllObjects];
-    [_aroundTableView reloadData];
-    PFQuery *query = [PFUser query];
-    if(!vendor)
-        [query whereKey:@"vendor" notEqualTo:@"NO"];
-    else
-        [query whereKey:@"vendor" equalTo:vendor];
-    
-    [query orderByDescending:@"createdAt"];
-    //[query orderByDescending:@"createdAt"];
-    NSArray *objects = [query findObjects];
-    for (PFObject *userObj in objects){
-        PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
-        [queryimg whereKey:@"user" equalTo:userObj[@"username"]];
-        [queryimg orderByDescending:@"createdAt"];
-        NSArray *imgobjects = [queryimg findObjects];
-        for (PFObject *imgObject in imgobjects){
-            PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
-            UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
-            croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];
-        }
-        
-        NSMutableDictionary *aroundDic=[[NSMutableDictionary alloc] initWithCapacity:3];
-        [aroundDic setValue:userObj forKey:@"UserData"];
-        [aroundDic setValue:userObj.objectId forKey:@"objectId"];
-        [aroundDic setValue:croppedImg forKey:@"UserImage"];
-        
-        [aroundDataSource addObject:aroundDic];
-
-    }
-    NSLog(@"%@", aroundDataSource);
-    [_aroundTableView reloadData];
-    if(!bandera)
-        [self getPV];
-    else
-        [self hideProgressHUD];
-}
 
 -(void)getPV {
     bandera = YES; // Para no seguirlos llamando cuando no sea necesario
@@ -301,6 +262,7 @@
                                          andImage:croppedImg
                                          andUrlIos:userObj.objectId
                                          andUrlOther:userObj[@"nickname"]
+                                         andUrlStream:userObj[@"urlStream"]
                                          andCoordinate:coordinate];
             
                 NSDictionary *datoTemporal=@{
@@ -414,7 +376,11 @@
             UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [errorAlertView show];
         }
-        [self getAroundPV:nil];
+        //[self getAroundPV:nil];
+        if(!bandera)
+            [self getPV];
+        else
+            [self hideProgressHUD];
     }];
 }
 
@@ -505,14 +471,14 @@
         UIButton *addRequest = (UIButton *)[calloutview viewWithTag:103];
         [viewRequest addTarget:self action:@selector(viewAction:) forControlEvents:UIControlEventTouchUpInside];
         [addRequest addTarget:self action:@selector(requestAction:) forControlEvents:UIControlEventTouchUpInside];
-        /*if(anot.urlStream && ![anot.urlStream isEqualToString:@""]){
+        
+        if(anot.rtmpStream && ![anot.rtmpStream isEqualToString:@""]){
             viewRequest.hidden = NO;
-            
             addRequest.hidden = YES;
         }else{
             addRequest.hidden = NO;
-            
-        }*/
+            viewRequest.hidden = YES;
+        }
 
         calloutview.tag = 999;
         
@@ -542,20 +508,6 @@
     NSLog(@"Delete Button Tapped");
 }
 
--(IBAction)showmenu:(id)sender
-{
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.50];
-    [UIView setAnimationDelegate:self];
-    
-    if(_menuTableView.frame.origin.x != 0){
-        _menuTableView.frame = CGRectMake(0, _menuTableView.frame.origin.y, _menuTableView.frame.size.width, _menuTableView.frame.size.height);
-    }else{
-        _menuTableView.frame = CGRectMake(0 - _menuTableView.frame.size.width, _menuTableView.frame.origin.y, _menuTableView.frame.size.width, _menuTableView.frame.size.height);
-    }
-    [UIView commitAnimations];
-    
-}
 
 -(IBAction)showhapening:(id)sender
 {
@@ -587,13 +539,6 @@
     [UIView commitAnimations];
 }
 
--(void)closemenus {
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.50];
-    [UIView setAnimationDelegate:self];
-    _menuTableView.frame = CGRectMake(0 - _menuTableView.frame.size.width, _menuTableView.frame.origin.y, _menuTableView.frame.size.width, _menuTableView.frame.size.height);
-    [UIView commitAnimations];
-}
 
 
 #pragma mark - Table view data source
@@ -644,14 +589,7 @@
     
     if(tableView==_happeningTableView || tableView==_aroundTableView){
             CellIdentifier = @"happen";
-    }else{
-        if(indexPath.row==0){
-            CellIdentifier = @"header";
-        }else{
-            CellIdentifier = @"menu";
-        }
     }
-    
     if(tableView==table)
         CellIdentifier = @"Cell";
     
@@ -784,6 +722,13 @@
     
     if(tableView==_aroundTableView){
         //Alguna
+        NSMutableDictionary *source = [aroundDataSource[indexPath.row] mutableCopy];
+        PFUser *sourceUser = source[@"UserData"];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"VendorProfile" bundle:nil];
+        VendorProfileViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"VendorProfile"];
+        viewController.currentUser = sourceUser;
+        [self.navigationController pushViewController:viewController
+                                             animated:YES];
     }else if(tableView==table){
         UITableViewCell *c = [tableView cellForRowAtIndexPath:indexPath];
         NSString *str = [NSString stringWithFormat:@"%@", c.textLabel.text];
@@ -821,8 +766,8 @@
         }else if (indexPath.row==6){
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Stream" bundle:nil];
             UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"streamView"];
-            [self.navigationController pushViewController:viewController
-                                                 animated:YES];
+            //[self.navigationController pushViewController:viewControlleranimated:YES];
+            [self presentViewController:viewController animated:YES completion:nil];
         }else if (indexPath.row==7){
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Coupons" bundle:nil];
             UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"myCoupons"];
@@ -836,11 +781,14 @@
         }else if (indexPath.row==2){
             [self.navigationController pushViewController:[[BasicViewController alloc] initWithNibName:@"BasicViewController" bundle:nil]
                                                  animated:YES];
+        }else if (indexPath.row==8){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MoneyStoryboard" bundle:nil];
+            UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"MyMoney"];
+            [self.navigationController pushViewController:viewController
+                                                 animated:YES];
         }
         
     }
-    
-    
 
 }
 
@@ -890,6 +838,7 @@
 
                         PFObject *notificationObject = [PFObject objectWithClassName:@"Notifications"];
                         notificationObject[@"alert"] = @"Live Stream Request";
+                        notificationObject[@"type"] = @"streaming";
                         notificationObject[@"title"] = [PFUser currentUser][@"nickname"];
                         notificationObject[@"from"] = [PFUser currentUser].objectId;
                         notificationObject[@"to"] = anotationSelected.urlStreamIos;
@@ -967,6 +916,8 @@
             if(objects.count<1){
                 croppedImage = [UIImage imageNamed:@"avatar.PNG"];
             }
+            
+            [[NSUserDefaults standardUserDefaults] setObject:UIImagePNGRepresentation(croppedImage) forKey:@"myImage"];
             
             [_menuTableView reloadData];
         } else {
@@ -1100,7 +1051,7 @@
     
     //Buscamos un pv con ese nickname
     NSLog(@"%@", pvObjects);
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"nickname CONTAINS %@", textField.text ];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"nickname CONTAINS[c] %@", textField.text ];
     
     filteredCandyArray = [NSMutableArray arrayWithArray:[pvObjects filteredArrayUsingPredicate:predicate]];
     NSLog(@"filteredCandyArray %@", filteredCandyArray);
@@ -1109,7 +1060,6 @@
         MKCoordinateRegion region = [_mvMap regionThatFits:MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake([[filteredCandyArray objectAtIndex:0][@"latitude"] floatValue], [[filteredCandyArray objectAtIndex:0][@"longitude"] floatValue]), 200, 200)];
         [_mvMap setRegion:region animated:YES];
     }
-    
     
     [textField resignFirstResponder];
     // }
@@ -1159,6 +1109,24 @@
 -(void)rel{
     //    [dropDown release];
     dropDown = nil;
+}
+
+- (BOOL)slideNavigationControllerShouldDisplayLeftMenu
+{
+    return YES;
+}
+
+- (BOOL)slideNavigationControllerShouldDisplayRightMenu
+{
+    return YES;
+}
+
+- (IBAction)onBtnMenu:(id)sender {
+    [[SlideNavigationController sharedInstance] leftMenuSelected:self];
+}
+
+- (IBAction)onRightBtnMenu:(id)sender {
+    [[SlideNavigationController sharedInstance] righttMenuSelected:self];
 }
 
 

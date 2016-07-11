@@ -11,7 +11,7 @@
 #import <Parse/Parse.h>
 
 @interface StreamViewController () <VCSessionDelegate> {
-    
+    IBOutlet UITextField *message;
 }
 @property (nonatomic, retain) VCSimpleSession* session;
 
@@ -26,10 +26,12 @@
     NSLog(@"Screen rect:%@", NSStringFromCGRect(rect));
     [[NSUserDefaults standardUserDefaults] setValue:@"name_preference" forKey:@"test"];
     
+    message.attributedPlaceholder = [[NSAttributedString alloc] initWithString:message.placeholder attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
     
     _session = [[VCSimpleSession alloc] initWithVideoSize:rect.size frameRate:30 bitrate:1000000 useInterfaceOrientation:YES];
     //    _session.orientationLocked = YES;
     [self.previewView addSubview:_session.previewView];
+    [self.previewView bringSubviewToFront:message];
     _session.previewView.frame = self.previewView.bounds;
     _session.delegate = self;
 }
@@ -96,7 +98,7 @@
         [push setMessage:@"Live Stream Finished"];
         [push sendPushInBackground];
         
-        [self.navigationController popViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
@@ -144,6 +146,28 @@
             //[self.btnConnect setTitle:@"Connect" forState:UIControlStateNormal];
             break;
     }
+}
+
+#pragma mark UITextField
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.50];
+    [UIView setAnimationDelegate:self];
+    textField.frame = CGRectMake(textField.frame.origin.x, textField.frame.origin.y-153 , textField.frame.size.width, textField.frame.size.height);
+    [UIView commitAnimations];
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.50];
+    [UIView setAnimationDelegate:self];
+    textField.frame = CGRectMake(textField.frame.origin.x, textField.frame.origin.y+153 , textField.frame.size.width, textField.frame.size.height);
+    [UIView commitAnimations];
+    
+    return YES;
 }
 
 @end

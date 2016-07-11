@@ -13,6 +13,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AppDelegate.h"
 #import "AWSMobileClient.h"
+//#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <Parse/Parse.h>
 #import "RequestNotificationViewController.h"
 #import "ChatViewController.h"
@@ -57,6 +58,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     }
     
     [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    
+     //[PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
     UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
                                                     UIUserNotificationTypeBadge |
@@ -103,6 +106,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                                                      withURL:url
                                        withSourceApplication:sourceApplication
                                               withAnnotation:annotation];
+    /*return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                          openURL:url
+                                                sourceApplication:sourceApplication
+                                                       annotation:annotation];*/
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -117,8 +124,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"applicationDidBecomeActive");
+    application.applicationIconBadgeNumber = 0;
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [[AWSMobileClient sharedInstance] applicationDidBecomeActive:application];
+    //[FBSDKAppEvents activateApp];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -220,7 +229,15 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                     localNotification.timeZone = [NSTimeZone defaultTimeZone];
                     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
                 }
+            }else{
+                UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
+                //Push to notifications
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
+                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
+                [mynavigation pushViewController:viewController
+                                        animated:YES];
             }
+            
         }
         
 
@@ -279,5 +296,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     */
 }
+
+
+
 
 @end

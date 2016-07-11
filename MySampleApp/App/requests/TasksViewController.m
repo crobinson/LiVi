@@ -48,6 +48,7 @@
         //traigo la imagen
         NSLog(@"%@", userObj.objectId);
         if(!userObj[@"pv"]){
+            croppedImg = nil;
             PFQuery *queryimg = [PFQuery queryWithClassName:@"TaskImages"];
             [queryimg whereKey:@"taskId" equalTo:userObj.objectId];
             [queryimg orderByDescending:@"createdAt"];
@@ -59,7 +60,12 @@
             }
             
             
-            if(croppedImg){
+            if(croppedImg)
+                NSLog(@"%@", croppedImg);
+            else{
+                croppedImg = [UIImage imageNamed:@"avatarm.PNG"];
+            }
+            
                 
                 NSDictionary *dataDictionary = @{
                                                  @"title"   : userObj[@"title"],
@@ -69,16 +75,6 @@
                                                  };
                 
                 [dataSource addObject:dataDictionary];
-            }else{
-                NSLog(@"%@", userObj);
-                NSDictionary *dataDictionary = @{
-                                                 @"title"   : userObj[@"title"],
-                                                 @"alert"   : userObj[@"date"],
-                                                 @"object"  : userObj,
-                                                 };
-                
-                [dataSource addObject:dataDictionary];
-            }
         }
         
     }

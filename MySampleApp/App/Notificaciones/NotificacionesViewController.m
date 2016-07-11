@@ -81,8 +81,11 @@
                         croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width - 75)/2, (scaledImage.size.height - 66)/2, 75, 66)];
                     }
                     
-                    NSLog(@"%@", userObj);
-                    NSLog(@"%@", croppedImg);
+                    if(croppedImg)
+                        NSLog(@"%@", croppedImg);
+                    else{
+                        croppedImg = [UIImage imageNamed:@"avatarm.PNG"];
+                    }
                     
                     NSDictionary *dataDictionary = @{
                                                      @"objectId": userObj[@"from"],
@@ -211,10 +214,37 @@
                                              animated:YES];
     } else if([obj[@"alert"] isEqualToString:@"Message Received"]){
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"InstantRequest" bundle:nil];
+        
+        UIImage *croppedImg = nil;
+        PFQuery *query = [PFUser query];
+        [query whereKey:@"objectId" equalTo:obj[@"from"]];
+        PFUser *chatmateUser = [query getFirstObject];
+        PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
+        [queryimg whereKey:@"user" equalTo:chatmateUser[@"username"]];
+        [queryimg orderByDescending:@"createdAt"];
+        NSArray *objects = [queryimg findObjects];
+        for (PFObject *imgObject in objects){
+            PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
+            UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(75, 55) interpolationQuality:kCGInterpolationHigh];
+            croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width - 75)/2, (scaledImage.size.height - 66)/2, 75, 66)];
+        }
+        
+        if(croppedImg)
+            NSLog(@"%@", croppedImg);
+        else{
+            croppedImg = [UIImage imageNamed:@"avatarm.PNG"];
+        }
+        
+        NSLog(@"%@", croppedImg);
+        NSLog(@"%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"myImage"]);
+        
+        
         ChatViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"chat"];
         viewController.myUserId = [PFUser currentUser].objectId;
         NSLog(@"%@", obj);
         viewController.chatMateId = obj[@"from"];
+        //viewController.myUserFoto = [[NSUserDefaults standardUserDefaults] objectForKey:@"myImage"];
+        viewController.chatMateFoto = croppedImg;
         viewController.taskId = obj[@"taskId"];
         [self.navigationController pushViewController:viewController
                                              animated:YES];

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 
-@interface StreamViewController : UIViewController
+@interface StreamViewController : UIViewController<UITextFieldDelegate>
 
 @property (retain, nonatomic) IBOutlet UIView *previewView;
 @property (retain, nonatomic) IBOutlet UIButton *btnConnect;

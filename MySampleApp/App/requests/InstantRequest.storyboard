@@ -348,6 +348,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="60" id="a1B-xZ-Idw"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <state key="normal" title="Send">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -370,57 +371,72 @@
                                                     <outlet property="delegate" destination="APA-Uv-aJK" id="HcW-3n-Lag"/>
                                                 </connections>
                                             </textField>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="32" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="YZz-SZ-byr">
-                                                <rect key="frame" x="0.0" y="0.0" width="600" height="505"/>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="123" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="YZz-SZ-byr">
+                                                <rect key="frame" x="0.0" y="64" width="600" height="441"/>
                                                 <prototypes>
-                                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageListPrototypeCell" rowHeight="32" id="k9U-fH-6bl" customClass="MNCChatMessageCell">
-                                                        <rect key="frame" x="0.0" y="22" width="600" height="32"/>
+                                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageListPrototypeCell" rowHeight="110" id="k9U-fH-6bl" customClass="MNCChatMessageCell">
+                                                        <rect key="frame" x="0.0" y="22" width="600" height="110"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="k9U-fH-6bl" id="5I2-oO-N80">
-                                                            <rect key="frame" x="0.0" y="0.0" width="600" height="32"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="600" height="110"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chat mate message shows here" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UXS-ha-Qpo">
-                                                                    <rect key="frame" x="8" y="8" width="259" height="16"/>
-                                                                    <color key="backgroundColor" red="0.75294117650000003" green="1" blue="0.49803921569999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
-                                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                            <integer key="value" value="3"/>
-                                                                        </userDefinedRuntimeAttribute>
-                                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                                                    </userDefinedRuntimeAttributes>
-                                                                </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="My message shows here" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4O0-Ff-kqk">
-                                                                    <rect key="frame" x="393" y="8" width="200" height="16"/>
-                                                                    <color key="backgroundColor" red="0.49803921569999998" green="0.75294117650000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
-                                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                            <integer key="value" value="3"/>
-                                                                        </userDefinedRuntimeAttribute>
-                                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                                                    </userDefinedRuntimeAttributes>
-                                                                </label>
+                                                                <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QGQ-3U-W5I">
+                                                                    <rect key="frame" x="0.0" y="22" width="70" height="66"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="66" id="6VU-QD-DNS"/>
+                                                                        <constraint firstAttribute="width" constant="75" id="Bl1-x1-zYP"/>
+                                                                    </constraints>
+                                                                </imageView>
+                                                                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pkR-vB-vNm">
+                                                                    <rect key="frame" x="78" y="22" width="521" height="66"/>
+                                                                    <subviews>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Chat mate message shows here" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UXS-ha-Qpo">
+                                                                            <rect key="frame" x="8" y="25" width="505" height="16"/>
+                                                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="11"/>
+                                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                            <userDefinedRuntimeAttributes>
+                                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                                    <integer key="value" value="3"/>
+                                                                                </userDefinedRuntimeAttribute>
+                                                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                                            </userDefinedRuntimeAttributes>
+                                                                        </label>
+                                                                    </subviews>
+                                                                    <color key="backgroundColor" red="0.3294117647" green="0.76862745099999996" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstItem="UXS-ha-Qpo" firstAttribute="centerY" secondItem="pkR-vB-vNm" secondAttribute="centerY" id="2uP-9a-TTm"/>
+                                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="eSN-3x-epu"/>
+                                                                    </constraints>
+                                                                </view>
                                                             </subviews>
                                                             <constraints>
-                                                                <constraint firstItem="UXS-ha-Qpo" firstAttribute="top" secondItem="5I2-oO-N80" secondAttribute="topMargin" id="3vm-Ue-i6k"/>
-                                                                <constraint firstItem="UXS-ha-Qpo" firstAttribute="bottom" secondItem="5I2-oO-N80" secondAttribute="bottomMargin" id="7Xr-YB-ZeR"/>
-                                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="UXS-ha-Qpo" secondAttribute="trailing" constant="100" id="DaP-7n-q1k"/>
-                                                                <constraint firstItem="4O0-Ff-kqk" firstAttribute="top" secondItem="5I2-oO-N80" secondAttribute="topMargin" id="Ept-uU-D3P"/>
-                                                                <constraint firstAttribute="trailingMargin" secondItem="4O0-Ff-kqk" secondAttribute="trailing" id="FgX-nH-b6U"/>
-                                                                <constraint firstItem="UXS-ha-Qpo" firstAttribute="leading" secondItem="5I2-oO-N80" secondAttribute="leadingMargin" id="OPd-Ex-fUD"/>
-                                                                <constraint firstItem="4O0-Ff-kqk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5I2-oO-N80" secondAttribute="leadingMargin" constant="100" id="hja-bP-rbE"/>
-                                                                <constraint firstItem="4O0-Ff-kqk" firstAttribute="bottom" secondItem="5I2-oO-N80" secondAttribute="bottomMargin" id="jv1-Bc-dmf"/>
+                                                                <constraint firstItem="QGQ-3U-W5I" firstAttribute="leading" secondItem="5I2-oO-N80" secondAttribute="leadingMargin" constant="-8" id="GOD-9z-VEk"/>
+                                                                <constraint firstItem="QGQ-3U-W5I" firstAttribute="centerY" secondItem="5I2-oO-N80" secondAttribute="centerY" id="Q01-Oc-wba"/>
+                                                                <constraint firstItem="pkR-vB-vNm" firstAttribute="leading" secondItem="QGQ-3U-W5I" secondAttribute="trailing" constant="8" id="mcp-Ld-8Lb"/>
+                                                                <constraint firstItem="pkR-vB-vNm" firstAttribute="centerY" secondItem="5I2-oO-N80" secondAttribute="centerY" id="r7a-zG-Tzv"/>
                                                             </constraints>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="mcp-Ld-8Lb"/>
+                                                                </mask>
+                                                            </variation>
                                                         </tableViewCellContentView>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="pkR-vB-vNm" secondAttribute="trailing" constant="1" id="Eqt-ea-J2h"/>
+                                                            <constraint firstItem="pkR-vB-vNm" firstAttribute="centerY" secondItem="k9U-fH-6bl" secondAttribute="centerY" id="uhU-tv-E2H"/>
+                                                        </constraints>
+                                                        <variation key="default">
+                                                            <mask key="constraints">
+                                                                <exclude reference="Eqt-ea-J2h"/>
+                                                                <exclude reference="uhU-tv-E2H"/>
+                                                            </mask>
+                                                        </variation>
                                                         <connections>
                                                             <outlet property="chatMateMessageLabel" destination="UXS-ha-Qpo" id="h3b-VM-TwU"/>
-                                                            <outlet property="myMessageLabel" destination="4O0-Ff-kqk" id="lsv-PY-Cbt"/>
+                                                            <outlet property="foto" destination="QGQ-3U-W5I" id="JJ3-kz-pnh"/>
+                                                            <outlet property="viewLabel" destination="pkR-vB-vNm" id="XPc-LF-KlN"/>
                                                         </connections>
                                                     </tableViewCell>
                                                 </prototypes>
@@ -430,6 +446,12 @@
                                                     <outlet property="delegate" destination="APA-Uv-aJK" id="HZw-04-vT7"/>
                                                 </connections>
                                             </tableView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7GK-PV-KhG">
+                                                <rect key="frame" x="533" y="35" width="42" height="21"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="11"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="YZz-SZ-byr" secondAttribute="width" id="8fg-ME-8PH"/>
@@ -493,6 +515,7 @@
                     <connections>
                         <outlet property="historicalMessagesTableView" destination="YZz-SZ-byr" id="j3t-Z0-sNA"/>
                         <outlet property="messageEditField" destination="2ev-D1-Xi8" id="nU8-Gk-LoZ"/>
+                        <outlet property="referencia" destination="7GK-PV-KhG" id="Emo-q1-9JT"/>
                         <outlet property="scrollView" destination="UOK-3E-Xmv" id="1jk-eQ-flz"/>
                     </connections>
                 </viewController>

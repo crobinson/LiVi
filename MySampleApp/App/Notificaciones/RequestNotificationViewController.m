@@ -46,9 +46,9 @@
     
     PFObject *notificationObject = [PFObject objectWithClassName:@"Notifications"];
     notificationObject[@"alert"] = @"Live Stream / Task Acepted";
-    
+    notificationObject[@"type"] = @"streaming";
     //for (PFObject *userObj in userArray){
-        notificationObject[@"title"] = [PFUser currentUser][@"nickname"];
+    notificationObject[@"title"] = [PFUser currentUser][@"nickname"];
     //}
     notificationObject[@"from"] = [PFUser currentUser].objectId;
     notificationObject[@"to"] = _userId;
@@ -70,19 +70,15 @@
     [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if(succeeded){
             NSLog(@"%@", push);
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Task / Request"
-                                                            message: @"You action was notificated"
-                                                           delegate: self
-                                                  cancelButtonTitle: @"OK"
-                                                  otherButtonTitles: nil];
-            [alert show];
         }else if (error.code == kPFErrorPushMisconfigured) {
             NSLog(@"Could not send push. Push is misconfigured: %@", error.description);
         } else {
             NSLog(@"Error sending push: %@", error.description);
         }
     }];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Stream" bundle:nil];
+    UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"streamView"];
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 
 -(IBAction)sorry:(id)sender {
@@ -92,14 +88,13 @@
     
     PFQuery *pushQuery = [PFInstallation query];
     [pushQuery whereKey:@"user" matchesQuery: query];
-
-    
     
     PFObject *notificationObject = [PFObject objectWithClassName:@"Notifications"];
     notificationObject[@"alert"] = @"Sorry the estblishment you want to see is not available";
     for (PFObject *userObj in userArray){
         notificationObject[@"title"] = userObj[@"nickname"];
     }
+    notificationObject[@"type"] = @"streaming";
     notificationObject[@"from"] = [PFUser currentUser].objectId;
     notificationObject[@"to"] = _userId;
     [notificationObject save];

@@ -9,7 +9,10 @@
 #import "ChatViewController.h"
 #import "AppDelegate.h"
 
-@interface ChatViewController ()
+@interface ChatViewController () {
+    IBOutlet UILabel *referencia;
+}
+
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property (strong, nonatomic) IBOutlet UITextField *messageEditField;
@@ -24,6 +27,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.messageArray = [[NSMutableArray alloc] init];
+    NSData* imageData = [[NSUserDefaults standardUserDefaults] objectForKey:@"myImage"];
+    _myUserFoto = [UIImage imageWithData:imageData];
     self.historicalMessagesTableView.rowHeight = UITableViewAutomaticDimension;
     [self retrieveMessagesFromParseWithChatMateID:self.chatMateId];
     UITapGestureRecognizer *tapTableGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnTableView)];
@@ -127,11 +132,14 @@
         if(!_notification){
             PFQuery *query = [PFQuery queryWithClassName:@"Notifications"];
             [query whereKey:@"from" equalTo:_myUserId];
+            [query whereKey:@"taskId" equalTo:_taskId];
             [query whereKey:@"to" equalTo:_chatMateId];
+            [query whereKey:@"alert" equalTo:@"Message Received"];
             [query orderByAscending:@"timestamp"];
             
             [query findObjectsInBackgroundWithBlock:^(NSArray *notificationArray, NSError *error) {
                 if (!error) {
+                    NSLog(@"%@", notificationArray);
                     if(notificationArray.count<1){
                         _notification = [PFObject objectWithClassName:@"Notifications"];
                         _notification[@"from"]  = _myUserId;
@@ -224,6 +232,27 @@
 
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    
+    UILabel *textolabel;
+    PFObject *chatMessage = self.messageArray[indexPath.row];
+    textolabel.text = chatMessage[@"text"];
+    NSString *texto = chatMessage[@"text"];
+    textolabel=[[UILabel alloc]initWithFrame:CGRectMake(85, 30, self.view.frame.size.width - 90, 75)];
+    textolabel.font=referencia.font;
+    textolabel.numberOfLines=0;
+    CGSize maximumLabelSize = CGSizeMake(self.view.frame.size.width - 78, FLT_MAX);
+    CGSize expectedLabelSize = [texto sizeWithFont:textolabel.font constrainedToSize:maximumLabelSize lineBreakMode:textolabel.lineBreakMode];
+    
+    if(expectedLabelSize.height+10<70)
+        return 110;
+    
+    return expectedLabelSize.height+60;
+    
+    
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
@@ -238,9 +267,61 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MNCChatMessageCell *messageCell = [tableView dequeueReusableCellWithIdentifier:@"MessageListPrototypeCell" forIndexPath:indexPath];
-    [self configureCell:messageCell forIndexPath:indexPath];
     
+    MNCChatMessageCell *messageCell = [tableView dequeueReusableCellWithIdentifier:@"MessageListPrototypeCell" forIndexPath:indexPath];
+    
+    PFObject *chatMessage = self.messageArray[indexPath.row];
+    
+    messageCell.viewLabel.layer.masksToBounds = YES;
+    [messageCell.viewLabel.layer setCornerRadius:15.0f];
+    
+    UILabel *textolabel;
+    textolabel.text = chatMessage[@"text"];
+    NSString *texto = chatMessage[@"text"];
+    textolabel=[[UILabel alloc]initWithFrame:CGRectMake(85, 30, self.view.frame.size.width - 90, 75)];
+    textolabel.font=messageCell.chatMateMessageLabel.font;
+    textolabel.numberOfLines=0;
+    messageCell.chatMateMessageLabel.numberOfLines = 0;
+    CGSize maximumLabelSize = CGSizeMake(self.view.frame.size.width - 78, FLT_MAX);
+    CGSize expectedLabelSize = [texto sizeWithFont:textolabel.font constrainedToSize:maximumLabelSize lineBreakMode:textolabel.lineBreakMode];
+    
+    
+    
+    CGRect newFrame = textolabel.frame;
+    newFrame.size.height = expectedLabelSize.height;
+    messageCell.chatMateMessageLabel.frame = newFrame;
+    messageCell.chatMateMessageLabel.text = chatMessage[@"text"];
+    
+    
+    UIView *viewLabel = [[UIView alloc] initWithFrame:CGRectMake(78, 20, self.view.frame.size.width - 78, newFrame.size.height + 10)];
+    viewLabel.layer.masksToBounds = YES;
+    [viewLabel.layer setCornerRadius:15.0f];
+    
+    if ([chatMessage[@"senderId"] isEqualToString:self.myUserId]) {
+        // If the message was sent by myself
+        messageCell.foto.image = _myUserFoto;
+        viewLabel.backgroundColor = [UIColor colorWithRed:54.0/255 green:121.0/255 blue:189.0/255 alpha:1];
+    } else {
+        // If the message was sent by the chat mate
+        messageCell.foto.image = _chatMateFoto;
+        viewLabel.backgroundColor = [UIColor colorWithRed:84.0/255 green:196.0/255 blue:238.0/255 alpha:1];
+    }
+    
+    UILabel *NombreLabel;
+    
+    if(expectedLabelSize.height+10<70)
+        viewLabel.frame = CGRectMake(78, 25, self.view.frame.size.width - 78, 75);
+    else
+        viewLabel.frame = CGRectMake(78, 25, self.view.frame.size.width - 78, expectedLabelSize.height+20);
+    
+    NombreLabel=[[UILabel alloc]initWithFrame:CGRectMake(viewLabel.frame.origin.x+10, (viewLabel.frame.size.height - textolabel.frame.size.height)/2, textolabel.frame.size.width, textolabel.frame.size.height)];
+    NombreLabel.font=messageCell.chatMateMessageLabel.font;
+    NombreLabel.textColor = [UIColor whiteColor];
+    NombreLabel.text = messageCell.chatMateMessageLabel.text;
+    NombreLabel.numberOfLines=0;
+    NombreLabel.frame=CGRectMake(textolabel.frame.origin.x, textolabel.frame.origin.y, textolabel.frame.size.width, textolabel.frame.size.height);
+    [messageCell.contentView addSubview:viewLabel];
+    [messageCell.contentView addSubview:NombreLabel];
     return messageCell;
 }
 
@@ -249,17 +330,7 @@
 
 - (void)configureCell:(MNCChatMessageCell *)messageCell forIndexPath:(NSIndexPath *)indexPath {
     
-    PFObject *chatMessage = self.messageArray[indexPath.row];
     
-    if ([chatMessage[@"senderId"] isEqualToString:self.myUserId]) {
-        // If the message was sent by myself
-        messageCell.chatMateMessageLabel.text = @"";
-        messageCell.myMessageLabel.text = chatMessage[@"text"];
-    } else {
-        // If the message was sent by the chat mate
-        messageCell.myMessageLabel.text = @"";
-        messageCell.chatMateMessageLabel.text = chatMessage[@"text"];
-    }
 }
 
 - (void)retrieveMessagesFromParseWithChatMateID:(NSString *)chatMateId {

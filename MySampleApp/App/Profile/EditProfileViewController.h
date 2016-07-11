@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EditProfileViewController : UIViewController
+@interface EditProfileViewController : UIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate,UIPickerViewDelegate, UIActionSheetDelegate>
 
+@property (weak, nonatomic) UIImage *croppedImage;
+@property (weak, nonatomic) NSString *nameString;
+@property (weak, nonatomic) NSString *emailString;
+@property (weak, nonatomic) NSString *descString;
 @end
