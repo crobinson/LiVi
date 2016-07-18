@@ -10,6 +10,8 @@
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"
 #import "UIImage+Resize.h"
+#import "SlideNavigationController.h"
+#import "CouponsMenuViewController.h"
 
 @interface CouponsViewController (){
     __weak IBOutlet UIPageControl *pagecontroll;
@@ -21,14 +23,32 @@
     
 }
 
+@property (strong, nonatomic) MBProgressHUD *progressHUD;
+
 @end
 
 @implementation CouponsViewController
+
+- (void) hideProgressHUD
+{
+    if (_progressHUD)
+    {
+        [_progressHUD hide:YES];
+        [_progressHUD removeFromSuperview];
+        _progressHUD = nil;
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     dataSource = [[NSMutableArray alloc] init];
+    
+    [SlideNavigationController sharedInstance].portraitSlideOffset = self.view.frame.size.width - 262;
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    CouponsMenuViewController *rightMenu = [storyboard instantiateViewControllerWithIdentifier:@"CouponsMenuViewController"];
+    [SlideNavigationController sharedInstance].rightMenu = rightMenu;
     
     [myscroll setScrollEnabled:YES];
     [myscroll setUserInteractionEnabled:YES];
@@ -45,48 +65,75 @@
     
 }
 
-- (void)getDataSource {
-    //PFQuery *queryuser = [PFUser query];
-    //[queryuser getObjectWithId:[PFUser currentUser].objectId];
-    
-    PFQuery *query = [PFQuery queryWithClassName:@"Coupons"];
-    [query whereKey:@"userId" equalTo:[PFUser currentUser].objectId];
-    NSArray *coupons = [query findObjects];
-    myscroll.contentSize = CGSizeMake(myscroll.frame.size.width * coupons.count, myscroll.frame.size.height);
-    int counter = 0;
-    for (PFObject *userObj in coupons) {
-        NSLog(@"%f", myscroll.frame.size.width);
-        UIView * contenview =  [[UIView alloc] initWithFrame:CGRectMake(myscroll.frame.size.width *counter, 0, 250, myscroll.frame.size.height)];
-        
-        UIImageView *subview = [[UIImageView alloc] initWithFrame:CGRectMake(myscroll.frame.size.width *counter, 0, 250, myscroll.frame.size.height)];
-        
-        PFFile *imagePf = (PFFile *)[userObj objectForKey:@"image"];
-        UIImage *image = [UIImage imageWithData:imagePf.getData];
-        subview.image = image;
-        
-        CGSize imageSize = image.size;
-        CGSize imageViewSize = subview.frame.size;
-        
-        float imageRatio = imageSize.width / imageSize.height;
-        float viewRatio = imageViewSize.width / imageViewSize.height;
-        float scale;
-        
-        if(imageRatio > viewRatio){
-            scale = imageSize.width / imageViewSize.width;
-        }else{
-            scale = imageSize.height / imageViewSize.height;
-        }
-        
-        CGRect frame = CGRectZero;
-        
-        frame.size = CGSizeMake(roundf(imageSize.width / scale), roundf(imageSize.height / scale));
-        frame.origin = CGPointMake((imageViewSize.width - frame.size.width) / 2.0, (imageViewSize.height - frame.size.height) / 2.0);
+- (BOOL)slideNavigationControllerShouldDisplayRightMenu
+{
+    return YES;
+}
 
-        [subview setFrame:frame];
-        [contenview addSubview:subview];
-        [myscroll addSubview:contenview];
-        counter = counter + 1;
+- (IBAction)onRightBtnMenu:(id)sender {
+    [[SlideNavigationController sharedInstance] righttMenuSelected:self];
+}
+
+- (void)getDataSource {
+    
+    if (_progressHUD == nil)
+    {
+        _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }
+    
+    [dataSource removeAllObjects];
+    
+    PFQuery *querySuscription = [PFQuery queryWithClassName:@"CouponsSubscriptions"];
+    [querySuscription whereKey:@"userId" equalTo:[PFUser currentUser].objectId];
+    NSArray *CouponsSubscriptions = [querySuscription findObjects];
+    
+    if(CouponsSubscriptions.count==0){
+        UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Coupons" message:@"You dont have subscriptions to any coupons." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [errorAlertView show];
+    }else{
+        PFQuery *query = [PFQuery queryWithClassName:@"Coupons"];
+        [query whereKey:@"objectId" equalTo:[[CouponsSubscriptions objectAtIndex:0] objectForKey:@"couponId"]];
+        NSArray *coupons = [query findObjects];
+        myscroll.contentSize = CGSizeMake(myscroll.frame.size.width * coupons.count, myscroll.frame.size.height);
+        int counter = 0;
+        
+        
+        for (PFObject *userObj in coupons) {
+            NSLog(@"%f", myscroll.frame.size.width);
+            UIView * contenview =  [[UIView alloc] initWithFrame:CGRectMake(myscroll.frame.size.width *counter, 0, 250, myscroll.frame.size.height)];
+            
+            UIImageView *subview = [[UIImageView alloc] initWithFrame:CGRectMake(myscroll.frame.size.width *counter, 0, 250, myscroll.frame.size.height)];
+            
+            PFFile *imagePf = (PFFile *)[userObj objectForKey:@"image"];
+            UIImage *image = [UIImage imageWithData:imagePf.getData];
+            subview.image = image;
+            
+            CGSize imageSize = image.size;
+            CGSize imageViewSize = subview.frame.size;
+            
+            float imageRatio = imageSize.width / imageSize.height;
+            float viewRatio = imageViewSize.width / imageViewSize.height;
+            float scale;
+            
+            if(imageRatio > viewRatio){
+                scale = imageSize.width / imageViewSize.width;
+            }else{
+                scale = imageSize.height / imageViewSize.height;
+            }
+            
+            CGRect frame = CGRectZero;
+            
+            frame.size = CGSizeMake(roundf(imageSize.width / scale), roundf(imageSize.height / scale));
+            frame.origin = CGPointMake((imageViewSize.width - frame.size.width) / 2.0, (imageViewSize.height - frame.size.height) / 2.0);
+            
+            [subview setFrame:frame];
+            [contenview addSubview:subview];
+            [myscroll addSubview:contenview];
+            counter = counter + 1;
+        }
+    }
+    
+    [self hideProgressHUD];
 }
 
 - (void)didReceiveMemoryWarning {

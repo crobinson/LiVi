@@ -12,7 +12,9 @@
 #import "UIImage+Resize.h"
 #import "VendorProfileViewController.h"
 
+
 @implementation RightMenuViewController
+
 
 #pragma mark - UIViewController Methods -
 
@@ -27,7 +29,24 @@
 	
 }
 
+
+- (void) hideProgressHUD
+{
+    if (_progressHUD)
+    {
+        [_progressHUD hide:YES];
+        [_progressHUD removeFromSuperview];
+        _progressHUD = nil;
+    }
+}
+
 -(void)getAroundPV:(NSString *)vendor {
+   
+    if (_progressHUD == nil)
+    {
+        _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
+
     
     [aroundDataSource removeAllObjects];
     PFQuery *query = [PFUser query];
@@ -62,7 +81,7 @@
         [aroundDataSource addObject:aroundDic];
         
     }
-    NSLog(@"%@", aroundDataSource);
+    [self hideProgressHUD];
     [self.tableView reloadData];
    
 }

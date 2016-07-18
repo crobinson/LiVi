@@ -1,9 +1,9 @@
 //
-//  RightMenuViewController.h
-//  SlideMenu
+//  CouponsMenuViewController.h
+//  Livi
 //
-//  Created by Aryan Gh on 4/26/14.
-//  Copyright (c) 2014 Aryan Ghassemi. All rights reserved.
+//  Created by Carlos Robinson on 7/12/16.
+//  Copyright © 2016 livi. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -14,15 +14,14 @@
 #import "SlideNavigationContorllerAnimatorScaleAndFade.h"
 #import "SlideNavigationContorllerAnimatorSlideAndFade.h"
 #import "NIDropDown.h"
-#import "MBProgressHUD.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface RightMenuViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, NIDropDownDelegate> {
+@interface CouponsMenuViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate, NIDropDownDelegate> {
     NSMutableArray *aroundDataSource;
     UIImage *croppedImg;
     NIDropDown *dropDown;
 }
 @property (weak, nonatomic) IBOutlet UIButton *selectButton;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) MBProgressHUD *progressHUD;
 
 @end

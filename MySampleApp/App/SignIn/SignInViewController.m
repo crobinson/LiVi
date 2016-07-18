@@ -16,6 +16,8 @@
 #import <AWSCore/AWSCore.h>
 #import "AWSIdentityManager.h"
 #import <Parse/Parse.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
 
 static NSString *LOG_TAG;
@@ -71,15 +73,7 @@ static NSString *LOG_TAG;
     [self.facebookButton addTarget:self
                             action:@selector(handleFacebookLogin)
                   forControlEvents:UIControlEventTouchUpInside];
-    /*UIImage *facebookButtonImage = [UIImage imageNamed:@"FacebookButton"];
-    if (facebookButtonImage) {
-        [self.facebookButton setImage:facebookButtonImage
-                             forState:UIControlStateNormal];
-    } else {
-        NSLog(@"%@: Facebook button image unavailable. We're hiding this button.", LOG_TAG);
-        self.facebookButton.hidden = YES;
-    }*/
-
+   
     /*[self.view addConstraint:[NSLayoutConstraint
                                  constraintWithItem:self.facebookButton
                                           attribute:NSLayoutAttributeTop
@@ -377,7 +371,16 @@ static NSString *LOG_TAG;
 }
 
 - (void)handleFacebookLogin {
-    [self handleLoginWithSignInProvider:AWSSignInProviderTypeFacebook];
+    //[self handleLoginWithSignInProvider:AWSSignInProviderTypeFacebook];
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:@[ @"publish_actions" ] block:^(PFUser *user, NSError *error) {
+        if (!user) {
+            NSLog(@"Uh oh. The user cancelled the Facebook login.");
+        } else if (user.isNew) {
+            NSLog(@"User signed up and logged in through Facebook!");
+        } else {
+            NSLog(@"User logged in through Facebook!");
+        }
+    }];
 }
 
 - (IBAction) manageLocation:(id)sender {

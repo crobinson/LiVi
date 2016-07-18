@@ -20,6 +20,50 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MAP-m1-vGB">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.75" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="f0j-w1-Qi1">
+                                        <rect key="frame" x="8" y="562" width="541" height="30"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="GNc-kF-fI6"/>
+                                        </constraints>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="userchat.png" translatesAutoresizingMaskIntoConstraints="NO" id="gav-eW-NcR">
+                                        <rect key="frame" x="557" y="557" width="35" height="35"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dRG-iW-ZWb">
+                                        <rect key="frame" x="8" y="488" width="70" height="66"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="66" id="Aua-r2-YIP"/>
+                                            <constraint firstAttribute="width" constant="75" id="FVT-Pk-YDY"/>
+                                        </constraints>
+                                    </imageView>
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xAS-NL-pZ2">
+                                        <rect key="frame" x="86" y="488" width="463" height="66"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Chat mate message shows here" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RAG-mR-N8z">
+                                                <rect key="frame" x="8" y="25" width="505" height="16"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="11"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="3"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.91764705879999997" green="0.34901960780000002" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="RAG-mR-N8z" firstAttribute="centerY" secondItem="xAS-NL-pZ2" secondAttribute="centerY" id="9uI-sB-amf"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="dzv-3W-SKu"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" tag="100" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dXX-5q-PAX">
@@ -36,28 +80,15 @@
                                     <action selector="btnConnectTouch:" destination="ROu-Fo-jGe" eventType="touchUpInside" id="wMX-ZU-lBw"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" alpha="0.75" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="f0j-w1-Qi1">
-                                <rect key="frame" x="8" y="285" width="584" height="30"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="GNc-kF-fI6"/>
-                                </constraints>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="4KK-Dw-Brd" firstAttribute="top" secondItem="f0j-w1-Qi1" secondAttribute="bottom" id="0xC-kx-NUO"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="f0j-w1-Qi1" secondAttribute="trailing" constant="-12" id="7Fr-Py-nTn"/>
                             <constraint firstItem="MAP-m1-vGB" firstAttribute="width" secondItem="lf1-ao-gav" secondAttribute="width" id="BYJ-Ik-2VA"/>
                             <constraint firstItem="MAP-m1-vGB" firstAttribute="centerY" secondItem="lf1-ao-gav" secondAttribute="centerY" id="EKO-ab-CZK"/>
                             <constraint firstItem="vXK-u7-ZP3" firstAttribute="centerY" secondItem="lf1-ao-gav" secondAttribute="centerY" id="FOK-2z-Qf4"/>
                             <constraint firstItem="MAP-m1-vGB" firstAttribute="centerX" secondItem="lf1-ao-gav" secondAttribute="centerX" id="OWG-Wm-wOP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="dXX-5q-PAX" secondAttribute="trailing" constant="24" id="cRn-Oy-zOw"/>
                             <constraint firstItem="MAP-m1-vGB" firstAttribute="height" secondItem="lf1-ao-gav" secondAttribute="height" id="dr2-wu-hWH"/>
-                            <constraint firstItem="f0j-w1-Qi1" firstAttribute="leading" secondItem="lf1-ao-gav" secondAttribute="leadingMargin" constant="-12" id="iop-FP-xFK"/>
                             <constraint firstItem="dXX-5q-PAX" firstAttribute="top" secondItem="kmZ-JT-4Az" secondAttribute="bottom" constant="20" id="m95-D9-cBe"/>
                             <constraint firstItem="vXK-u7-ZP3" firstAttribute="centerX" secondItem="lf1-ao-gav" secondAttribute="centerX" id="wNs-eG-VJ0"/>
                         </constraints>
@@ -76,5 +107,6 @@
     <resources>
         <image name="close.png" width="43" height="43"/>
         <image name="playStream.png" width="45" height="53"/>
+        <image name="userchat.png" width="37" height="37"/>
     </resources>
 </document>

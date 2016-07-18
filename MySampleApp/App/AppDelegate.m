@@ -13,8 +13,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AppDelegate.h"
 #import "AWSMobileClient.h"
-//#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <Parse/Parse.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "RequestNotificationViewController.h"
 #import "ChatViewController.h"
 //#import "AWSPushManager.h"
@@ -72,9 +73,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     
     // Override point for customization after application launch.
-    return [[AWSMobileClient sharedInstance] didFinishLaunching:application
-                                             withOptions:launchOptions];
     
+     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
+    
+    return [[AWSMobileClient sharedInstance] didFinishLaunching:application
+                                                    withOptions:launchOptions];
     // Initialize Parse.
     /*[Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = @"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta";
@@ -102,14 +105,14 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"application application: %@, openURL: %@, sourceApplication: %@", application.description, url.absoluteURL,
           sourceApplication);
 
-    return [[AWSMobileClient sharedInstance] withApplication:application
+    /*return [[AWSMobileClient sharedInstance] withApplication:application
                                                      withURL:url
                                        withSourceApplication:sourceApplication
-                                              withAnnotation:annotation];
-    /*return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                              withAnnotation:annotation];*/
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                           openURL:url
                                                 sourceApplication:sourceApplication
-                                                       annotation:annotation];*/
+                                                       annotation:annotation];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -126,8 +129,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"applicationDidBecomeActive");
     application.applicationIconBadgeNumber = 0;
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    [[AWSMobileClient sharedInstance] applicationDidBecomeActive:application];
-    //[FBSDKAppEvents activateApp];
+    //[[AWSMobileClient sharedInstance] applicationDidBecomeActive:application];
+    [FBSDKAppEvents activateApp];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

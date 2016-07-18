@@ -181,6 +181,9 @@
 		078441E91D249140008AE402 /* line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 078441E71D249140008AE402 /* line@2x.png */; };
 		078441EC1D2530C8008AE402 /* VendorProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 078441EB1D2530C8008AE402 /* VendorProfileViewController.m */; };
 		078441EF1D2556EA008AE402 /* FollowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 078441EE1D2556EA008AE402 /* FollowViewController.m */; };
+		078772E61D3BE1D10024E692 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078772E51D3BE1D10024E692 /* ParseFacebookUtilsV4.framework */; };
+		078772E91D3C0E060024E692 /* userchat.png in Resources */ = {isa = PBXBuildFile; fileRef = 078772E71D3C0E060024E692 /* userchat.png */; };
+		078772EA1D3C0E060024E692 /* userchat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 078772E81D3C0E060024E692 /* userchat@2x.png */; };
 		079F87B11D32924F00AEF8D9 /* SlideNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 079F87B01D32924F00AEF8D9 /* SlideNavigationController.m */; };
 		079F87B71D32927C00AEF8D9 /* LeftMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 079F87B41D32927C00AEF8D9 /* LeftMenuViewController.m */; };
 		079F87B81D32927C00AEF8D9 /* RightMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 079F87B61D32927C00AEF8D9 /* RightMenuViewController.m */; };
@@ -189,6 +192,8 @@
 		079F87C71D32936800AEF8D9 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 079F87BF1D32936800AEF8D9 /* SlideNavigationContorllerAnimatorSlideAndFade.m */; };
 		079F87C81D32936800AEF8D9 /* SlideNavigationContorllerAnimatorScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 079F87C11D32936800AEF8D9 /* SlideNavigationContorllerAnimatorScale.m */; };
 		079F87C91D32936800AEF8D9 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 079F87C31D32936800AEF8D9 /* SlideNavigationContorllerAnimatorScaleAndFade.m */; };
+		079F87D61D34756200AEF8D9 /* AddCouponsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 079F87D51D34756200AEF8D9 /* AddCouponsViewController.m */; };
+		079F87DC1D35912D00AEF8D9 /* CouponsMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 079F87DB1D35912D00AEF8D9 /* CouponsMenuViewController.m */; };
 		07C7C79D1CEB60AD00B09DC0 /* RequestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C7C79C1CEB60AD00B09DC0 /* RequestsViewController.m */; };
 		07C7C7A11CEB62D000B09DC0 /* instantreq.png in Resources */ = {isa = PBXBuildFile; fileRef = 07C7C7A01CEB62D000B09DC0 /* instantreq.png */; };
 		07C7C7A51CEB633100B09DC0 /* InstantRequest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07C7C7A41CEB633100B09DC0 /* InstantRequest.storyboard */; };
@@ -788,6 +793,9 @@
 		078441EB1D2530C8008AE402 /* VendorProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VendorProfileViewController.m; path = App/Profile/VendorProfileViewController.m; sourceTree = "<group>"; };
 		078441ED1D2556EA008AE402 /* FollowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FollowViewController.h; path = App/Profile/FollowViewController.h; sourceTree = "<group>"; };
 		078441EE1D2556EA008AE402 /* FollowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FollowViewController.m; path = App/Profile/FollowViewController.m; sourceTree = "<group>"; };
+		078772E51D3BE1D10024E692 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
+		078772E71D3C0E060024E692 /* userchat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userchat.png; sourceTree = "<group>"; };
+		078772E81D3C0E060024E692 /* userchat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userchat@2x.png"; sourceTree = "<group>"; };
 		079F87AF1D32924F00AEF8D9 /* SlideNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationController.h; sourceTree = "<group>"; };
 		079F87B01D32924F00AEF8D9 /* SlideNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationController.m; sourceTree = "<group>"; };
 		079F87B31D32927C00AEF8D9 /* LeftMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftMenuViewController.h; sourceTree = "<group>"; };
@@ -805,6 +813,10 @@
 		079F87C21D32936800AEF8D9 /* SlideNavigationContorllerAnimatorScaleAndFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorScaleAndFade.h; sourceTree = "<group>"; };
 		079F87C31D32936800AEF8D9 /* SlideNavigationContorllerAnimatorScaleAndFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorScaleAndFade.m; sourceTree = "<group>"; };
 		079F87C41D32936800AEF8D9 /* SlideNavigationContorllerAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimator.h; sourceTree = "<group>"; };
+		079F87D41D34756200AEF8D9 /* AddCouponsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddCouponsViewController.h; path = App/Coupons/AddCouponsViewController.h; sourceTree = "<group>"; };
+		079F87D51D34756200AEF8D9 /* AddCouponsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddCouponsViewController.m; path = App/Coupons/AddCouponsViewController.m; sourceTree = "<group>"; };
+		079F87DA1D35912D00AEF8D9 /* CouponsMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouponsMenuViewController.h; sourceTree = "<group>"; };
+		079F87DB1D35912D00AEF8D9 /* CouponsMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouponsMenuViewController.m; sourceTree = "<group>"; };
 		07C7C79B1CEB60AD00B09DC0 /* RequestsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RequestsViewController.h; path = App/requests/RequestsViewController.h; sourceTree = "<group>"; };
 		07C7C79C1CEB60AD00B09DC0 /* RequestsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RequestsViewController.m; path = App/requests/RequestsViewController.m; sourceTree = "<group>"; };
 		07C7C7A01CEB62D000B09DC0 /* instantreq.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = instantreq.png; sourceTree = "<group>"; };
@@ -1098,6 +1110,7 @@
 				076B2F511CE967F10098489C /* libavformat.a in Frameworks */,
 				6BCB92911BAF88D600475B9E /* CoreLocation.framework in Frameworks */,
 				076B2FF21CE968830098489C /* libx264.a in Frameworks */,
+				078772E61D3BE1D10024E692 /* ParseFacebookUtilsV4.framework in Frameworks */,
 				078441E01D217BB0008AE402 /* ParseUI.framework in Frameworks */,
 				6BCB928D1BAF889F00475B9E /* CoreMotion.framework in Frameworks */,
 				076B2FED1CE968830098489C /* libavutil.a in Frameworks */,
@@ -1809,6 +1822,8 @@
 				079F87B41D32927C00AEF8D9 /* LeftMenuViewController.m */,
 				079F87B51D32927C00AEF8D9 /* RightMenuViewController.h */,
 				079F87B61D32927C00AEF8D9 /* RightMenuViewController.m */,
+				079F87DA1D35912D00AEF8D9 /* CouponsMenuViewController.h */,
+				079F87DB1D35912D00AEF8D9 /* CouponsMenuViewController.m */,
 			);
 			name = menues;
 			sourceTree = "<group>";
@@ -1993,6 +2008,8 @@
 		07CFD3BF1CAABA4000CB2735 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				078772E71D3C0E060024E692 /* userchat.png */,
+				078772E81D3C0E060024E692 /* userchat@2x.png */,
 				0737EAEF1D2BF28300F5C82D /* redeem.png */,
 				0737EAF01D2BF28300F5C82D /* redeem@2x.png */,
 				0737EAEB1D2BF27600F5C82D /* coins.png */,
@@ -2162,6 +2179,8 @@
 			children = (
 				07D58A4C1CD10BFB007CF5E2 /* CouponsViewController.h */,
 				07D58A4D1CD10BFB007CF5E2 /* CouponsViewController.m */,
+				079F87D41D34756200AEF8D9 /* AddCouponsViewController.h */,
+				079F87D51D34756200AEF8D9 /* AddCouponsViewController.m */,
 				07D58A4F1CD10C13007CF5E2 /* Coupons.storyboard */,
 			);
 			name = Coupons;
@@ -2296,6 +2315,7 @@
 		6B443C891B5DD94700406B17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				078772E51D3BE1D10024E692 /* ParseFacebookUtilsV4.framework */,
 				078441DD1D217BB0008AE402 /* ParseUI.framework */,
 				078441DE1D217BB0008AE402 /* Parse.framework */,
 				078441DF1D217BB0008AE402 /* Bolts.framework */,
@@ -2583,6 +2603,7 @@
 				07DBEF861D1DCC0C005A561E /* calenarwhite.png in Resources */,
 				07CC568B1CB86ED4003B6916 /* HelveticaNeueLTStd-It.otf in Resources */,
 				0772E6C51CC05E1B009608F0 /* blocked.png in Resources */,
+				078772EA1D3C0E060024E692 /* userchat@2x.png in Resources */,
 				073EDFE51CCC3D8C008E0F6F /* startwhite.png in Resources */,
 				07CC56981CB86ED4003B6916 /* HelveticaNeueLTStd-Roman.otf in Resources */,
 				0772E6991CBF77DA009608F0 /* gear@2x.png in Resources */,
@@ -2652,6 +2673,7 @@
 				07CC56A41CB86ED4003B6916 /* HelveticaNeueLTStd-UltLtIt.otf in Resources */,
 				07CC56C71CB8B347003B6916 /* task.png in Resources */,
 				073EDFE61CCC3D8C008E0F6F /* startwhite@2x.png in Resources */,
+				078772E91D3C0E060024E692 /* userchat.png in Resources */,
 				CE790C461C2894CC000CA0DE /* Images.xcassets in Resources */,
 				07CC56A21CB86ED4003B6916 /* HelveticaNeueLTStd-UltLtEx.otf in Resources */,
 				0772E68D1CBF75B0009608F0 /* tag@2x.png in Resources */,
@@ -2770,6 +2792,7 @@
 				07CC56311CB49133003B6916 /* UIImage+WebP.m in Sources */,
 				07CC562D1CB49133003B6916 /* SDWebImagePrefetcher.m in Sources */,
 				CE790C431C2894C0000CA0DE /* AppDelegate.m in Sources */,
+				079F87D61D34756200AEF8D9 /* AddCouponsViewController.m in Sources */,
 				07CC56271CB49133003B6916 /* SDImageCache.m in Sources */,
 				07FFFE171D0AD34400395DAF /* TasksViewController.m in Sources */,
 				07CC562C1CB49133003B6916 /* SDWebImageManager.m in Sources */,
@@ -2782,6 +2805,7 @@
 				07CC56281CB49133003B6916 /* SDWebImageCompat.m in Sources */,
 				CE790C561C289509000CA0DE /* AWSFacebookSignInProvider.m in Sources */,
 				0711EC5D1D1371F20073CEE8 /* ChatViewController.m in Sources */,
+				079F87DC1D35912D00AEF8D9 /* CouponsMenuViewController.m in Sources */,
 				0772E6821CBF5857009608F0 /* UIImage+Resize.m in Sources */,
 				07C7C79D1CEB60AD00B09DC0 /* RequestsViewController.m in Sources */,
 				079F87B71D32927C00AEF8D9 /* LeftMenuViewController.m in Sources */,

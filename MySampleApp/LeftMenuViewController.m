@@ -32,7 +32,6 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	self.tableView.separatorColor = [UIColor lightGrayColor];
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
 
 }
 
@@ -149,12 +148,58 @@
             storyboard = [UIStoryboard storyboardWithName:@"UserProfile" bundle:nil];
             vc = [storyboard instantiateViewControllerWithIdentifier: @"UserProfile"];
             break;
+            
+        case 6:
+            storyboard = [UIStoryboard storyboardWithName:@"Stream" bundle:nil];
+            vc = [storyboard instantiateViewControllerWithIdentifier: @"streamView"];
+            break;
+            
+        case 7:
+            storyboard = [UIStoryboard storyboardWithName:@"Coupons" bundle:nil];
+            vc = [storyboard instantiateViewControllerWithIdentifier: @"myCoupons"];
+            break;
+            
+        case 8:
+            storyboard = [UIStoryboard storyboardWithName:@"MoneyStoryboard" bundle:nil];
+            vc = [storyboard instantiateViewControllerWithIdentifier: @"MyMoney"];
+            break;
 			
 		/*case 3:
 			[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 			[[SlideNavigationController sharedInstance] popToRootViewControllerAnimated:YES];
 			return;
-			break;*/
+			break;
+         
+         else if (indexPath.row==4){
+         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"InstantRequest" bundle:nil];
+         UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Tasksrequests"];
+         [self.navigationController pushViewController:viewController
+         animated:YES];
+         }else if (indexPath.row==6){
+         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Stream" bundle:nil];
+         UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"streamView"];
+         //[self.navigationController pushViewController:viewControlleranimated:YES];
+         [self presentViewController:viewController animated:YES completion:nil];
+         }else if (indexPath.row==7){
+         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Coupons" bundle:nil];
+         UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"myCoupons"];
+         [self.navigationController pushViewController:viewController
+         animated:YES];
+         }else if (indexPath.row==3){
+         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
+         UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
+         [self.navigationController pushViewController:viewController
+         animated:YES];
+         }else if (indexPath.row==2){
+         [self.navigationController pushViewController:[[BasicViewController alloc] initWithNibName:@"BasicViewController" bundle:nil]
+         animated:YES];
+         }else if (indexPath.row==8){
+         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MoneyStoryboard" bundle:nil];
+         UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"MyMoney"];
+         [self.navigationController pushViewController:viewController
+         animated:YES];
+         }
+         */
 	}
 	
 	[[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:vc

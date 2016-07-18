@@ -71,6 +71,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    
+    [SlideNavigationController sharedInstance].portraitSlideOffset = self.view.frame.size.width - 262;
+    
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LeftMenuViewController *leftMenu = [storyboard instantiateViewControllerWithIdentifier:@"LeftMenuViewController"];
     
@@ -281,9 +284,9 @@
             [self hideProgressHUD];
         }else {
             [self hideProgressHUD];
-            NSString *errorString = [[error userInfo] objectForKey:@"error"];
+           /* NSString *errorString = [[error userInfo] objectForKey:@"error"];
             UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [errorAlertView show];
+            [errorAlertView show];*/
         }
     }];
     
@@ -309,7 +312,6 @@
     
     /*addrequestViewController *ctl = [[addrequestViewController alloc] initWithAnnot:annot.coordinate.latitude andLong:annot.coordinate.latitude];
     */
-    
     
     /*pOver = [[UIPopoverController alloc] initWithContentViewController:ctl];
      pOver.popoverContentSize = CGSizeMake(251, 204);
@@ -372,9 +374,25 @@
             
             [_happeningTableView reloadData];
         }else {
-            NSString *errorString = [[error userInfo] objectForKey:@"error"];
-            UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [errorAlertView show];
+            if(error.code==kPFErrorInvalidSessionToken){
+                
+                NSString *errorString = [NSString stringWithFormat:@"Session is no longer valid, please log in again."
+                                         ];
+                UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Invalid Session" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [errorAlertView show];
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"SignIn" bundle:nil];
+                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"SignIn"];
+                [self presentViewController:viewController
+                                   animated:YES
+                                 completion:nil];
+            
+            }else{
+                NSString *errorString = [[error userInfo] objectForKey:@"error"];
+                UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [errorAlertView show];
+            }
+            
+            
         }
         //[self getAroundPV:nil];
         if(!bandera)
@@ -639,74 +657,6 @@
         descripcion.text = sourceUser[@"description"];
         return cell;
 
-    }else{
-        AWSIdentityManager *identityManager = [AWSIdentityManager sharedInstance];
-        NSURL *imageUrl = identityManager.imageURL;
-        
-        if(indexPath.row==0){
-            UIImageView *_miimageView = (UIImageView *)[cell viewWithTag:101];
-            UILabel *nombre = (UILabel *)[cell viewWithTag:102];
-            UILabel *email = (UILabel *)[cell viewWithTag:103];
-            _miimageView.layer.masksToBounds = YES;
-            [_miimageView.layer setCornerRadius:39.0f];
-            
-            if ([AWSIdentityManager sharedInstance].isLoggedIn) {
-                
-                [_miimageView sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"avatarm.PNG"]];
-                if (identityManager.userName) {
-                    nombre.text = identityManager.userName;
-                } else {
-                    nombre.text = NSLocalizedString(@"GUEST USER", @"Placeholder text for the guest user.");
-                }
-                [[NSUserDefaults standardUserDefaults] setObject:identityManager.identityId forKey:@"objectId"];
-                email.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
-            }else{
-                PFUser *currentUser = [PFUser currentUser];
-                if (currentUser) {
-                    _miimageView.image = croppedImage;
-                    email.text = currentUser.username;
-                    [[NSUserDefaults standardUserDefaults] setObject:currentUser.objectId forKey:@"objectId"];
-                    nombre.text = [NSString stringWithFormat:@"%@ %@", currentUser[@"firstname"], currentUser[@"lastname"]];
-                    
-                }
-            }
-            
-        }else{
-            UIImageView *_miimageView = (UIImageView *)[cell viewWithTag:101];
-            UILabel *texto = (UILabel *)[cell viewWithTag:102];
-            if(indexPath.row==1){
-                _miimageView.image = [UIImage imageNamed:@"browse.png"];
-                texto.text = @"Browse";
-            }
-            else if(indexPath.row==2){
-                _miimageView.image = [UIImage imageNamed:@"calendar.png"];
-                texto.text = @"My Schedule";
-            }
-            if(indexPath.row==3){
-                _miimageView.image = [UIImage imageNamed:@"notifications.png"];
-                texto.text = @"Notifications";
-            }
-            else if(indexPath.row==4){
-                _miimageView.image = [UIImage imageNamed:@"task.png"];
-                texto.text = @"Task/Request";
-            }
-            else if(indexPath.row==5){
-                _miimageView.image = [UIImage imageNamed:@"profile.png"];
-                texto.text = @"Profile";
-            }
-            else if(indexPath.row==6){
-                _miimageView.image = [UIImage imageNamed:@"play.png"];
-                texto.text = @"Start Stream";
-            }
-            else if(indexPath.row==7){
-                _miimageView.image = [UIImage imageNamed:@"cupons.png"];
-                texto.text = @"Coupons";
-            }
-            else if(indexPath.row==8){
-                _miimageView.image = [UIImage imageNamed:@"money.png"];
-                texto.text = @"My Money";
-            }
-        }
     }
     
 
@@ -734,62 +684,7 @@
         NSString *str = [NSString stringWithFormat:@"%@", c.textLabel.text];
         [_selectButton setTitle:str forState:UIControlStateNormal];
         //[self getAroundPV:c.textLabel.text];
-    }else{
-        if(indexPath.row == 5){
-            PFUser *currentUser = [PFUser currentUser];
-            if (currentUser) {
-                /*if(![currentUser[@"vendor"] isEqualToString:@"NO"]){
-                 NSLog(@"%@", currentUser[@"description"]);
-                 UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"VendorProfile" bundle:nil];
-                 UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"VendorProfile"];
-                 [self.navigationController pushViewController:viewController
-                 animated:YES];
-                 }else if([currentUser[@"vendor"] isEqualToString:@"NO"]){*/
-                NSLog(@"%@", currentUser[@"description"]);
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"UserProfile" bundle:nil];
-                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"UserProfile"];
-                [self.navigationController pushViewController:viewController
-                                                     animated:YES];
-                //}
-            }else{
-                NSLog(@"%@", currentUser[@"description"]);
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"UserProfile" bundle:nil];
-                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"UserProfile"];
-                [self.navigationController pushViewController:viewController
-                                                     animated:YES];
-            }
-        }else if (indexPath.row==4){
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"InstantRequest" bundle:nil];
-            UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Tasksrequests"];
-            [self.navigationController pushViewController:viewController
-                                                 animated:YES];
-        }else if (indexPath.row==6){
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Stream" bundle:nil];
-            UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"streamView"];
-            //[self.navigationController pushViewController:viewControlleranimated:YES];
-            [self presentViewController:viewController animated:YES completion:nil];
-        }else if (indexPath.row==7){
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Coupons" bundle:nil];
-            UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"myCoupons"];
-            [self.navigationController pushViewController:viewController
-                                                 animated:YES];
-        }else if (indexPath.row==3){
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
-            UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
-            [self.navigationController pushViewController:viewController
-                                                 animated:YES];
-        }else if (indexPath.row==2){
-            [self.navigationController pushViewController:[[BasicViewController alloc] initWithNibName:@"BasicViewController" bundle:nil]
-                                                 animated:YES];
-        }else if (indexPath.row==8){
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MoneyStoryboard" bundle:nil];
-            UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"MyMoney"];
-            [self.navigationController pushViewController:viewController
-                                                 animated:YES];
-        }
-        
     }
-
 }
 
 -(void)viewAction:(UIButton *)sender{
@@ -921,9 +816,9 @@
             
             [_menuTableView reloadData];
         } else {
-            NSString *errorString = [[error userInfo] objectForKey:@"error"];
+            /*NSString *errorString = [[error userInfo] objectForKey:@"error"];
             UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [errorAlertView show];
+            [errorAlertView show];*/
         }
     }];
     
@@ -1123,6 +1018,7 @@
 
 - (IBAction)onBtnMenu:(id)sender {
     [[SlideNavigationController sharedInstance] leftMenuSelected:self];
+    //[[SlideNavigationController sharedInstance] toggleLeftMenu];
 }
 
 - (IBAction)onRightBtnMenu:(id)sender {
