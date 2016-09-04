@@ -1,0 +1,2 @@
+PODS_BRAINTREE_LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/Braintree/BraintreePayPal/PayPalDataCollector/Risk"
+PODS_BRAINTREE_OTHER_LDFLAGS = -ObjC -l"PPRiskComponent" -l"c++" -framework "AddressBook" -framework "CoreLocation" -framework "MessageUI" -framework "SystemConfiguration" -framework "UIKit" -weak_framework "Contacts" -weak_framework "SafariServices"

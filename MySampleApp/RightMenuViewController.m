@@ -50,6 +50,7 @@
     
     [aroundDataSource removeAllObjects];
     PFQuery *query = [PFUser query];
+    [query whereKeyExists:@"vendor"];
     if(!vendor)
         [query whereKey:@"vendor" notEqualTo:@"NO"];
     else
@@ -57,32 +58,38 @@
     
     [query orderByDescending:@"createdAt"];
     //[query orderByDescending:@"createdAt"];
-    NSArray *objects = [query findObjects];
-    for (PFObject *userObj in objects){
-        PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
-        [queryimg whereKey:@"user" equalTo:userObj[@"username"]];
-        [queryimg orderByDescending:@"createdAt"];
-        NSArray *imgobjects = [queryimg findObjects];
-        croppedImg = nil;
-        for (PFObject *imgObject in imgobjects){
-            PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
-            UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
-            croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *userObj in objects){
+                PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
+                [queryimg whereKey:@"user" equalTo:userObj[@"username"]];
+                [queryimg orderByDescending:@"createdAt"];
+                NSArray *imgobjects = [queryimg findObjects];
+                croppedImg = nil;
+                /*for (PFObject *imgObject in imgobjects){
+                    PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
+                    UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
+                    croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];
+                }*/
+                
+                if(!croppedImg)
+                    croppedImg = [UIImage imageNamed:@"avatarm.PNG"];
+                
+                NSMutableDictionary *aroundDic=[[NSMutableDictionary alloc] initWithCapacity:3];
+                [aroundDic setValue:userObj forKey:@"UserData"];
+                [aroundDic setValue:userObj.objectId forKey:@"objectId"];
+                [aroundDic setValue:croppedImg forKey:@"UserImage"];
+                
+                [aroundDataSource addObject:aroundDic];
+                
+            }
+            [self hideProgressHUD];
+            [self.tableView reloadData];
+        }else{
+            NSLog(@"%@", error);
         }
-        
-        if(!croppedImg)
-            croppedImg = [UIImage imageNamed:@"avatarm.PNG"];
-        
-        NSMutableDictionary *aroundDic=[[NSMutableDictionary alloc] initWithCapacity:3];
-        [aroundDic setValue:userObj forKey:@"UserData"];
-        [aroundDic setValue:userObj.objectId forKey:@"objectId"];
-        [aroundDic setValue:croppedImg forKey:@"UserImage"];
-        
-        [aroundDataSource addObject:aroundDic];
-        
-    }
-    [self hideProgressHUD];
-    [self.tableView reloadData];
+    }];
+    
    
 }
 
@@ -110,7 +117,6 @@
     UILabel *nombre = (UILabel *)[cell viewWithTag:201];
     UILabel *descripcion = (UILabel *)[cell viewWithTag:202];
     PFUser *sourceUser = source[@"UserData"];
-    NSLog(@"%@", sourceUser);
     _miimageView.image = source[@"UserImage"];
     nombre.text = sourceUser[@"businessname"];
     descripcion.text = sourceUser[@"description"];
@@ -126,8 +132,11 @@
     VendorProfileViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"VendorProfile"];
     viewController.currentUser = sourceUser;
     //[self.navigationController pushViewController:viewController                        animated:YES];
-    [[SlideNavigationController sharedInstance] pushViewController:viewController
-                                                            animated:YES];
+    //[[SlideNavigationController sharedInstance] pushViewController:viewController
+      //                                                      animated:YES];
+    [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:viewController
+                                                             withSlideOutAnimation:NO
+                                                                     andCompletion:nil];
 
 }
 

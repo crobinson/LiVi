@@ -32,7 +32,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    //[Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
     
     _requestView.layer.masksToBounds = YES;
     [_requestView.layer setCornerRadius:20.0f];

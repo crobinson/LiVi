@@ -65,24 +65,29 @@
     
     [query orderByDescending:@"createdAt"];
     //[query orderByDescending:@"createdAt"];
-    NSArray *objects = [query findObjects];
-    for (PFObject *userObj in objects){
-        
-        PFQuery *queryUser = [PFUser query];
-        [queryUser whereKey:@"objectId" equalTo:[userObj objectForKey:@"userId"]];
-        NSArray *usuario = [queryUser findObjects];
-        
-        PFFile *image = (PFFile *)[userObj objectForKey:@"image"];
-        UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
-        croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];
-        
-        NSMutableDictionary *aroundDic=[[NSMutableDictionary alloc] initWithCapacity:3];
-        [aroundDic setValue:[usuario objectAtIndex:0] forKey:@"UserData"];
-        [aroundDic setValue:croppedImg forKey:@"UserImage"];
-        [aroundDataSource addObject:aroundDic];
-        
-    }
-    [self.tableView reloadData];
+    //NSArray *objects = [query findObjects];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *userObj in objects){
+                
+                PFQuery *queryUser = [PFUser query];
+                [queryUser whereKey:@"objectId" equalTo:[userObj objectForKey:@"userId"]];
+                NSArray *usuario = [queryUser findObjects];
+                
+                PFFile *image = (PFFile *)[userObj objectForKey:@"image"];
+                UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
+                croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];
+                
+                NSMutableDictionary *aroundDic=[[NSMutableDictionary alloc] initWithCapacity:3];
+                [aroundDic setValue:[usuario objectAtIndex:0] forKey:@"UserData"];
+                [aroundDic setValue:croppedImg forKey:@"UserImage"];
+                [aroundDataSource addObject:aroundDic];
+                
+            }
+            [self.tableView reloadData];
+        }
+    }];
+    
     
 }
 
@@ -176,7 +181,7 @@
             PFUser *currentUser = [PFUser currentUser];
             currentUser[@"latitudTemporal"] = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
             currentUser[@"longitudTemporal"] = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
-            [[PFUser currentUser] save];
+            [[PFUser currentUser] saveInBackground];
         }
     }
     

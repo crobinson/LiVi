@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -22,9 +22,6 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YxF-gm-XKb">
                                 <rect key="frame" x="113" y="84" width="374" height="518"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="tag.png" translatesAutoresizingMaskIntoConstraints="NO" id="WXh-g7-91Q">
-                                        <rect key="frame" x="0.0" y="0.0" width="83" height="37"/>
-                                    </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sib-jy-YkE">
                                         <rect key="frame" x="91" y="4" width="214" height="29"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="29"/>
@@ -46,6 +43,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Urm-cb-c8u">
                                         <rect key="frame" x="3" y="108" width="47" height="22"/>
                                         <state key="normal" image="gear.png"/>
+                                        <connections>
+                                            <action selector="onSettings:" destination="AJj-GE-TnG" eventType="touchUpInside" id="Y92-S4-fNy"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ieA-wK-NJE">
                                         <rect key="frame" x="285" y="107" width="89" height="22"/>
@@ -75,6 +75,9 @@
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="location.png" translatesAutoresizingMaskIntoConstraints="NO" id="Cr1-wa-k3t">
                                         <rect key="frame" x="33" y="315" width="15" height="20"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="tag.png" translatesAutoresizingMaskIntoConstraints="NO" id="WXh-g7-91Q">
+                                        <rect key="frame" x="0.0" y="133" width="83" height="37"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="phone.png" translatesAutoresizingMaskIntoConstraints="NO" id="14o-nY-1xl">
                                         <rect key="frame" x="33" y="341" width="16" height="16"/>
@@ -162,6 +165,7 @@
                                     <constraint firstItem="ioN-An-rOE" firstAttribute="top" secondItem="14o-nY-1xl" secondAttribute="bottom" constant="8" id="gxo-QF-Z9g"/>
                                     <constraint firstItem="mns-j5-iFy" firstAttribute="top" secondItem="VVo-0R-B5w" secondAttribute="bottom" constant="-1" id="h4h-ev-LMH"/>
                                     <constraint firstItem="vTs-3k-AGE" firstAttribute="centerY" secondItem="14o-nY-1xl" secondAttribute="centerY" id="hHb-6m-xSO"/>
+                                    <constraint firstItem="WXh-g7-91Q" firstAttribute="top" secondItem="Urm-cb-c8u" secondAttribute="bottom" constant="3" id="j6q-Ab-GFy"/>
                                     <constraint firstItem="ieA-wK-NJE" firstAttribute="centerY" secondItem="Urm-cb-c8u" secondAttribute="centerY" id="rBj-SU-jIT"/>
                                     <constraint firstItem="VVo-0R-B5w" firstAttribute="top" secondItem="shN-xp-cce" secondAttribute="bottom" constant="1" id="tUh-Cf-fSO"/>
                                     <constraint firstAttribute="trailing" secondItem="ieA-wK-NJE" secondAttribute="trailing" constant="100" id="umE-SC-eIM"/>
@@ -174,6 +178,7 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="IkV-Jv-PkY"/>
                                         <exclude reference="7z6-tP-U5k"/>
                                         <exclude reference="umE-SC-eIM"/>
                                         <exclude reference="yxY-Zp-oiZ"/>

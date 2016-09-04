@@ -48,7 +48,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    //[Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
     NSLog(@"%@", _croppedImage);
     self.profilePic2.image = _croppedImage;
     self.name.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.name.placeholder attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
@@ -253,7 +253,7 @@
     PFUser *user = [PFUser currentUser];
     user.email = _email.text;
     user[@"description"] = _profileDesc.text;
-    [user save];
+    [user saveInBackground];
     [self hideProgressHUD];
     if(isPhotoSelected==YES){
         NSData *picData = UIImageJPEGRepresentation(self.profilePic2.image, 0.5);

@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PayPalMobile.h"
+#import "BraintreeUI.h"
+#import "BraintreePayPal.h"
 
-@interface ComprarViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PayPalPaymentDelegate>
 
-@property (strong, nonatomic) NSDictionary *item;
+@interface ComprarViewController : UIViewController<BTDropInViewControllerDelegate, UIWebViewDelegate, BTAppSwitchDelegate, BTViewControllerPresentingDelegate>
+
+@property (nonatomic, strong) BTAPIClient *braintreeClient;
+@property (nonatomic, strong) BTPayPalDriver *payPalDriver;
 
 @end

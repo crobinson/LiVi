@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -33,8 +33,8 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jgp-9Z-Wwp">
-                    <rect key="frame" x="13" y="27" width="17" height="29"/>
-                    <state key="normal" backgroundImage="back.png"/>
+                    <rect key="frame" x="13" y="27" width="29" height="27"/>
+                    <state key="normal" backgroundImage="menublanco.png"/>
                     <connections>
                         <action selector="back:" destination="-1" eventType="touchUpInside" id="ffe-7T-bLY"/>
                     </connections>
@@ -45,7 +45,7 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="calenarwhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="R1H-WF-Sn4">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="calenarwhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="R1H-WF-Sn4">
                     <rect key="frame" x="44" y="27" width="29" height="28"/>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bdp-Eg-DIZ">
@@ -77,6 +77,7 @@
                 <constraint firstItem="V2D-jB-xad" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="a1x-G4-3ng"/>
                 <constraint firstItem="jgp-9Z-Wwp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="gNY-SG-yJm"/>
                 <constraint firstItem="bUG-Um-eDs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="60" id="jp6-Hu-86S"/>
+                <constraint firstItem="R1H-WF-Sn4" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="54" id="uMz-17-oGg"/>
                 <constraint firstItem="V2D-jB-xad" firstAttribute="top" secondItem="bUG-Um-eDs" secondAttribute="bottom" id="vea-aa-tOL"/>
                 <constraint firstItem="saC-Yu-eql" firstAttribute="centerY" secondItem="R1H-WF-Sn4" secondAttribute="centerY" id="w4U-gz-ZtC"/>
                 <constraint firstItem="saC-Yu-eql" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="ynQ-S5-NGR"/>
@@ -85,7 +86,7 @@
         </view>
     </objects>
     <resources>
-        <image name="back.png" width="16" height="26"/>
         <image name="calenarwhite.png" width="29" height="29"/>
+        <image name="menublanco.png" width="29" height="27"/>
     </resources>
 </document>

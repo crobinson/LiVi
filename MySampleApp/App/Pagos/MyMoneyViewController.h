@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SlideNavigationController.h"
 
 @interface MyMoneyViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
 

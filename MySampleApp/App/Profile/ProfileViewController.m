@@ -53,7 +53,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    //[Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
     self.nextBtn.layer.cornerRadius = 10;
     [self getUserImage];
     // Do any additional setup after loading the view.
@@ -111,7 +111,15 @@
               UIImage *profileImage = [UIImage imageWithData:pictureData];
               self.profilePic.image = profileImage;
         }else{
-            self.profilePic.image = [UIImage imageNamed:@"avatarm.PNG"];
+            if([[NSUserDefaults standardUserDefaults] objectForKey:@"myImage"]){
+                
+                UIImage *img = [[UIImage alloc] initWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"myImage"]];
+                UIImage *scaledImage = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:self.profilePic.bounds.size interpolationQuality:kCGInterpolationHigh];
+                // Crop the image to a square (yikes, fancy!)
+                UIImage *croppedImage = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -self.profilePic.frame.size.width)/2, (scaledImage.size.height -self.profilePic.frame.size.height)/2, self.profilePic.frame.size.width, self.profilePic.frame.size.height)];
+                self.profilePic.image = croppedImage;
+            }else
+                self.profilePic.image = [UIImage imageNamed:@"avatarm.PNG"];
         }
         
         PFUser *currentUser = [PFUser currentUser];
@@ -243,7 +251,7 @@
     if (currentUser) {
         //[currentUser addObject:_descriptionTxt.text forKey:@"description"];
         currentUser[@"description"] = _descriptionTxt.text;
-        [[PFUser currentUser] save];
+        [[PFUser currentUser] saveInBackground];
         NSData *picData = UIImageJPEGRepresentation(self.profilePic.image, 0.5);
         PFFile *file = [PFFile fileWithName:@"img" data:picData];
         
@@ -417,9 +425,16 @@
     
 }
 
--(IBAction)back:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+- (BOOL)slideNavigationControllerShouldDisplayLeftMenu
+{
+    return YES;
 }
+
+-(IBAction)back:(id)sender {
+    //[self.navigationController popViewControllerAnimated:YES];
+    [[SlideNavigationController sharedInstance] leftMenuSelected:self];
+}
+
 
 
 

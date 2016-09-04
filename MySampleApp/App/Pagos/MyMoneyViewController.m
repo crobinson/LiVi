@@ -92,9 +92,6 @@
     return cell;
 }
 
--(IBAction)back:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
-}
 
 /*
 #pragma mark - Navigation
@@ -105,5 +102,15 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (BOOL)slideNavigationControllerShouldDisplayLeftMenu
+{
+    return YES;
+}
+
+-(IBAction)back:(id)sender {
+    //[self.navigationController popViewControllerAnimated:YES];
+    [[SlideNavigationController sharedInstance] leftMenuSelected:self];
+}
 
 @end

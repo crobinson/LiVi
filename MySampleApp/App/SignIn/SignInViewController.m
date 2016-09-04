@@ -13,12 +13,12 @@
 //
 #import <Foundation/Foundation.h>
 #import "SignInViewController.h"
-#import <AWSCore/AWSCore.h>
-#import "AWSIdentityManager.h"
-#import <Parse/Parse.h>
+//#import <AWSCore/AWSCore.h>/
+//#import "AWSIdentityManager.h"
+//#import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
-
+#import <Parse/Parse.h>
 
 static NSString *LOG_TAG;
 
@@ -42,7 +42,7 @@ static NSString *LOG_TAG;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    //[Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
     latitude=0;
     longitude=0;
     NSLog(@"%@: Sign-In Loading.", LOG_TAG);
@@ -59,7 +59,7 @@ static NSString *LOG_TAG;
     self.selectButton.layer.cornerRadius = 10;
 
     __weak SignInViewController *weakSelf = self;
-    self.didSignInObserver =
+    /*self.didSignInObserver =
         [[NSNotificationCenter defaultCenter]
             addObserverForName:AWSIdentityManagerDidSignInNotification
                         object:[AWSIdentityManager sharedInstance]
@@ -68,12 +68,17 @@ static NSString *LOG_TAG;
                                   [weakSelf.presentingViewController
                                       dismissViewControllerAnimated:YES
                                                          completion:nil];
-                               }];
+                               }];*/
     // FACEBOOK UI SETUP
     [self.facebookButton addTarget:self
                             action:@selector(handleFacebookLogin)
                   forControlEvents:UIControlEventTouchUpInside];
    
+    /*FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
+    loginButton.center = self.view.center;
+    [self.view addSubview:loginButton];
+*/
+    
     /*[self.view addConstraint:[NSLayoutConstraint
                                  constraintWithItem:self.facebookButton
                                           attribute:NSLayoutAttributeTop
@@ -132,7 +137,7 @@ static NSString *LOG_TAG;
 
 #pragma mark - Utility Methods
 
-- (void)handleLoginWithSignInProvider:(AWSSignInProviderType)signInProviderType {
+/*- (void)handleLoginWithSignInProvider:(AWSSignInProviderType)signInProviderType {
     [[AWSIdentityManager sharedInstance]
         loginWithSignInProvider:signInProviderType
               completionHandler:^(id result, NSError *error) {
@@ -144,7 +149,7 @@ static NSString *LOG_TAG;
                                     }
                                     NSLog(@"result = %@, error = %@", result, error);
                                 }];
-}
+}*/
 
 - (void)showErrorDialog:(NSString *)loginProviderName withError:(const NSError *)error {
     NSLog(@"%@: %@ failed to sign in w/ error: %@", LOG_TAG, loginProviderName, error);
@@ -371,16 +376,59 @@ static NSString *LOG_TAG;
 }
 
 - (void)handleFacebookLogin {
-    //[self handleLoginWithSignInProvider:AWSSignInProviderTypeFacebook];
-    [PFFacebookUtils logInInBackgroundWithReadPermissions:@[ @"publish_actions" ] block:^(PFUser *user, NSError *error) {
+    
+    NSArray *permissionsArray = @[ @"user_about_me", @"user_relationships", @"user_birthday", @"user_location"];
+    
+    //[PFUser enableRevocableSessionInBackground];
+    //@[@"public_profile", @"email", @"user_friends"]
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:@[@"public_profile", @"email", @"user_friends"] block:^(PFUser *user, NSError *error) {
+        NSLog(@"%@", user);
+        NSLog(@"Token is available : %@",[[FBSDKAccessToken currentAccessToken]tokenString]);
+        
+        
         if (!user) {
             NSLog(@"Uh oh. The user cancelled the Facebook login.");
-        } else if (user.isNew) {
-            NSLog(@"User signed up and logged in through Facebook!");
         } else {
-            NSLog(@"User logged in through Facebook!");
+            NSLog(@"User now has publish permissions!");
+            // Do stuff after successful login.
+            NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
+            [parameters setValue:@"id,name,email" forKey:@"fields"];
+            FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:parameters];
+            [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                if (!error) {
+                    NSDictionary *userData = (NSDictionary *)result;
+                    NSLog(@"%@", userData);
+                    PFUser *currentUser = [PFUser currentUser];
+                    currentUser[@"email"] = userData[@"email"];
+                    currentUser[@"firstname"] = userData[@"name"];
+                    [currentUser saveInBackground];
+                    NSString *facebookID = userData[@"id"];
+                    /*NSString *name = userData[@"name"];
+                    NSString *location = userData[@"location"][@"name"];
+                    NSString *gender = userData[@"gender"];
+                    NSString *birthday = userData[@"birthday"];
+                    NSString *relationship = userData[@"relationship_status"];*/
+                    NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID]];
+                    NSData *data = [NSData dataWithContentsOfURL:pictureURL];
+                    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"myImage"];
+                    // Now add the data to the UI elements
+                    // ...
+                    PFInstallation *installation = [PFInstallation currentInstallation];
+                    installation[@"user"] = [PFUser currentUser];
+                    [installation setDeviceTokenFromData:[[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"]];
+                    
+                    [installation saveInBackground];
+                    
+                    [self hideProgressHUD];
+                    [self.parentViewController dismissViewControllerAnimated:YES
+                                                                  completion:nil];
+                }
+            }];
+            
+           
         }
     }];
+
 }
 
 - (IBAction) manageLocation:(id)sender {

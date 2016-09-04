@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SlideNavigationController.h"
 
-@interface NotificacionesViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
+@interface NotificacionesViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, SlideNavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *myTableView;
 

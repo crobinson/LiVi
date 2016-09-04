@@ -7,4 +7,11 @@ source 'https://github.com/CocoaPods/Specs.git'
 #pod 'VideoCore', '~>0.3.2'
 pod 'VideoCore', path: '../..'
 pod 'JTCalendar', '~> 2.0'
-pod 'PayPal-iOS-SDK'
+pod 'Braintree'
+pod 'Bolts'
+pod 'Parse'
+pod 'ParseFacebookUtilsV4'
+pod "FBSDKCoreKit"
+pod "FBSDKLoginKit"
+pod "FBSDKShareKit"
+pod "FBSDKMessengerShareKit"

@@ -12,12 +12,17 @@
 //
 #import <AVFoundation/AVFoundation.h>
 #import "AppDelegate.h"
-#import "AWSMobileClient.h"
-#import <Parse/Parse.h>
+#import "BraintreeCore.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "AWSMobileClient.h"
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import <Parse/Parse.h>
 #import "RequestNotificationViewController.h"
 #import "ChatViewController.h"
+#import "StreamViewController.h"
+#import "SlideNavigationController.h"
+#import "LeftMenuViewController.h"
+#import "RightMenuViewController.h"
 //#import "AWSPushManager.h"
 
 @interface AppDelegate ()
@@ -26,39 +31,56 @@
 
 @implementation AppDelegate
 
+
+
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSLog(@"application didFinishLaunchingWithOptions");
     
-    if (launchOptions != nil)
+    // ****************************************************************************
+    // Parse initialization
+    //[ParseCrashReporting enable];
+    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
+    // ****************************************************************************
+    
+    // Track app open.
+    
+    // Set default ACLs
+    //PFACL *defaultACL = [PFACL ACL];
+    //[defaultACL setPublicReadAccess:YES];
+    //[PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+
+    
+    /*if (launchOptions != nil)
     {
         NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
         NSDictionary *dictionary2 = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
         NSLog(@"%@, %@", dictionary, dictionary2);
         if (dictionary != nil)
         {
-            
-            /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Your Custom Title"
-                                                            message: [NSString stringWithFormat:@"Launched from push notification: %@", dictionary]
-                                                           delegate: self
-                                                  cancelButtonTitle: @"OK"
-                                                  otherButtonTitles: nil];
-            [alert show];*/
             NSDictionary *message = [dictionary objectForKey:@"aps"];
-            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Your Custom Title"
                                                             message: message[@"alert"]
                                                            delegate: self
                                                   cancelButtonTitle: @"OK"
                                                   otherButtonTitles: nil];
             [alert show];
-            
             NSLog(@"Launched from push notification: %@", dictionary);
             //[self addMessageFromRemoteNotification:dictionary updateUI:NO];
         }
-    }
+    }*/
     
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    //[BTAppSwitch setReturnURLScheme:@"com.amazon.Livi.payments"];
+    
+    //[SlideNavigationController sharedInstance].portraitSlideOffset = self.window.frame.size.width - 262;
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    
+    LeftMenuViewController *leftMenu = [storyboard instantiateViewControllerWithIdentifier:@"LeftMenuViewController"];
+    
+    RightMenuViewController *rightMenu = [storyboard instantiateViewControllerWithIdentifier:@"RightMenuViewController"];
+    [SlideNavigationController sharedInstance].rightMenu = rightMenu;
+    [SlideNavigationController sharedInstance].leftMenu = leftMenu;
     
      //[PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
@@ -72,12 +94,14 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     
     
+    
+    
     // Override point for customization after application launch.
     
-     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
-    return [[AWSMobileClient sharedInstance] didFinishLaunching:application
-                                                    withOptions:launchOptions];
+    //return [[AWSMobileClient sharedInstance] didFinishLaunching:application
+      //                                              withOptions:launchOptions];
+    
     // Initialize Parse.
     /*[Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = @"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta";
@@ -93,12 +117,35 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
    // return [[AWSPushManager defaultPushManager] interceptApplication:application
      //                                  didFinishLaunchingWithOptions:launchOptions];
+    //[PFUser enableRevocableSessionInBackground];
 
-
+    //return [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+    return YES;
 }
 
 
+
+
 - (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    
+    if ([url.scheme localizedCaseInsensitiveCompare:@"com.amazon.Livi.payments"] == NSOrderedSame) {
+        return [BTAppSwitch handleOpenURL:url sourceApplication:sourceApplication];
+    }
+    
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                          openURL:url
+                                                sourceApplication:sourceApplication
+                                                       annotation:annotation];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [FBSDKAppEvents activateApp];
+}
+
+/*- (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
@@ -109,32 +156,43 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                                                      withURL:url
                                        withSourceApplication:sourceApplication
                                               withAnnotation:annotation];*/
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
+    /*return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                           openURL:url
                                                 sourceApplication:sourceApplication
                                                        annotation:annotation];
-}
+}*/
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    
+    // Aplicación cambia para otra. Ej entra una llamada o pasas a otra aplicación.
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
+/*- (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"applicationDidBecomeActive");
     application.applicationIconBadgeNumber = 0;
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     //[[AWSMobileClient sharedInstance] applicationDidBecomeActive:application];
     [FBSDKAppEvents activateApp];
-}
+}*/
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+    // Aplicación se cierra, si estoy transmitiendo borro!!!!
+    
+    UIViewController *vc = [(UINavigationController *)self.window.rootViewController topViewController];
+    if ([vc isKindOfClass: [StreamViewController class]]) {
+        [vc performSelector:@selector(handleCloseApp)];
+    }
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -177,10 +235,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     if(application.applicationState == UIApplicationStateInactive) {
         
-        NSLog(@"Inactive");
+        //App is Inactive
         
         if([userInfo valueForKey:@"name"]!=nil){
             if([userInfo[@"name"] isEqualToString:@"TaskMessage"]){
+                
+                // SI ES UN MENSAJE PARA EL CHAT DE TAREAS
+                
                 if([self.window.rootViewController isKindOfClass:[UINavigationController class]]){
                     UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
                     //Push to notifications
@@ -189,11 +250,30 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                     [mynavigation pushViewController:viewController
                                             animated:YES];
                 }
+            }else if([userInfo[@"name"] isEqualToString:@"NewTask"]){
+                
+                //SI ES UNA NUEVA TAREA
+                
+                UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
+                //Push to notifications
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"InstantRequest" bundle:nil];
+                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Tasksrequests"];
+                [mynavigation pushViewController:viewController
+                                        animated:YES];
+            }else if([userInfo[@"name"] isEqualToString:@"chatMessage"]){
+                // SI ES UN MENSAJE DE CHAT NO HAGO NADA
+            }else{
+                UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
+                //Push to notifications
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
+                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
+                [mynavigation pushViewController:viewController
+                                        animated:YES];
             }
         }
     } else if (application.applicationState == UIApplicationStateBackground) {
         
-        NSLog(@"Background");
+        //App is in Background
         
         if([userInfo valueForKey:@"name"]!=nil){
             if([userInfo[@"name"] isEqualToString:@"TaskMessage"]){
@@ -205,15 +285,27 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                     [mynavigation pushViewController:viewController
                                             animated:YES];
                 }
+            }else if([userInfo[@"name"] isEqualToString:@"NewTask"]){
+                UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
+                //Push to notifications
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"InstantRequest" bundle:nil];
+                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Tasksrequests"];
+                [mynavigation pushViewController:viewController
+                                        animated:YES];
+            }else{
+                UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
+                //Push to notifications
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
+                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
+                [mynavigation pushViewController:viewController
+                                        animated:YES];
             }
+
         }
         
         
     } else {
-        
-        NSLog(@"Active");
-        NSLog(@"%@", userInfo);
-        
+        //App is active
         
         if([userInfo valueForKey:@"name"]!=nil){
             if([userInfo[@"name"] isEqualToString:@"TaskMessage"]){
@@ -231,7 +323,25 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                     localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
                     localNotification.timeZone = [NSTimeZone defaultTimeZone];
                     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+                    
+                    [PFPush handlePush:userInfo];
                 }
+            }else if([userInfo[@"name"] isEqualToString:@"chatMessage"]){
+                // SI ES UN MENSAJE DE CHAT ES PORQUE ESTOY EN LA PANTALLA CORRECTA
+                
+                UIViewController *vc = [(UINavigationController *)self.window.rootViewController topViewController];
+                [vc performSelector:@selector(handleThePushNotification:) withObject:userInfo];
+                
+                
+            }else if([userInfo[@"name"] isEqualToString:@"NewTask"]){
+                UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
+                //Push to notifications
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"InstantRequest" bundle:nil];
+                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Tasksrequests"];
+                [mynavigation pushViewController:viewController
+                                        animated:YES];
+                
+                [PFPush handlePush:userInfo];
             }else{
                 UINavigationController * mynavigation = (UINavigationController*)_window.rootViewController;
                 //Push to notifications
@@ -239,15 +349,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                 UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Notificaciones"];
                 [mynavigation pushViewController:viewController
                                         animated:YES];
+                [PFPush handlePush:userInfo];
             }
             
         }
-        
 
-        [PFPush handlePush:userInfo];
-        
+        //
     }
-    
     completionHandler(UIBackgroundFetchResultNewData);
 }
 

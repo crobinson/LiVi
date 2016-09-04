@@ -32,7 +32,7 @@
     {
         _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }
-
+    
 }
 
 - (void) hideProgressHUD
@@ -186,7 +186,7 @@
         
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Notificaciones" bundle:nil];
         RequestNotificationViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"RequestNotification"];
-        viewController.userId = obj[@"objectId"];
+        viewController.userId = obj[@"object"][@"userId"];
         [self.navigationController pushViewController:viewController
                                              animated:YES];
         
@@ -251,12 +251,25 @@
     }
 }
 -(IBAction)back:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+   [[SlideNavigationController sharedInstance] leftMenuSelected:self];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
 }
+
+- (BOOL)slideNavigationControllerShouldDisplayLeftMenu
+{
+    return YES;
+}
+
+- (BOOL)slideNavigationControllerShouldDisplayRightMenu
+{
+    return NO;
+}
+
+
+
 
 @end

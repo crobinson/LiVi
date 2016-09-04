@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 
-@interface VendorProfileViewController : UIViewController
+@interface VendorProfileViewController : UIViewController<UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *tooltip;
-@property (weak, nonatomic) PFUser *currentUser;
+@property (retain, nonatomic) PFUser *currentUser;
+@property (weak, nonatomic) NSString *userId;
 
 @end

@@ -6,11 +6,95 @@
 // project.
 
 
-// CardIO
-#define COCOAPODS_POD_AVAILABLE_CardIO
-#define COCOAPODS_VERSION_MAJOR_CardIO 5
-#define COCOAPODS_VERSION_MINOR_CardIO 3
-#define COCOAPODS_VERSION_PATCH_CardIO 2
+// Bolts
+#define COCOAPODS_POD_AVAILABLE_Bolts
+#define COCOAPODS_VERSION_MAJOR_Bolts 1
+#define COCOAPODS_VERSION_MINOR_Bolts 8
+#define COCOAPODS_VERSION_PATCH_Bolts 4
+
+// Bolts/AppLinks
+#define COCOAPODS_POD_AVAILABLE_Bolts_AppLinks
+#define COCOAPODS_VERSION_MAJOR_Bolts_AppLinks 1
+#define COCOAPODS_VERSION_MINOR_Bolts_AppLinks 8
+#define COCOAPODS_VERSION_PATCH_Bolts_AppLinks 4
+
+// Bolts/Tasks
+#define COCOAPODS_POD_AVAILABLE_Bolts_Tasks
+#define COCOAPODS_VERSION_MAJOR_Bolts_Tasks 1
+#define COCOAPODS_VERSION_MINOR_Bolts_Tasks 8
+#define COCOAPODS_VERSION_PATCH_Bolts_Tasks 4
+
+// Braintree
+#define COCOAPODS_POD_AVAILABLE_Braintree
+#define COCOAPODS_VERSION_MAJOR_Braintree 4
+#define COCOAPODS_VERSION_MINOR_Braintree 5
+#define COCOAPODS_VERSION_PATCH_Braintree 0
+
+// Braintree/Card
+#define COCOAPODS_POD_AVAILABLE_Braintree_Card
+#define COCOAPODS_VERSION_MAJOR_Braintree_Card 4
+#define COCOAPODS_VERSION_MINOR_Braintree_Card 5
+#define COCOAPODS_VERSION_PATCH_Braintree_Card 0
+
+// Braintree/Core
+#define COCOAPODS_POD_AVAILABLE_Braintree_Core
+#define COCOAPODS_VERSION_MAJOR_Braintree_Core 4
+#define COCOAPODS_VERSION_MINOR_Braintree_Core 5
+#define COCOAPODS_VERSION_PATCH_Braintree_Core 0
+
+// Braintree/PayPal
+#define COCOAPODS_POD_AVAILABLE_Braintree_PayPal
+#define COCOAPODS_VERSION_MAJOR_Braintree_PayPal 4
+#define COCOAPODS_VERSION_MINOR_Braintree_PayPal 5
+#define COCOAPODS_VERSION_PATCH_Braintree_PayPal 0
+
+// Braintree/PayPalDataCollector
+#define COCOAPODS_POD_AVAILABLE_Braintree_PayPalDataCollector
+#define COCOAPODS_VERSION_MAJOR_Braintree_PayPalDataCollector 4
+#define COCOAPODS_VERSION_MINOR_Braintree_PayPalDataCollector 5
+#define COCOAPODS_VERSION_PATCH_Braintree_PayPalDataCollector 0
+
+// Braintree/PayPalOneTouch
+#define COCOAPODS_POD_AVAILABLE_Braintree_PayPalOneTouch
+#define COCOAPODS_VERSION_MAJOR_Braintree_PayPalOneTouch 4
+#define COCOAPODS_VERSION_MINOR_Braintree_PayPalOneTouch 5
+#define COCOAPODS_VERSION_PATCH_Braintree_PayPalOneTouch 0
+
+// Braintree/PayPalUtils
+#define COCOAPODS_POD_AVAILABLE_Braintree_PayPalUtils
+#define COCOAPODS_VERSION_MAJOR_Braintree_PayPalUtils 4
+#define COCOAPODS_VERSION_MINOR_Braintree_PayPalUtils 5
+#define COCOAPODS_VERSION_PATCH_Braintree_PayPalUtils 0
+
+// Braintree/UI
+#define COCOAPODS_POD_AVAILABLE_Braintree_UI
+#define COCOAPODS_VERSION_MAJOR_Braintree_UI 4
+#define COCOAPODS_VERSION_MINOR_Braintree_UI 5
+#define COCOAPODS_VERSION_PATCH_Braintree_UI 0
+
+// FBSDKCoreKit
+#define COCOAPODS_POD_AVAILABLE_FBSDKCoreKit
+#define COCOAPODS_VERSION_MAJOR_FBSDKCoreKit 4
+#define COCOAPODS_VERSION_MINOR_FBSDKCoreKit 15
+#define COCOAPODS_VERSION_PATCH_FBSDKCoreKit 0
+
+// FBSDKLoginKit
+#define COCOAPODS_POD_AVAILABLE_FBSDKLoginKit
+#define COCOAPODS_VERSION_MAJOR_FBSDKLoginKit 4
+#define COCOAPODS_VERSION_MINOR_FBSDKLoginKit 15
+#define COCOAPODS_VERSION_PATCH_FBSDKLoginKit 0
+
+// FBSDKMessengerShareKit
+#define COCOAPODS_POD_AVAILABLE_FBSDKMessengerShareKit
+#define COCOAPODS_VERSION_MAJOR_FBSDKMessengerShareKit 1
+#define COCOAPODS_VERSION_MINOR_FBSDKMessengerShareKit 3
+#define COCOAPODS_VERSION_PATCH_FBSDKMessengerShareKit 2
+
+// FBSDKShareKit
+#define COCOAPODS_POD_AVAILABLE_FBSDKShareKit
+#define COCOAPODS_VERSION_MAJOR_FBSDKShareKit 4
+#define COCOAPODS_VERSION_MINOR_FBSDKShareKit 15
+#define COCOAPODS_VERSION_PATCH_FBSDKShareKit 0
 
 // JTCalendar
 #define COCOAPODS_POD_AVAILABLE_JTCalendar
@@ -18,23 +102,17 @@
 #define COCOAPODS_VERSION_MINOR_JTCalendar 1
 #define COCOAPODS_VERSION_PATCH_JTCalendar 7
 
-// PayPal-iOS-SDK
-#define COCOAPODS_POD_AVAILABLE_PayPal_iOS_SDK
-#define COCOAPODS_VERSION_MAJOR_PayPal_iOS_SDK 2
-#define COCOAPODS_VERSION_MINOR_PayPal_iOS_SDK 14
-#define COCOAPODS_VERSION_PATCH_PayPal_iOS_SDK 3
+// Parse
+#define COCOAPODS_POD_AVAILABLE_Parse
+#define COCOAPODS_VERSION_MAJOR_Parse 1
+#define COCOAPODS_VERSION_MINOR_Parse 14
+#define COCOAPODS_VERSION_PATCH_Parse 2
 
-// PayPal-iOS-SDK/CardIO
-#define COCOAPODS_POD_AVAILABLE_PayPal_iOS_SDK_CardIO
-#define COCOAPODS_VERSION_MAJOR_PayPal_iOS_SDK_CardIO 2
-#define COCOAPODS_VERSION_MINOR_PayPal_iOS_SDK_CardIO 14
-#define COCOAPODS_VERSION_PATCH_PayPal_iOS_SDK_CardIO 3
-
-// PayPal-iOS-SDK/Core
-#define COCOAPODS_POD_AVAILABLE_PayPal_iOS_SDK_Core
-#define COCOAPODS_VERSION_MAJOR_PayPal_iOS_SDK_Core 2
-#define COCOAPODS_VERSION_MINOR_PayPal_iOS_SDK_Core 14
-#define COCOAPODS_VERSION_PATCH_PayPal_iOS_SDK_Core 3
+// ParseFacebookUtilsV4
+#define COCOAPODS_POD_AVAILABLE_ParseFacebookUtilsV4
+#define COCOAPODS_VERSION_MAJOR_ParseFacebookUtilsV4 1
+#define COCOAPODS_VERSION_MINOR_ParseFacebookUtilsV4 11
+#define COCOAPODS_VERSION_PATCH_ParseFacebookUtilsV4 1
 
 // UriParser-cpp
 #define COCOAPODS_POD_AVAILABLE_UriParser_cpp

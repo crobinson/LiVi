@@ -7,8 +7,8 @@
 //
 
 #import "addRqstViewController.h"
-#import "MBProgressHUD.h"
 #import <Parse/Parse.h>
+#import <EventKit/EventKit.h>
 #import "UIImage+Resize.h"
 
 @interface addRqstViewController () {
@@ -28,7 +28,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    //[Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
     
     _requestView.layer.masksToBounds = YES;
     [_requestView.layer setCornerRadius:20.0f];
@@ -47,7 +47,7 @@
         [keyboardToolbar setItems:[[NSArray alloc] initWithObjects: extraSpace, accept, nil]];
     }
     _dateTxt.inputAccessoryView = keyboardToolbar;
-    
+    _descriptionTxt.inputAccessoryView = keyboardToolbar;
     datePicker = [[UIDatePicker alloc] init];
     //datePicker.datePickerMode = UIDatePickerModeDate;
     datePicker.datePickerMode = UIDatePickerModeDateAndTime;
@@ -58,7 +58,11 @@
     [_addPic.layer setCornerRadius:75.0f];
 }
 
-- (void)closeKeyboard:(id)sender{ [_dateTxt resignFirstResponder]; }
+- (void)closeKeyboard:(id)sender{
+    [_dateTxt resignFirstResponder];
+    if(_usrTextView!=nil)
+        [_usrTextView resignFirstResponder];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -189,10 +193,7 @@
     //if(textField==_emailLogin || textField==_passwordLogin){
        // self.view.frame = CGRectMake(0, 0 - textField.frame.origin.y + 100 , self.view.frame.size.width, self.view.frame.size.height);
     //}
-    
-    
     [UIView commitAnimations];
-    
 }
 
 
@@ -267,7 +268,50 @@
                         [imageObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             //4
                             if (succeeded){
-                                //Go back to the wall
+                                //Send notification
+                                
+                                EKEventStore *store = [EKEventStore new];
+                                [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
+                                    if (!granted) { return; }
+                                    EKEvent *event = [EKEvent eventWithEventStore:store];
+                                    event.title = _tasktitle.text;
+                                    event.startDate = date; //today
+                                    event.endDate = [date dateByAddingTimeInterval:[_time.text intValue]];  //set 1 hour meeting
+                                    event.calendar = [store defaultCalendarForNewEvents];
+                                    NSError *err = nil;
+                                    [store saveEvent:event span:EKSpanThisEvent commit:YES error:&err];
+                                    //self.savedEventId = event.eventIdentifier;  //save the event id if you want to access this later
+                                }];
+                                
+                                PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:_latitude longitude:_longitude];
+                                PFQuery *userquery = [PFUser query];
+                                [userquery whereKey:@"location" nearGeoPoint:point withinKilometers: 100.0];
+                                
+                                PFQuery *pushQuery = [PFInstallation query];
+                                [pushQuery whereKey:@"user" matchesQuery: userquery];
+                                
+                                NSDictionary *data = @{
+                                                       @"alert" : [NSString stringWithFormat:@"New task created around you by %@", [PFUser currentUser][@"nickname"]],
+                                                       @"badge" : @"Increment",
+                                                       @"sounds": @"cheering.caf",
+                                                       @"name" : @"NewTask",
+                                                       @"title" : [PFUser currentUser].objectId
+                                                       };
+                                PFPush *push = [[PFPush alloc] init];
+                                [push setQuery:pushQuery]; // Set our Installation query
+                                //[push setMessage:@"Live Stream Requested"];
+                                [push setData:data];
+                                //[push setChannel:[PFUser currentUser].objectId];
+                                [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                                    if(succeeded){
+                                        NSLog(@"%@", push);
+                                    }else if (error.code == kPFErrorPushMisconfigured) {
+                                        NSLog(@"Could not send push. Push is misconfigured: %@", error.description);
+                                    } else {
+                                        NSLog(@"Error sending push: %@", error.description);
+                                    }
+                                }];
+                                
                                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Task created succesfully" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                                 
                                 [alertView show];

@@ -7,8 +7,10 @@
 //
 
 #import "AcceptTaskViewController.h"
-#import "UIImage+Resize.h"
 #import "ChatViewController.h"
+#import <EventKit/EventKit.h>
+#import "UIImage+Resize.h"
+#import "UIImageView+WebCache.h"
 
 
 @interface AcceptTaskViewController (){
@@ -22,7 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+    //[Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
     _acceptButton.layer.masksToBounds = YES;
     [_acceptButton.layer setCornerRadius:6.0f];
     _canceButton.layer.masksToBounds = YES;
@@ -41,26 +43,24 @@
     _taskDescription.text = _obj[@"description"];
     
     PFQuery *query = [PFQuery queryWithClassName:@"TaskImages"];
-    NSLog(@"%@", _obj);
     NSString *objId = [NSString stringWithFormat:@"%@", _obj.objectId];
     [query whereKey:@"taskId" equalTo:objId];
     [query orderByDescending:@"createdAt"];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            NSString *myimage = nil;
             for (PFObject *imgObject in objects){
                 PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
-                UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(78, 78) interpolationQuality:kCGInterpolationHigh];
+                myimage = image.url;
+                /*UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(78, 78) interpolationQuality:kCGInterpolationHigh];
                 // Crop the image to a square (yikes, fancy!)
-                croppedImage = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -78)/2, (scaledImage.size.height -78)/2, 78, 78)];
+                croppedImage = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -78)/2, (scaledImage.size.height -78)/2, 78, 78)];*/
                 
             }
             
-            if(objects.count<1){
-                croppedImage = [UIImage imageNamed:@"avatar.PNG"];
-            }
-            
-            _taskImage.image = croppedImage;
+            [_taskImage sd_setImageWithURL:[NSURL URLWithString:myimage] placeholderImage:[UIImage imageNamed:@"avatar.PNG"]];
+            //_taskImage.image = croppedImage;
             _taskImage.layer.masksToBounds = YES;
             [_taskImage.layer setCornerRadius:68.0f];
         }
@@ -87,7 +87,25 @@
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         if (!error) {
             object[@"responsable"] = [PFUser currentUser].objectId;
-            [object save];
+            [object saveInBackground];
+            
+            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+            [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSDate *date = _obj[@"date"];
+            
+            
+            EKEventStore *store = [EKEventStore new];
+            [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
+                if (!granted) { return; }
+                EKEvent *event = [EKEvent eventWithEventStore:store];
+                event.title = _obj[@"title"];
+                event.startDate = date;//today
+                event.endDate = [date dateByAddingTimeInterval:[_obj[@"time"] intValue]];  //set 1 hour meeting
+                event.calendar = [store defaultCalendarForNewEvents];
+                NSError *err = nil;
+                [store saveEvent:event span:EKSpanThisEvent commit:YES error:&err];
+                //self.savedEventId = event.eventIdentifier;  //save the event id if you want to access this later
+            }];
             
             //notification
             
@@ -97,7 +115,8 @@
             notificationObject[@"type"] = @"streaming";
             notificationObject[@"from"] = [PFUser currentUser].objectId;
             notificationObject[@"to"] = object[@"userId"];
-            [notificationObject save];
+            notificationObject[@"taskId"] = _obj.objectId;
+            [notificationObject saveInBackground];
             
             /////
             
@@ -131,6 +150,8 @@
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Task was assigned to you" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             
             [alertView show];
+            
+            [self.navigationController popViewControllerAnimated:YES];
         }
     }];
 }
@@ -151,19 +172,14 @@
         [queryimg whereKey:@"user" equalTo:chatmateUser[@"username"]];
         [queryimg orderByDescending:@"createdAt"];
         NSArray *objects = [queryimg findObjects];
+        croppedImg = [UIImage imageNamed:@"avatarm.PNG"];
         for (PFObject *imgObject in objects){
             PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
             UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(75, 55) interpolationQuality:kCGInterpolationHigh];
             croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width - 75)/2, (scaledImage.size.height - 66)/2, 75, 66)];
         }
         
-        if(croppedImg)
-            NSLog(@"%@", croppedImg);
-        else{
-            croppedImg = [UIImage imageNamed:@"avatarm.PNG"];
-        }
         
-        NSLog(@"%@", croppedImg);
         NSLog(@"%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"myImage"]);
         
         ChatViewController *ct = segue.destinationViewController;

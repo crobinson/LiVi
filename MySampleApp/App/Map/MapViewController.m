@@ -26,9 +26,10 @@
 #import "addRqstViewController.h"
 #import "BasicViewController.h"
 #import "VendorProfileViewController.h"
-#import "SlideNavigationController.h"
-#import "LeftMenuViewController.h"
-#import "RightMenuViewController.h"
+#import "BraintreeUI.h"
+#import "BraintreePayPal.h"
+#import "ComprarViewController.h"
+
 
 @interface MapViewController ()
 {
@@ -47,6 +48,8 @@
     bool opened;
     MKPointAnnotation *newannot;
     NSMutableArray *filteredCandyArray;
+    NSString *amount;
+    NSString *_streamStrig;
 }
 
 @property(nonatomic, strong) UITableView *table;
@@ -54,9 +57,13 @@
 @property(nonatomic, retain) NSArray *list;
 @property(nonatomic, retain) NSArray *imageList;
 @property (nonatomic, retain) NSString *animationDirection;
+@property (nonatomic, retain) NSString *taskId;
 
 @property (strong, nonatomic) MBProgressHUD *progressHUD;
 
+//Pagos variables
+@property (nonatomic, strong) BTAPIClient *braintreeClient;
+@property (nonatomic, strong) BTPayPalDriver *payPalDriver;
 
 @end
 
@@ -70,16 +77,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
-    
-    [SlideNavigationController sharedInstance].portraitSlideOffset = self.view.frame.size.width - 262;
-    
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    LeftMenuViewController *leftMenu = [storyboard instantiateViewControllerWithIdentifier:@"LeftMenuViewController"];
-    
-    RightMenuViewController *rightMenu = [storyboard instantiateViewControllerWithIdentifier:@"RightMenuViewController"];
-    [SlideNavigationController sharedInstance].rightMenu = rightMenu;
-    [SlideNavigationController sharedInstance].leftMenu = leftMenu;
+    //[Parse setApplicationId:@"BsIBfZnR1xUg1ZY9AwGcd3iKtqrMPu2zUTjP49ta" clientKey:@"E2od7oEslPMj6C2yG9GnWXvC9qDicnTNgcDgN9xm"];
+
     _searchview.layer.masksToBounds = YES;
     [_searchview.layer setCornerRadius:3.0f];
     [_searchview.layer setBorderColor:[UIColor colorWithRed:54.0/255 green:121.0/255 blue:189.0/255 alpha:1].CGColor];
@@ -141,6 +140,8 @@
     else
         [locationManager startUpdatingLocation];
     
+    
+    
 }
 
 - (void) hideProgressHUD
@@ -176,15 +177,26 @@
                                animated:YES
                              completion:nil];
         }
-        
-        [self getDataSource];
 
         
     }else{
+        if([PFUser currentUser])
+            [[PFUser currentUser] fetch]; //synchronous
         
         PFUser *currentUser = [PFUser currentUser];
         if (currentUser) {
-            // Buscamos descripcion en parse
+            
+            NSLog(@"%@", currentUser[@"authorized"]);
+            if([currentUser[@"authorized"] isEqualToString:@"SI" ] || !currentUser[@"vendor"] || [currentUser[@"vendor"] isEqualToString:@"NO"]){
+                [self getDataSource];
+            }else{
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MoneyStoryboard" bundle:nil];
+                UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"comprar"];
+                [self presentViewController:viewController
+                                   animated:YES
+                                 completion:nil];
+            }
+            
             [self getUserImage];
             NSLog(@"%@", currentUser[@"description"]);
             
@@ -198,7 +210,6 @@
             }
             
             //[self getPV];
-            [self getDataSource];
             
         } else {
             // show the signup or login screen
@@ -220,6 +231,7 @@
 -(void)getPV {
     bandera = YES; // Para no seguirlos llamando cuando no sea necesario
     PFQuery *query = [PFUser query];
+    [query whereKeyExists:@"vendor"];
     [query whereKey:@"vendor" notEqualTo:@"NO"];
     [query orderByDescending:@"createdAt"];
     
@@ -231,42 +243,35 @@
             for (PFObject *userObj in objects){
                 NSLog(@"%@", userObj);
                 
-                //Traigo la imagen
                 
                 PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
                 [queryimg whereKey:@"user" equalTo:userObj[@"username"]];
                 [queryimg orderByDescending:@"createdAt"];
-                /*[queryimg findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                    if (!error) {
-                        //Everything was correct, put the new objects and load the wall
-                        
-                    }
-                }];*/
+                
                 NSArray *objects = [queryimg findObjects];
+                NSString *myimage = nil;
                 for (PFObject *imgObject in objects){
                     PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
-                    UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
-                    croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];
-                    NSLog(@"%@", croppedImg);
-                    
+                    NSLog(@"%@", image.url);
+                    myimage = image.url;
+                    /*UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
+                    croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];*/
                 }
-                
-                NSLog(@"%@", croppedImg);
                 
                 PFGeoPoint *geopoint = (PFGeoPoint *)[userObj objectForKey:@"location"];
                 CLLocationCoordinate2D coordinate;
                 coordinate.latitude = geopoint.latitude;
                 coordinate.longitude = geopoint.longitude;
                 //destino.coordinate = coordinate;
-
                 MyAnnotation *destino = [[MyAnnotation alloc]
                                          initWithTitle:userObj[@"username"]
                                          andSubtitle:userObj[@"description"]
-                                         andImage:croppedImg
+                                         andImage:myimage
                                          andUrlIos:userObj.objectId
                                          andUrlOther:userObj[@"nickname"]
                                          andUrlStream:userObj[@"urlStream"]
-                                         andCoordinate:coordinate];
+                                         andCoordinate:coordinate
+                                         andPV:userObj[@"vendor"]];
             
                 NSDictionary *datoTemporal=@{
                                              @"nickname" : userObj[@"nickname"],
@@ -274,9 +279,6 @@
                                              @"longitude" : [NSString stringWithFormat:@"%f", coordinate.longitude],
                                              };
                 [datasourcetemporal addObject:datoTemporal];
-                //destino.title = userObj[@"firstname"];
-                //destino.accessibilityHint = userObj[@"vendor"];
-                //destino.accessibilityHint = userObj[@"username"];
                 
                 [_mvMap addAnnotation:destino];
             }
@@ -284,9 +286,7 @@
             [self hideProgressHUD];
         }else {
             [self hideProgressHUD];
-           /* NSString *errorString = [[error userInfo] objectForKey:@"error"];
-            UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [errorAlertView show];*/
+           
         }
     }];
     
@@ -298,7 +298,7 @@
     
     //[self performSegueWithIdentifier:@"addpopover" sender:self];
     
-    CGPoint touchPoint = [gestureRecognizer locationInView:_mvMap];
+    /*CGPoint touchPoint = [gestureRecognizer locationInView:_mvMap];
     CLLocationCoordinate2D touchMapCoordinate =
     [self.mvMap convertPoint:touchPoint toCoordinateFromView:self.mvMap];
     
@@ -308,7 +308,7 @@
     newannot = annot;
     //[self.mvMap addAnnotation:annot];
     
-    [self performSegueWithIdentifier:@"addpopover" sender:self];
+    [self performSegueWithIdentifier:@"addpopover" sender:self];*/
     
     /*addrequestViewController *ctl = [[addrequestViewController alloc] initWithAnnot:annot.coordinate.latitude andLong:annot.coordinate.latitude];
     */
@@ -340,32 +340,33 @@
         if (!error) {
             //Everything was correct, put the new objects and load the wall
             for (PFObject *userObj in objects){
-                NSLog(@"%@", userObj);
-                
                 //Traigo la imagen
-                
                 PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
                 [queryimg whereKey:@"user" equalTo:userObj[@"username"]];
                 [queryimg orderByDescending:@"createdAt"];
                 NSArray *userImage = [queryimg findObjects];
-                NSLog(@"%@", userImage);
+                NSString *myimage = nil;
                 for (PFObject *imgObject in userImage){
                     PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
-                    UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
-                    croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];
+                    myimage = image.url;
+                    /*UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(103, 103) interpolationQuality:kCGInterpolationHigh];
+                    croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width -103)/2, (scaledImage.size.height -103)/2, 103, 103)];*/
                 }
-                if(croppedImg)
-                    NSLog(@"%@", croppedImg);
-                else{
-                    croppedImg = [UIImage imageNamed:@"avatarm.PNG"];
-                }
+                
                 
                 NSMutableDictionary *happening = [[NSMutableDictionary alloc] initWithDictionary: @{
                                                                                                    @"UserData" : userObj,
                                                                                                    @"objectId" : userObj.objectId,
-                                                                                                   @"UserImage" : croppedImg,
                                                                                                    @"Likes" : @"",
                                                                                                    }];
+                if(myimage)
+                    happening = [[NSMutableDictionary alloc] initWithDictionary: @{
+                                                                                                        @"UserData" : userObj,
+                                                                                                        @"objectId" : userObj.objectId,
+                                                                                                        @"UserImage" : myimage,
+                                                                                                        @"Likes" : @"",
+                                                                                                        }];
+                
                 
                 
                 
@@ -403,47 +404,32 @@
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-    if([annotation isKindOfClass:[MKUserLocation class]]) {
-        return nil;
-    }
-    
-    //if (![annotation isKindOfClass:[MyAnnotationView class]])
-        //return nil;
-    
+
     static NSString *identifier = @"MyAnnotation";
     MyAnnotationView * pinView = (MyAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
     MyAnnotation *anot = annotation;
     // If it's the user location, just return nil.
+    if([anot.title isEqualToString:@"Me"] || [anot.title isEqualToString:@"Current Location"])
+        return pinView;
     
     if (!pinView)
     {
         // If an existing pin view was not available, create one.
        pinView = [[MyAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
         NSLog(@"%@", anot.title);
-        PFQuery *query = [PFUser query];
-        [query whereKey:@"username" equalTo:anot.title];
-        [query orderByDescending:@"createdAt"];
         
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                //Everything was correct, put the new objects and load the wall
-                for (PFObject *userObj in objects){
-                    NSLog(@"%@", userObj);
-                    if([userObj[@"vendor"] isEqualToString:@"Online Enterprices"]){
-                        pinView.image = [UIImage imageNamed:@"pinrojo.png"];
-                    }else if([userObj[@"vendor"] isEqualToString:@"Night Live"]){
-                        pinView.image = [UIImage imageNamed:@"pinazul.png"];
-                    }else if([userObj[@"vendor"] isEqualToString:@"Dinning"]){
-                        pinView.image = [UIImage imageNamed:@"pinverde.png"];
-                    }else{
-                        pinView.image = [UIImage imageNamed:@"pinvioleta.png"];
-                    }
-                    
-                    pinView.calloutOffset = CGPointMake(0, 32);
-
-                }
-            }
-        }];
+        
+        if([anot.pv isEqualToString:@"Online Enterprices"]){
+            pinView.image = [UIImage imageNamed:@"pinrojo.png"];
+        }else if([anot.pv isEqualToString:@"Night Live"]){
+            pinView.image = [UIImage imageNamed:@"pinazul.png"];
+        }else if([anot.pv isEqualToString:@"Dinning"]){
+            pinView.image = [UIImage imageNamed:@"pinverde.png"];
+        }else{
+            pinView.image = [UIImage imageNamed:@"pinvioleta.png"];
+        }
+        
+        pinView.calloutOffset = CGPointMake(0, 32);
         
         
     } else {
@@ -479,7 +465,7 @@
 
         UIImageView *vpImgView = (UIImageView *)[calloutview viewWithTag:100];
         if (vpImgView.image != nil && vpImgView.image != nil)
-            vpImgView.image = anot.proImage;
+            [vpImgView sd_setImageWithURL:[NSURL URLWithString:anot.proImage] placeholderImage:[UIImage imageNamed:@"avatar.PNG"]];
         
         vpImgView.layer.masksToBounds = YES;
         [vpImgView.layer setCornerRadius:51.0f];
@@ -487,8 +473,11 @@
         UIButton *viewRequest = (UIButton *)[calloutview viewWithTag:102];
         //viewRequest.hidden = YES;
         UIButton *addRequest = (UIButton *)[calloutview viewWithTag:103];
+        UIButton *viewProfile = (UIButton *)[calloutview viewWithTag:104];
+        viewProfile.accessibilityValue = anot.urlStreamIos;
         [viewRequest addTarget:self action:@selector(viewAction:) forControlEvents:UIControlEventTouchUpInside];
         [addRequest addTarget:self action:@selector(requestAction:) forControlEvents:UIControlEventTouchUpInside];
+        [viewProfile addTarget:self action:@selector(viewProfileAction:) forControlEvents:UIControlEventTouchUpInside];
         
         if(anot.rtmpStream && ![anot.rtmpStream isEqualToString:@""]){
             viewRequest.hidden = NO;
@@ -639,7 +628,8 @@
         UILabel *descripcion = (UILabel *)[cell viewWithTag:202];
         PFUser *sourceUser = source[@"UserData"];
         NSLog(@"%@", sourceUser);
-        _miimageView.image = source[@"UserImage"];
+        //_miimageView.image = source[@"UserImage"];
+        [_miimageView sd_setImageWithURL:[NSURL URLWithString:source[@"UserImage"]] placeholderImage:[UIImage imageNamed:@"avatar.PNG"]];
         nombre.text = sourceUser[@"businessname"];
         descripcion.text = sourceUser[@"description"];
         return cell;
@@ -652,7 +642,7 @@
         UILabel *descripcion = (UILabel *)[cell viewWithTag:202];
         PFUser *sourceUser = source[@"UserData"];
         NSLog(@"%@", sourceUser);
-        _miimageView.image = source[@"UserImage"];
+        [_miimageView sd_setImageWithURL:[NSURL URLWithString:source[@"UserImage"]] placeholderImage:[UIImage imageNamed:@"avatar.PNG"]];
         nombre.text = sourceUser[@"businessname"];
         descripcion.text = sourceUser[@"description"];
         return cell;
@@ -662,6 +652,16 @@
 
     
     return cell;
+}
+
+-(IBAction)viewProfileAction:(id)sender {
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"VendorProfile" bundle:nil];
+    VendorProfileViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"VendorProfile"];
+    viewController.userId = anotationSelected.title;
+    [self.navigationController pushViewController:viewController
+                                         animated:YES];
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -690,6 +690,9 @@
 -(void)viewAction:(UIButton *)sender{
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Livi" bundle:nil];
+    
+    // EN ESTE PUNTO YA HAY UN REQUEST EN PROCESO
+    
     //LiviViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"liviView"];
     RTMPPlayerViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"playerView"];
     //viewController.urlString = [NSString stringWithFormat:@"http://54.164.51.55:1935/live/%@/playlist.m3u8", anotationSelected.urlStreamIos];
@@ -721,6 +724,7 @@
             for (PFObject *userObj in objects){
                 NSLog(@"%@", userObj);
                 requestObject[@"pv"] = userObj;
+                requestObject[@"responsable"] = userObj;
                 requestObject[@"location"] = userObj[@"location"];
                 requestObject[@"creator"] = [PFUser currentUser];
                 [requestObject setObject:[PFUser currentUser].objectId forKey:@"userId"];
@@ -737,7 +741,7 @@
                         notificationObject[@"title"] = [PFUser currentUser][@"nickname"];
                         notificationObject[@"from"] = [PFUser currentUser].objectId;
                         notificationObject[@"to"] = anotationSelected.urlStreamIos;
-                        [notificationObject save];
+                        [notificationObject saveInBackground];
                         
                         PFQuery *userquery = [PFUser query];
                         [userquery getObjectWithId:anotationSelected.urlStreamIos];
@@ -792,14 +796,26 @@
     //Prepare the query to get all the images in descending order
     PFQuery *query = [PFQuery queryWithClassName:@"UserImage"];
     PFUser *currentUser = [PFUser currentUser];
+    
+    //Verifico pago pendiente
+    
+    if(currentUser[@"pendingPayment"])
+        if(![currentUser[@"pendingPayment"] isEqualToString:@""]){
+            self.taskId = currentUser[@"pendingPayment"];
+            [self cobropaypal];
+        }
+    
     [query whereKey:@"user" equalTo:currentUser.username];
     [query orderByDescending:@"createdAt"];
-    
+    query.limit = 1; // limit to at most 10 results
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             //Everything was correct, put the new objects and load the wall
             for (PFObject *imgObject in objects){
                 PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
+                
+                [[NSUserDefaults standardUserDefaults] setObject:image.url forKey:@"myImageUrl"];
+                
                 //UIImageView *userImage = [[UIImageView alloc] initWithImage:[UIImage imageWithData:image.getData]];
                 //NSLog(@"%@", image.getData);
                 UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(78, 78) interpolationQuality:kCGInterpolationHigh];
@@ -811,6 +827,7 @@
             if(objects.count<1){
                 croppedImage = [UIImage imageNamed:@"avatar.PNG"];
             }
+            
             
             [[NSUserDefaults standardUserDefaults] setObject:UIImagePNGRepresentation(croppedImage) forKey:@"myImage"];
             
@@ -850,7 +867,7 @@
     
     if(origen == nil) {
         origen = [[MKPointAnnotation alloc] init];
-        origen.title = @"Yo";
+        origen.title = @"Me";
         [_mvMap addAnnotation:origen];
     }
     
@@ -868,7 +885,13 @@
         PFUser *currentUser = [PFUser currentUser];
         currentUser[@"latitudTemporal"] = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
         currentUser[@"longitudTemporal"] = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
-        [[PFUser currentUser] save];
+        
+        
+        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
+        if([currentUser[@"vendor"] isEqualToString:@"NO"]){
+            currentUser[@"location"] = point;
+        }
+        [[PFUser currentUser] saveInBackground];
         [_mvMap setRegion:region animated:TRUE];
     }
     banderamap = TRUE;
@@ -888,7 +911,11 @@
             PFUser *currentUser = [PFUser currentUser];
             currentUser[@"latitudTemporal"] = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
             currentUser[@"longitudTemporal"] = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
-            [[PFUser currentUser] save];
+            PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
+            if([currentUser[@"vendor"] isEqualToString:@"NO"]){
+                currentUser[@"location"] = point;
+            }
+            [[PFUser currentUser] saveInBackground];
         }
     }
 
@@ -1023,6 +1050,128 @@
 
 - (IBAction)onRightBtnMenu:(id)sender {
     [[SlideNavigationController sharedInstance] righttMenuSelected:self];
+}
+
+
+- (IBAction)tappedMyPayButton {
+    
+    BTDropInViewController *dropInViewController = [[BTDropInViewController alloc]
+                                                    initWithAPIClient:self.braintreeClient];
+    dropInViewController.delegate = self;
+    
+    /*UIBarButtonItem *item = [[UIBarButtonItem alloc]
+     initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+     target:self
+     action:@selector(userDidCancelPayment)];
+     dropInViewController.navigationItem.leftBarButtonItem = item;*/
+    UINavigationController *navigationController = [[UINavigationController alloc]
+                                                    initWithRootViewController:dropInViewController];
+    [self presentViewController:navigationController animated:YES completion:nil];
+}
+
+- (void)userDidCancelPayment {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+// Implement BTDropInViewControllerDelegate ...
+
+- (void)dropInViewController:(BTDropInViewController *)viewController
+  didSucceedWithTokenization:(BTPaymentMethodNonce *)paymentMethodNonce {
+    // Send payment method nonce to your server for processing
+    [self postNonceToServer:paymentMethodNonce.nonce];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)dropInViewControllerDidCancel:(__unused BTDropInViewController *)viewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)postNonceToServer:(NSString *)paymentMethodNonce {
+    // Update URL with your server
+    NSURL *paymentURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://liviapp.co/checkout.php?mobile=true&amount=%@", amount]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:paymentURL];
+    request.HTTPBody = [[NSString stringWithFormat:@"payment_method_nonce=%@", paymentMethodNonce] dataUsingEncoding:NSUTF8StringEncoding];
+    request.HTTPMethod = @"POST";
+    
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        // TODO: Handle success and failure
+        NSString *responsestring = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSUTF8StringEncoding];
+        NSLog(@"response %@",responsestring);
+        
+        NSDictionary *arrayresponse = [[NSJSONSerialization JSONObjectWithData:data options:0 error: NULL] mutableCopy];
+        
+        [self hideProgressHUD];
+        PFUser *currentUser = [PFUser currentUser];
+        currentUser[@"pendingPayment"] = amount;
+        if([arrayresponse[@"status"] isEqualToString:@"failed"]){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Livi"
+                                                            message: @"Your payment was declined"
+                                                           delegate: self
+                                                  cancelButtonTitle: @"OK"
+                                                  otherButtonTitles: nil];
+            [alert show];
+            [self tappedMyPayButton];
+        }else{
+            currentUser[@"pendingPayment"] = @"";
+            
+            PFObject *transaction = [PFObject objectWithClassName:@"MyMoney"];
+            transaction[@"userId"] = currentUser.objectId;
+            transaction[@"paypalresponse"] = arrayresponse[@"realstatus"];
+            transaction[@"taskId"] = self.taskId;
+            transaction[@"value"] = amount;
+            transaction[@"redeem"] = @"YES";
+            
+            [transaction saveInBackground];
+            
+            
+            PFObject *transaction2 = [PFObject objectWithClassName:@"MyMoney"];
+            transaction2[@"userId"] = _streamStrig;
+            transaction2[@"paypalresponse"] = arrayresponse[@"realstatus"];
+            transaction2[@"taskId"] = self.taskId;
+            transaction2[@"value"] = amount;
+            transaction2[@"earning"] = @"YES";
+            
+            [transaction2 saveInBackground];
+            
+        }
+        [currentUser saveInBackground];
+        
+    }] resume];
+}
+
+-(void)cobropaypal {
+    PFQuery *queryReq = [PFQuery queryWithClassName:@"Requests"];
+    [queryReq getObjectInBackgroundWithId:self.taskId block:^(PFObject *request, NSError *error) {
+        if(request[@"price"])
+            amount = request[@"price"];
+        
+        _streamStrig = request[@"userId"];
+        
+                //Muestro paypal
+                if (_progressHUD == nil)
+                {
+                    _progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                }
+                NSURL *clientTokenURL = [NSURL URLWithString:@"http://liviapp.co/checkout.php?client_token=Zkdjs"];
+                NSMutableURLRequest *clientTokenRequest = [NSMutableURLRequest requestWithURL:clientTokenURL];
+                
+                [[[NSURLSession sharedSession] dataTaskWithRequest:clientTokenRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                    
+                    NSString *responsestring = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSUTF8StringEncoding];
+                    NSLog(@"response %@",responsestring);
+                    
+                    NSDictionary *arrayresponse = [[NSJSONSerialization JSONObjectWithData:data options:0 error: NULL] mutableCopy];
+                    
+                    NSString *clientToken = arrayresponse[@"client_token"];
+                    NSLog(@"client token %@", clientToken);
+                    
+                    self.braintreeClient = [[BTAPIClient alloc] initWithAuthorization:clientToken];
+                    [self tappedMyPayButton];
+                    
+                }] resume];
+        
+        
+    }];
 }
 
 

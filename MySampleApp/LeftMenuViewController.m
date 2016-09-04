@@ -72,10 +72,14 @@
         [_miimageView.layer setCornerRadius:39.0f];
         PFUser *currentUser = [PFUser currentUser];
         if (currentUser) {
-            //_miimageView.image = [[NSUserDefaults standardUserDefaults] objectForKey:@"myImage"];
+            UIImage* image = [UIImage imageWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"myImage"]];
+            _miimageView.image = image;
             email.text = currentUser.username;
             [[NSUserDefaults standardUserDefaults] setObject:currentUser.objectId forKey:@"objectId"];
-            nombre.text = [NSString stringWithFormat:@"%@ %@", currentUser[@"firstname"], currentUser[@"lastname"]];
+            if(currentUser[@"lastname"])
+                nombre.text = [NSString stringWithFormat:@"%@ %@", currentUser[@"firstname"], currentUser[@"lastname"]];
+            else
+                nombre.text = [NSString stringWithFormat:@"%@", currentUser[@"firstname"]];
             
         }
     }else if(indexPath.row==1){
@@ -123,13 +127,15 @@
 	switch (indexPath.row)
 	{
 		case 0:
-            vc = nil;
+            storyboard = [UIStoryboard storyboardWithName:@"UserProfile" bundle:nil];
+            vc = [storyboard instantiateViewControllerWithIdentifier: @"UserProfile"];
 			break;
 			
 		case 1:
             storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             vc = [storyboard instantiateViewControllerWithIdentifier: @"Map"];
-			
+			break;
+            
 		case 2:
             vc = [[BasicViewController alloc] initWithNibName:@"BasicViewController" bundle:nil];
 			break;
@@ -152,6 +158,7 @@
         case 6:
             storyboard = [UIStoryboard storyboardWithName:@"Stream" bundle:nil];
             vc = [storyboard instantiateViewControllerWithIdentifier: @"streamView"];
+            //[self presentViewController:vc animated:YES completion:nil];
             break;
             
         case 7:
@@ -202,9 +209,11 @@
          */
 	}
 	
-	[[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:vc
-															 withSlideOutAnimation:self.slideOutAnimationEnabled
+    //if(indexPath.row!=6){
+        [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:vc
+															 withSlideOutAnimation:NO
 																	 andCompletion:nil];
+    //}
 }
 
 @end

@@ -277,8 +277,14 @@
     }
     
 }
+- (BOOL)slideNavigationControllerShouldDisplayLeftMenu
+{
+    return YES;
+}
+
 -(IBAction)back:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+    [[SlideNavigationController sharedInstance] leftMenuSelected:self];
 }
 
 @end

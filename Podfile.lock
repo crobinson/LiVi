@@ -1,4 +1,10 @@
 PODS:
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.8.4)
   - boost (1.51.0):
     - boost/graph-includes (= 1.51.0)
     - boost/math-includes (= 1.51.0)
@@ -14,15 +20,45 @@ PODS:
   - boost/preprocessor-includes (1.51.0)
   - boost/shared_ptr-includes (1.51.0)
   - boost/string_algorithms-includes (1.51.0)
-  - CardIO (5.3.2)
+  - Braintree (4.5.0):
+    - Braintree/Card (= 4.5.0)
+    - Braintree/Core (= 4.5.0)
+    - Braintree/PayPal (= 4.5.0)
+    - Braintree/UI (= 4.5.0)
+  - Braintree/Card (4.5.0):
+    - Braintree/Core
+  - Braintree/Core (4.5.0)
+  - Braintree/PayPal (4.5.0):
+    - Braintree/Core
+    - Braintree/PayPalOneTouch
+  - Braintree/PayPalDataCollector (4.5.0):
+    - Braintree/Core
+    - Braintree/PayPalUtils
+  - Braintree/PayPalOneTouch (4.5.0):
+    - Braintree/Core
+    - Braintree/PayPalDataCollector
+    - Braintree/PayPalUtils
+  - Braintree/PayPalUtils (4.5.0)
+  - Braintree/UI (4.5.0):
+    - Braintree/Card
+    - Braintree/Core
+  - FBSDKCoreKit (4.15.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.15.0):
+    - FBSDKCoreKit
+  - FBSDKMessengerShareKit (1.3.2)
+  - FBSDKShareKit (4.15.0):
+    - FBSDKCoreKit
   - glm (0.9.4.6)
   - JTCalendar (2.1.7)
-  - PayPal-iOS-SDK (2.14.3):
-    - PayPal-iOS-SDK/CardIO (= 2.14.3)
-    - PayPal-iOS-SDK/Core (= 2.14.3)
-  - PayPal-iOS-SDK/CardIO (2.14.3):
-    - CardIO (~> 5.3.2)
-  - PayPal-iOS-SDK/Core (2.14.3)
+  - Parse (1.14.2):
+    - Bolts/Tasks (~> 1.8)
+  - ParseFacebookUtilsV4 (1.11.1):
+    - Bolts/Tasks (>= 1.6)
+    - FBSDKCoreKit (~> 4.10)
+    - FBSDKLoginKit (~> 4.10)
+    - FBSDKTVOSKit (~> 4.10)
+    - Parse (~> 1.12)
   - UriParser-cpp (0.1.3)
   - VideoCore (0.3.2):
     - boost (~> 1.51.0)
@@ -30,8 +66,15 @@ PODS:
     - UriParser-cpp (~> 0.1.3)
 
 DEPENDENCIES:
+  - Bolts
+  - Braintree
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKMessengerShareKit
+  - FBSDKShareKit
   - JTCalendar (~> 2.0)
-  - PayPal-iOS-SDK
+  - Parse
+  - ParseFacebookUtilsV4
   - VideoCore (from `../..`)
 
 EXTERNAL SOURCES:
@@ -39,11 +82,17 @@ EXTERNAL SOURCES:
     :path: ../..
 
 SPEC CHECKSUMS:
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   boost: 6c5c8d8daef26ac83c1e1c00ad14de62b80161d7
-  CardIO: 92c45caef0d986c4a303a7afba0c9b76ff2b1f6e
+  Braintree: 7bcebecbcfe5210ed4438a97638c230d2521b54d
+  FBSDKCoreKit: 6680cbd33a4243d80700f182d0af36b3fa7f3118
+  FBSDKLoginKit: 96d9b70b5784490f02ab86119e542a1f182017a8
+  FBSDKMessengerShareKit: 41c0b1a667d685c9433f993eb9611b3d5074e1cb
+  FBSDKShareKit: 06ef20cb2f16828ca4b20055333313dd445de362
   glm: e22c8d9df10404059b19c2952f9fa44d9a9f3056
   JTCalendar: bc7f3086a4df02aa2e02ac4d505ef888cc2283a0
-  PayPal-iOS-SDK: 3acc0c606383e1b2afdbad113bf2060748e98679
+  Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
+  ParseFacebookUtilsV4: 2f30c2b7021c8005d3042781da7ef87d06589421
   UriParser-cpp: cbbe00080ee432ec4833dca863a7fc83adc9b01a
   VideoCore: 9b783edd81b91a80c5599bae1f98e9c93ee029e7
 

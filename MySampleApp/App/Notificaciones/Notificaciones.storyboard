@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -77,8 +77,8 @@
                                         <rect key="frame" x="55" y="31" width="29" height="28"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AXc-VZ-NV0">
-                                        <rect key="frame" x="24" y="29" width="17" height="31"/>
-                                        <state key="normal" backgroundImage="back.png"/>
+                                        <rect key="frame" x="24" y="29" width="27" height="27"/>
+                                        <state key="normal" backgroundImage="menublanco.png"/>
                                         <connections>
                                             <action selector="back:" destination="8gP-59-HJk" eventType="touchUpInside" id="1Ig-06-CLr"/>
                                         </connections>
@@ -88,7 +88,7 @@
                                 <constraints>
                                     <constraint firstItem="EAM-5g-ca0" firstAttribute="centerY" secondItem="2iv-Xg-rlh" secondAttribute="centerY" id="4Mr-cN-0se"/>
                                     <constraint firstItem="BIa-ok-tnF" firstAttribute="centerX" secondItem="2iv-Xg-rlh" secondAttribute="centerX" id="7hf-fM-LMS"/>
-                                    <constraint firstItem="H4P-I9-cTu" firstAttribute="leading" secondItem="EAM-5g-ca0" secondAttribute="trailing" constant="11" id="GM9-gY-vi6"/>
+                                    <constraint firstItem="H4P-I9-cTu" firstAttribute="leading" secondItem="EAM-5g-ca0" secondAttribute="trailing" constant="31" id="GM9-gY-vi6"/>
                                     <constraint firstItem="AXc-VZ-NV0" firstAttribute="centerX" secondItem="EAM-5g-ca0" secondAttribute="centerX" id="THF-kt-4Cx"/>
                                     <constraint firstItem="EAM-5g-ca0" firstAttribute="leading" secondItem="2iv-Xg-rlh" secondAttribute="leading" constant="15" id="aNz-FZ-Dfs"/>
                                     <constraint firstItem="EAM-5g-ca0" firstAttribute="centerX" secondItem="2iv-Xg-rlh" secondAttribute="centerX" id="cuh-rb-wJn"/>
@@ -393,6 +393,7 @@
     <resources>
         <image name="back.png" width="16" height="26"/>
         <image name="checkmark.png" width="60" height="44"/>
+        <image name="menublanco.png" width="29" height="27"/>
         <image name="pinblanco.png" width="22" height="30"/>
         <image name="rating.png" width="145" height="25"/>
         <image name="task.png" width="33" height="36"/>

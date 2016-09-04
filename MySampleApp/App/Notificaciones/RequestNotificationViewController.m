@@ -52,7 +52,7 @@
     //}
     notificationObject[@"from"] = [PFUser currentUser].objectId;
     notificationObject[@"to"] = _userId;
-    [notificationObject save];
+    [notificationObject saveInBackground];
     
     // Send push notification to query
     NSDictionary *data = @{
@@ -78,7 +78,9 @@
     }];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Stream" bundle:nil];
     UIViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"streamView"];
-    [self presentViewController:viewController animated:YES completion:nil];
+    //[self presentViewController:viewController animated:YES completion:nil];
+    [self.navigationController pushViewController:viewController
+                                         animated:YES];
 }
 
 -(IBAction)sorry:(id)sender {
@@ -97,7 +99,7 @@
     notificationObject[@"type"] = @"streaming";
     notificationObject[@"from"] = [PFUser currentUser].objectId;
     notificationObject[@"to"] = _userId;
-    [notificationObject save];
+    [notificationObject saveInBackground];
     
     // Send push notification to query
     NSDictionary *data = @{

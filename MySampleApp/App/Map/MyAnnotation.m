@@ -5,9 +5,8 @@
 @synthesize coordinate;
 
 
-- (id)initWithTitle:(NSString*)strTitle andSubtitle:(NSString *)strSubtitle andImage:(UIImage *)proImg andUrlIos:(NSString *)urlIos andUrlOther:(NSString *)urlOther andUrlStream:(NSString *)urlRTMP andCoordinate:(CLLocationCoordinate2D)coord
+- (id)initWithTitle:(NSString*)strTitle andSubtitle:(NSString *)strSubtitle andImage:(NSString *)proImg andUrlIos:(NSString *)urlIos andUrlOther:(NSString *)urlOther andUrlStream:(NSString *)urlRTMP andCoordinate:(CLLocationCoordinate2D)coord andPV:(NSString *)pv
 {
-    
     if (self = [super init]) {
         self.title = strTitle;//[strTitle copy];
         self.subtitle=strSubtitle;
@@ -16,6 +15,7 @@
         self.urlStream = urlOther;
         self.rtmpStream = urlRTMP;
         self.coordinate = coord;
+        self.pv = pv;
     }
     return self;
 }

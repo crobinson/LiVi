@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SlideNavigationController.h"
 
-@interface TasksViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
+@interface TasksViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, SlideNavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *myTableView;
 

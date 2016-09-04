@@ -64,79 +64,92 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Followers"];
     [query whereKey:@"userId" equalTo:[PFUser currentUser].objectId];
     [query orderByDescending:@"createdAt"];
-    NSArray *notifications = [query findObjects];
-    for (PFObject *userObj in notifications) {
-        
-        //Traigo el user q envía
-        PFQuery *userquery = [PFUser query];
-        [userquery whereKey:@"objectId" equalTo:userObj[@"following"]];
-        NSArray *userobjects = [userquery findObjects];
-        for (PFObject *user in userobjects){
-            //Traigo la imagen
-            
-            PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
-            [queryimg whereKey:@"user" equalTo:user[@"username"]];
-            [queryimg orderByDescending:@"createdAt"];
-            NSArray *objects = [queryimg findObjects];
-            for (PFObject *imgObject in objects){
-                PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
-                UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(75, 55) interpolationQuality:kCGInterpolationHigh];
-                croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width - 75)/2, (scaledImage.size.height - 66)/2, 75, 66)];
+    //NSArray *notifications = [query findObjects];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *notifications, NSError *error) {
+        if (!error) {
+            for (PFObject *userObj in notifications) {
+                
+                //Traigo el user q envía
+                PFQuery *userquery = [PFUser query];
+                [userquery whereKey:@"objectId" equalTo:userObj[@"following"]];
+                NSArray *userobjects = [userquery findObjects];
+                for (PFObject *user in userobjects){
+                    //Traigo la imagen
+                    
+                    PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
+                    [queryimg whereKey:@"user" equalTo:user[@"username"]];
+                    [queryimg orderByDescending:@"createdAt"];
+                    NSArray *objects = [queryimg findObjects];
+                    for (PFObject *imgObject in objects){
+                        PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
+                        UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(75, 55) interpolationQuality:kCGInterpolationHigh];
+                        croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width - 75)/2, (scaledImage.size.height - 66)/2, 75, 66)];
+                    }
+                    
+                    NSLog(@"%@", userObj);
+                    NSLog(@"%@", croppedImg);
+                    
+                    NSDictionary *dataDictionary = @{
+                                                     @"nickname": user[@"nickname"],
+                                                     @"description"   : user[@"description"],
+                                                     @"image"   : croppedImg,
+                                                     };
+                    
+                    
+                    [dataSource addObject:dataDictionary];
+                }
             }
-            
-            NSLog(@"%@", userObj);
-            NSLog(@"%@", croppedImg);
-            
-            NSDictionary *dataDictionary = @{
-                                             @"nickname": user[@"nickname"],
-                                             @"description"   : user[@"description"],
-                                             @"image"   : croppedImg,
-                                             };
-            
-            
-            [dataSource addObject:dataDictionary];
+            [_myTableView reloadData];
+            [self hideProgressHUD];
         }
-    }
+    }];
+    
     PFQuery *query2 = [PFQuery queryWithClassName:@"Followers"];
     [query2 whereKey:@"following" equalTo:[PFUser currentUser].objectId];
     [query2 orderByDescending:@"createdAt"];
-    NSArray *followings = [query2 findObjects];
-    for (PFObject *userObj in followings) {
-        
-        //Traigo el user q envía
-        PFQuery *userquery = [PFUser query];
-        [userquery whereKey:@"objectId" equalTo:userObj[@"userId"]];
-        NSArray *userobjects = [userquery findObjects];
-        for (PFObject *user in userobjects){
-            //Traigo la imagen
-            
-            PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
-            [queryimg whereKey:@"user" equalTo:user[@"username"]];
-            [queryimg orderByDescending:@"createdAt"];
-            NSArray *objects = [queryimg findObjects];
-            croppedImg = nil;
-            for (PFObject *imgObject in objects){
-                PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
-                UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(75, 55) interpolationQuality:kCGInterpolationHigh];
-                croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width - 75)/2, (scaledImage.size.height - 66)/2, 75, 66)];
+    //NSArray *followings = [query2 findObjects];
+    [query2 findObjectsInBackgroundWithBlock:^(NSArray *followings, NSError *error) {
+        if (!error) {
+            for (PFObject *userObj in followings) {
+                
+                //Traigo el user q envía
+                PFQuery *userquery = [PFUser query];
+                [userquery whereKey:@"objectId" equalTo:userObj[@"userId"]];
+                NSArray *userobjects = [userquery findObjects];
+                for (PFObject *user in userobjects){
+                    //Traigo la imagen
+                    
+                    PFQuery *queryimg = [PFQuery queryWithClassName:@"UserImage"];
+                    [queryimg whereKey:@"user" equalTo:user[@"username"]];
+                    [queryimg orderByDescending:@"createdAt"];
+                    NSArray *objects = [queryimg findObjects];
+                    croppedImg = nil;
+                    for (PFObject *imgObject in objects){
+                        PFFile *image = (PFFile *)[imgObject objectForKey:@"image"];
+                        UIImage *scaledImage = [[UIImage imageWithData:image.getData] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(75, 55) interpolationQuality:kCGInterpolationHigh];
+                        croppedImg = [scaledImage croppedImage:CGRectMake((scaledImage.size.width - 75)/2, (scaledImage.size.height - 66)/2, 75, 66)];
+                    }
+                    
+                    NSLog(@"%@", userObj);
+                    NSLog(@"%@", croppedImg);
+                    
+                    NSDictionary *dataDictionary = @{
+                                                     @"nickname": user[@"nickname"],
+                                                     @"description"   : user[@"description"],
+                                                     @"image"   : croppedImg,
+                                                     };
+                    
+                    
+                    [dataSource2 addObject:dataDictionary];
+                }
             }
-            
-            NSLog(@"%@", userObj);
-            NSLog(@"%@", croppedImg);
-            
-            NSDictionary *dataDictionary = @{
-                                             @"nickname": user[@"nickname"],
-                                             @"description"   : user[@"description"],
-                                             @"image"   : croppedImg,
-                                             };
-            
-            
-            [dataSource2 addObject:dataDictionary];
+            [_myTableView2 reloadData];
         }
-    }
-    [self hideProgressHUD];
-    [_myTableView reloadData];
-    [_myTableView2 reloadData];
+    }];
+    
+    
+    
+    
 }
 
 /*

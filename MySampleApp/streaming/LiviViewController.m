@@ -23,7 +23,7 @@
     PFObject *gameScore = [PFObject objectWithClassName:@"Views"];
     gameScore[@"userId"] = [PFUser currentUser].objectId;
     gameScore[@"ownerId"] = _objectId;
-    [gameScore save];
+    [gameScore saveInBackground];
 
     NSLog(@"%@", _urlString);
     [_mywebview setBackgroundColor:[UIColor whiteColor]];
